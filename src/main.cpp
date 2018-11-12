@@ -1,13 +1,39 @@
 #include <SFML/Graphics.hpp>
 #include <stdio.h>
 
-class World {
+enum class Tile {
+  GRASS
+};
+
+class World : public sf::Drawable {
+  std::vector<std::vector<Tile>> _region;
+
+  void _region_draw(sf::RenderTarget& window) const {
+    for (int i = 0; i < _region.size(); ++i) {
+      for (int j = 0; j < _region[0].size(); ++j) {
+        sf::RectangleShape r(sf::Vector2f(tile_size, tile_size));
+        r.setPosition(sf::Vector2f(i * tile_size, j * tile_size));
+
+        if ((i + j) % 2) {
+          r.setFillColor(sf::Color(0, 50, 150));
+        } else {
+          r.setFillColor(sf::Color(0, 150, 0));
+        }
+        window.draw(r);
+      }
+    }
+  }
 public:
-  
+  constexpr static float tile_size = 1.f;
+
+  World(): _region(50, std::vector<Tile>(50, Tile::GRASS)) {}
+
+  virtual void draw(sf::RenderTarget& rw, sf::RenderStates states) const {
+    _region_draw(rw);
+  }
 };
 
 class Game {
-  constexpr static float tile_size = 1.f;
   sf::View _view;
   sf::Clock _clock;
   sf::RenderWindow _window;
@@ -15,8 +41,8 @@ class Game {
 
 public:
   Game(): 
-      _view (sf::Vector2f(0, 0), sf::Vector2f(10 * tile_size 
-        * sf::VideoMode::getFullscreenModes()[0].width / sf::VideoMode::getFullscreenModes()[0].height, 10 * tile_size)),
+      _view (sf::Vector2f(0, 0), sf::Vector2f(10 * World::tile_size 
+        * sf::VideoMode::getFullscreenModes()[0].width / sf::VideoMode::getFullscreenModes()[0].height, 10 * World::tile_size)),
       _window (sf::VideoMode::getFullscreenModes()[0], "Fortress Commander", sf::Style::Fullscreen) {
     _window.setView(_view);
     _clock.restart();
@@ -38,20 +64,7 @@ public:
       _window.setView(_view);
       _window.clear();
 
-
-      for (int i = 0; i < 100; ++i) {
-        for (int j = 0; j < 100; ++j) {
-          sf::RectangleShape r(sf::Vector2f(tile_size, tile_size));
-          r.setPosition(sf::Vector2f(i * tile_size, j * tile_size));
-
-          if ((i + j) % 2) {
-            r.setFillColor(sf::Color(0, 50, 150));
-          } else {
-            r.setFillColor(sf::Color(0, 150, 0));
-          }
-          _window.draw(r);
-        }
-      }
+      _window.draw(_world);
 
       _window.display();
       sf::sleep(sf::seconds(1.0f/ 60) - _clock.getElapsedTime());
