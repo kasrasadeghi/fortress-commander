@@ -1,11 +1,17 @@
 #include <SFML/Graphics.hpp>
 #include <stdio.h>
 
+class World {
+public:
+  
+};
+
 class Game {
   constexpr static float tile_size = 1.f;
   sf::View _view;
   sf::Clock _clock;
   sf::RenderWindow _window;
+  World _world;
 
 public:
   Game(): 
@@ -48,6 +54,7 @@ public:
       }
 
       _window.display();
+      sf::sleep(sf::seconds(1.0f/ 60) - _clock.getElapsedTime());
     }
   }
 
