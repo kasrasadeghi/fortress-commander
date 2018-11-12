@@ -9,8 +9,9 @@ class Game {
 
 public:
   Game(): 
-      _view (sf::Vector2f(0, 0), sf::Vector2f(10 * tile_size, 10 * tile_size)),
-      _window (sf::VideoMode(600, 600), "Fortress Commander") {
+      _view (sf::Vector2f(0, 0), sf::Vector2f(10 * tile_size 
+        * sf::VideoMode::getFullscreenModes()[0].width / sf::VideoMode::getFullscreenModes()[0].height, 10 * tile_size)),
+      _window (sf::VideoMode::getFullscreenModes()[0], "Fortress Commander", sf::Style::Fullscreen) {
     _window.setView(_view);
     _clock.restart();
   }
@@ -62,6 +63,25 @@ public:
   void handleViewInput(const sf::Time& dt) {
     constexpr float speed = 10;
     float d = (speed * dt).asSeconds();
+
+    // mouse
+    constexpr int margin = 20;
+    auto pos = sf::Mouse::getPosition();
+    if (pos.x < margin) {
+      _view.move(-d, 0);      
+    }
+    if (pos.y < margin) {
+      _view.move(0, -d);
+    }
+
+    if (pos.x > _window.getSize().x - margin) {
+      _view.move(d, 0);
+    }
+    if (pos.y > _window.getSize().y - margin) {
+      _view.move(0, d);
+    }
+
+    // keyboard 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
       _view.move(0, -d);
     }
