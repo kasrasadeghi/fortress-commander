@@ -81,6 +81,21 @@ void Game::handleViewInput(const sf::Time& dt) {
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
     _view.move(d, 0);
   }
+
+  auto topLeft = _view.getCenter() - (_view.getSize() / 2.f);
+  auto bottomRight = _view.getCenter() + (_view.getSize() / 2.f);
+  if (topLeft.x < 0) {
+    _view.setCenter(view_size / 2.f * widthScalingFactor(), _view.getCenter().y);
+  }
+  if (topLeft.y < 0) {
+    _view.setCenter(_view.getCenter().x, view_size / 2.f);
+  }
+  if (bottomRight.x > _world.size() * World::tile_size) {
+    _view.setCenter(_world.size() * World::tile_size - (view_size / 2.f * widthScalingFactor()), _view.getCenter().y);
+  }
+  if (bottomRight.y > _world.size() * World::tile_size) {
+    _view.setCenter(_view.getCenter().x, _world.size() * World::tile_size - view_size / 2.f);
+  }
 }
 
 void World::_region_draw(sf::RenderTarget& window) const {

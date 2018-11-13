@@ -6,7 +6,9 @@
 - add a world that can be drawn
 - clang-format
 - start the camera at one of the 4 corners (chose top left)
-
 - lock the camera to view
+
+- clean up lock camera code
+- it crashes when detecting mouse position
 - place buildings
 - make a map
