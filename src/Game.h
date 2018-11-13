@@ -1,12 +1,22 @@
 #include <SFML/Graphics.hpp>
 
-class World {
+enum class Tile {
+  GRASS
+};
+
+class World : public sf::Drawable {
+  std::vector<std::vector<Tile>> _region;
+
+  void _region_draw(sf::RenderTarget& window) const;
 public:
-  
+  constexpr static float tile_size = 1.f;
+
+  World(): _region(50, std::vector<Tile>(50, Tile::GRASS)) {}
+
+  virtual void draw(sf::RenderTarget& rw, sf::RenderStates states) const;
 };
 
 class Game {
-  constexpr static float tile_size = 1.f;
   sf::View _view;
   sf::Clock _clock;
   sf::RenderWindow _window;
