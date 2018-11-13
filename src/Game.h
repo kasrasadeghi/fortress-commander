@@ -13,7 +13,9 @@ public:
 
   World(): _region(50, std::vector<Tile>(50, Tile::GRASS)) {}
 
-  virtual void draw(sf::RenderTarget& rw, sf::RenderStates states) const;
+  virtual void draw(sf::RenderTarget& rw, sf::RenderStates states) const {
+    _region_draw(rw);
+  };
 };
 
 class Game {

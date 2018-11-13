@@ -4,11 +4,12 @@
 #include <stdio.h>
 
 Game::Game(): 
-    _view (sf::Vector2f(0, 0), sf::Vector2f(10 * World::tile_size 
+        _view (sf::Vector2f(0, 0), sf::Vector2f(10 * World::tile_size 
          * sf::VideoMode::getFullscreenModes()[0].width / sf::VideoMode::getFullscreenModes()[0].height, 10 * World::tile_size)),
-      _window (sf::VideoMode::getFullscreenModes()[0], "Fortress Commander", sf::Style::Fullscreen) {
+        _window (sf::VideoMode::getFullscreenModes()[0], "Fortress Commander", sf::Style::Fullscreen) {
     _window.setView(_view);
     _clock.restart();
+    _window.setFramerateLimit(60);
 }
 
 void Game::loop() {
@@ -30,7 +31,6 @@ void Game::loop() {
         _window.draw(_world);
 
         _window.display();
-        sf::sleep(sf::seconds(1.0f/ 60) - _clock.getElapsedTime());
     }
 }
 
@@ -76,5 +76,21 @@ void Game::handleViewInput(const sf::Time& dt) {
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
         _view.move(d, 0);
+    }
+}
+
+void World::_region_draw(sf::RenderTarget& window) const {
+    for (int i = 0; i < _region.size(); ++i) {
+        for (int j = 0; j < _region[0].size(); ++j) {
+            sf::RectangleShape r(sf::Vector2f(tile_size, tile_size));
+            r.setPosition(sf::Vector2f(i * tile_size, j * tile_size));
+
+            if ((i + j) % 2) {
+                r.setFillColor(sf::Color(0, 50, 150));
+            } else {
+                r.setFillColor(sf::Color(0, 150, 0));
+            }
+            window.draw(r);
+        }
     }
 }
