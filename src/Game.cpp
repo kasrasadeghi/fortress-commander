@@ -45,6 +45,14 @@ void Game::handleEvent(const sf::Event& event) {
   if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
     _window.close();
   }
+  if (event.type == sf::Event::MouseButtonPressed) {
+    auto coords = _window.mapPixelToCoords(sf::Mouse::getPosition(), _view);
+    _paint = _world.flipCell(static_cast<int>(coords.x / World::tile_size), static_cast<int>(coords.y / World::tile_size));
+  }
+  if (event.type == sf::Event::MouseMoved && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+    auto coords = _window.mapPixelToCoords(sf::Mouse::getPosition(), _view);
+    _world.setCell(static_cast<int>(coords.x / World::tile_size), static_cast<int>(coords.y / World::tile_size), _paint);
+  }
 }
 
 void Game::handleViewInput(const sf::Time& dt) {
@@ -82,6 +90,11 @@ void Game::handleViewInput(const sf::Time& dt) {
     _view.move(d, 0);
   }
 
+  if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+    auto coords = _window.mapPixelToCoords(sf::Mouse::getPosition(), _view);
+    _world.setCell(static_cast<int>(coords.x / World::tile_size), static_cast<int>(coords.y / World::tile_size), _paint);
+  }
+
   auto topLeft = _view.getCenter() - (_view.getSize() / 2.f);
   auto bottomRight = _view.getCenter() + (_view.getSize() / 2.f);
 
@@ -103,14 +116,12 @@ void Game::handleViewInput(const sf::Time& dt) {
 }
 
 void World::_region_draw(sf::RenderTarget& window) const {
-  const auto k = 255 * 4.f / (_region.size() * _region.size()); 
-  auto quad = [this, k](int x) { return k * x * (_region.size() - x); };
   for (int i = 0; i < _region.size(); ++i) {
     for (int j = 0; j < _region[0].size(); ++j) {
       sf::RectangleShape r(sf::Vector2f(tile_size, tile_size));
       r.setPosition(sf::Vector2f(i * tile_size, j * tile_size));
 
-      r.setFillColor(sf::Color(quad(i), quad(j), 0));
+      r.setFillColor(Tile::GRASS == _region[i][j] ? sf::Color::Green : sf::Color::Blue);
       window.draw(r);
     }
   }
