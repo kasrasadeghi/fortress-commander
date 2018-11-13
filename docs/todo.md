@@ -8,7 +8,7 @@
 - start the camera at one of the 4 corners (chose top left)
 - lock the camera to view
 - it crashes when detecting mouse position
-
 - clean up lock camera code
+
 - place buildings
 - make a map

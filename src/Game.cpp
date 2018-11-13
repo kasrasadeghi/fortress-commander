@@ -84,17 +84,21 @@ void Game::handleViewInput(const sf::Time& dt) {
 
   auto topLeft = _view.getCenter() - (_view.getSize() / 2.f);
   auto bottomRight = _view.getCenter() + (_view.getSize() / 2.f);
+
+  const auto viewRadius = view_size / 2.f;
+  const auto worldBorder = _world.size() * World::tile_size;
+
   if (topLeft.x < 0) {
-    _view.setCenter(view_size / 2.f * widthScalingFactor(), _view.getCenter().y);
+    _view.setCenter(viewRadius * widthScalingFactor(), _view.getCenter().y);
   }
   if (topLeft.y < 0) {
-    _view.setCenter(_view.getCenter().x, view_size / 2.f);
+    _view.setCenter(_view.getCenter().x, viewRadius);
   }
-  if (bottomRight.x > _world.size() * World::tile_size) {
-    _view.setCenter(_world.size() * World::tile_size - (view_size / 2.f * widthScalingFactor()), _view.getCenter().y);
+  if (bottomRight.x > worldBorder) {
+    _view.setCenter(worldBorder - (viewRadius * widthScalingFactor()), _view.getCenter().y);
   }
-  if (bottomRight.y > _world.size() * World::tile_size) {
-    _view.setCenter(_view.getCenter().x, _world.size() * World::tile_size - view_size / 2.f);
+  if (bottomRight.y > worldBorder) {
+    _view.setCenter(_view.getCenter().x, worldBorder - viewRadius);
   }
 }
 
