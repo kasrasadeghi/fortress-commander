@@ -24,12 +24,10 @@ message(STATUS "SFML libraries found: " ${SFML_LIBRARIES})
 message(STATUS "SFML include dir found: " ${SFML_INCLUDE_DIR})
 
 file(GLOB SRC_FILES src/*.cpp)
-file(GLOB INCL_FILES src/*.h)
 
 add_executable(${PROJECT_NAME} ${SRC_FILES})
 
 target_include_directories(${PROJECT_NAME} PUBLIC
-    ${INCL_FILES}
     ${SFML_INCLUDE_DIR}
 )
 
