@@ -42,7 +42,7 @@ void Game::handleEvent(const sf::Event& event) {
   if (event.type == sf::Event::Closed) {
     _window.close();
   }
-  if (event.key.code == sf::Keyboard::Escape) {
+  if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
     _window.close();
   }
 }
