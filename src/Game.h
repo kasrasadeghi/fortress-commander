@@ -3,14 +3,15 @@
 enum class Tile { GRASS };
 
 class World : public sf::Drawable {
-  std::vector<std::vector<Tile>> _region;
+  std::vector<std::vector<Tile>> _region; // this should be a square
 
   void _region_draw(sf::RenderTarget& window) const;
 
 public:
   constexpr static float tile_size = 1.f;
 
-  World() : _region(50, std::vector<Tile>(50, Tile::GRASS)) {}
+  World(size_t size) : _region(size, std::vector<Tile>(size, Tile::GRASS)) {}
+  size_t size() const { return _region.size(); }
 
   virtual void draw(sf::RenderTarget& rw, sf::RenderStates states) const {
     _region_draw(rw);
@@ -18,12 +19,17 @@ public:
 };
 
 class Game {
-  sf::View _view;
-  sf::Clock _clock;
-  sf::RenderWindow _window;
   World _world;
+  sf::View _view;
+  sf::RenderWindow _window;
+  sf::Clock _clock;
 
 public:
+  constexpr static int view_size = 10;
+  static float widthScalingFactor() {
+    return 1.f * sf::VideoMode::getFullscreenModes()[0].width /
+           sf::VideoMode::getFullscreenModes()[0].height;
+  }
   Game();
 
   void loop();

@@ -4,11 +4,11 @@
 #include <stdio.h>
 
 Game::Game()
-    : _view(sf::Vector2f(0, 0),
-            sf::Vector2f(10 * World::tile_size *
-                             sf::VideoMode::getFullscreenModes()[0].width /
-                             sf::VideoMode::getFullscreenModes()[0].height,
-                         10 * World::tile_size)),
+    : _world(50),
+      _view(sf::Vector2f(view_size / 2.f * widthScalingFactor(),
+                         view_size / 2.f),
+            sf::Vector2f(view_size * World::tile_size * widthScalingFactor(),
+                         view_size * World::tile_size)),
       _window(sf::VideoMode::getFullscreenModes()[0], "Fortress Commander",
               sf::Style::Fullscreen) {
   _window.setView(_view);
