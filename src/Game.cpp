@@ -110,11 +110,7 @@ void World::_region_draw(sf::RenderTarget& window) const {
       sf::RectangleShape r(sf::Vector2f(tile_size, tile_size));
       r.setPosition(sf::Vector2f(i * tile_size, j * tile_size));
 
-      if ((i + j) % 2) {
-        r.setFillColor(sf::Color(quad(i), quad(j), 0));
-      } else {
-        r.setFillColor(sf::Color(quad(i), quad(j), 0));
-      }
+      r.setFillColor(sf::Color(quad(i), quad(j), 0));
       window.draw(r);
     }
   }
