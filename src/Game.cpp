@@ -112,7 +112,7 @@ void Game::handleViewInput(const sf::Time& dt) {
   }
 }
 
-void World::_region_draw(sf::RenderTarget& window) const {
+void World::_drawRegion(sf::RenderTarget& window) const {
   for (int i = 0; i < _region.size(); ++i) {
     for (int j = 0; j < _region[0].size(); ++j) {
       sf::RectangleShape r(sf::Vector2f(tile_size, tile_size));

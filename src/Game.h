@@ -8,10 +8,10 @@ enum class Tile { NONE, GRASS, WATER };
 class World : public sf::Drawable {
   std::vector<std::vector<Tile>> _region; // this should be a square
 
-  void _region_draw(sf::RenderTarget& window) const;
+  void _drawRegion(sf::RenderTarget& window) const;
 
   /// stuff to make out of bounds clicks snap back to bounds
-  bool _region_check(sf::Vector2i& v) {
+  bool _snapToRegion(sf::Vector2i& v) {
     bool result = true;
     if (0 > v.x) {
       v.x = 0;
@@ -39,17 +39,17 @@ public:
   size_t size() const { return _region.size(); }
 
   Tile flipCell(sf::Vector2i v) {
-    _region_check(v);
+    _snapToRegion(v);
     return _region[v.x][v.y] = (_region[v.x][v.y] == Tile::GRASS) ? Tile::WATER : Tile::GRASS;
   }
 
   void setCell(sf::Vector2i v, Tile t) {
-    _region_check(v);
+    _snapToRegion(v);
     _region[v.x][v.y] = t;
   }
 
   virtual void draw(sf::RenderTarget& rw, sf::RenderStates states) const {
-    _region_draw(rw);
+    _drawRegion(rw);
   }
 };
 

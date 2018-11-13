@@ -16,6 +16,8 @@
 - clean up tile coloring
 - it just crashes sometimes??
   - the cell flips were out of bounds
+- standardize semi-java case naming conventions (only under for private);
 
+- zoom in and out
 - place buildings
 - make a map
