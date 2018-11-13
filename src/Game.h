@@ -5,14 +5,14 @@ enum class Tile { GRASS };
 class World : public sf::Drawable {
   std::vector<std::vector<Tile>> _region;
 
-  void _region_draw(sf::RenderTarget &window) const;
+  void _region_draw(sf::RenderTarget& window) const;
 
 public:
   constexpr static float tile_size = 1.f;
 
   World() : _region(50, std::vector<Tile>(50, Tile::GRASS)) {}
 
-  virtual void draw(sf::RenderTarget &rw, sf::RenderStates states) const {
+  virtual void draw(sf::RenderTarget& rw, sf::RenderStates states) const {
     _region_draw(rw);
   };
 };
@@ -27,7 +27,7 @@ public:
   Game();
 
   void loop();
-  void handleEvent(const sf::Event &event);
+  void handleEvent(const sf::Event& event);
 
-  void handleViewInput(const sf::Time &dt);
+  void handleViewInput(const sf::Time& dt);
 };

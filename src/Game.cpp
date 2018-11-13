@@ -38,7 +38,7 @@ void Game::loop() {
   }
 }
 
-void Game::handleEvent(const sf::Event &event) {
+void Game::handleEvent(const sf::Event& event) {
   if (event.type == sf::Event::Closed) {
     _window.close();
   }
@@ -47,7 +47,7 @@ void Game::handleEvent(const sf::Event &event) {
   }
 }
 
-void Game::handleViewInput(const sf::Time &dt) {
+void Game::handleViewInput(const sf::Time& dt) {
   constexpr float speed = 10;
   float d = (speed * dt).asSeconds();
 
@@ -83,7 +83,7 @@ void Game::handleViewInput(const sf::Time &dt) {
   }
 }
 
-void World::_region_draw(sf::RenderTarget &window) const {
+void World::_region_draw(sf::RenderTarget& window) const {
   for (int i = 0; i < _region.size(); ++i) {
     for (int j = 0; j < _region[0].size(); ++j) {
       sf::RectangleShape r(sf::Vector2f(tile_size, tile_size));
