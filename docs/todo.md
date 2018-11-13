@@ -5,8 +5,8 @@
 - sleep for framerate limiting
 - add a world that can be drawn
 - clang-format
+- start the camera at one of the 4 corners (chose top left)
 
-- start the camera at one of the 4 corners
 - lock the camera to view
 - place buildings
 - make a map

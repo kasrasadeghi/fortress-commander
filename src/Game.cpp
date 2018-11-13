@@ -84,15 +84,17 @@ void Game::handleViewInput(const sf::Time& dt) {
 }
 
 void World::_region_draw(sf::RenderTarget& window) const {
+  const auto k = 255 * 4.f / (_region.size() * _region.size()); 
+  auto quad = [this, k](int x) { return k * x * (_region.size() - x); };
   for (int i = 0; i < _region.size(); ++i) {
     for (int j = 0; j < _region[0].size(); ++j) {
       sf::RectangleShape r(sf::Vector2f(tile_size, tile_size));
       r.setPosition(sf::Vector2f(i * tile_size, j * tile_size));
 
       if ((i + j) % 2) {
-        r.setFillColor(sf::Color(0, 50, 150));
+        r.setFillColor(sf::Color(quad(i), quad(j), 0));
       } else {
-        r.setFillColor(sf::Color(0, 150, 0));
+        r.setFillColor(sf::Color(quad(i), quad(j), 0));
       }
       window.draw(r);
     }
