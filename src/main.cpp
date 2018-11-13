@@ -5,6 +5,6 @@ int main() {
 
   // g.pushState(new GameState(game));
   g.loop();
-  
+
   return 0;
 }
