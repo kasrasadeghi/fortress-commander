@@ -74,4 +74,16 @@ win/loss condition
 ![tinykeep’s “dungen”](https://i.imgur.com/wM30Xyl.gif)
 ![some island map I made out of perlin noise](https://d2mxuefqeaa7sj.cloudfront.net/s_88FBEBEE3376E0D40867DEB07BD57349772DAC286AF57CD038EA97CB45EE3493_1542054661846_image.png)
 
-
+# Division of Labor
+- Game mechanics
+  - Austin
+  - Kasra
+- Graphics
+  - Logan
+  - Kasra
+- Art
+  - Austin
+  - Logan
+  - Kasra
+- Engine structure
+  - Austin
