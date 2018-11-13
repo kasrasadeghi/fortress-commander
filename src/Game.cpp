@@ -46,12 +46,10 @@ void Game::handleEvent(const sf::Event& event) {
     _window.close();
   }
   if (event.type == sf::Event::MouseButtonPressed) {
-    auto coords = _window.mapPixelToCoords(sf::Mouse::getPosition(), _view);
-    _paint = _world.flipCell(static_cast<int>(coords.x / World::tile_size), static_cast<int>(coords.y / World::tile_size));
+    _paint = _world.flipCell(getMouseTile());
   }
   if (event.type == sf::Event::MouseMoved && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
-    auto coords = _window.mapPixelToCoords(sf::Mouse::getPosition(), _view);
-    _world.setCell(static_cast<int>(coords.x / World::tile_size), static_cast<int>(coords.y / World::tile_size), _paint);
+    _world.setCell(getMouseTile(), _paint);
   }
 }
 
@@ -91,8 +89,7 @@ void Game::handleViewInput(const sf::Time& dt) {
   }
 
   if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
-    auto coords = _window.mapPixelToCoords(sf::Mouse::getPosition(), _view);
-    _world.setCell(static_cast<int>(coords.x / World::tile_size), static_cast<int>(coords.y / World::tile_size), _paint);
+    _world.setCell(getMouseTile(), _paint);
   }
 
   auto topLeft = _view.getCenter() - (_view.getSize() / 2.f);

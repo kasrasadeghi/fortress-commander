@@ -13,7 +13,8 @@
   - click and drag
   - click scroll the side
 - render the world based on the tiles
-
 - clean up tile coloring
+
+- it just crashes sometimes??
 - place buildings
 - make a map

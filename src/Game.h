@@ -15,12 +15,12 @@ public:
   World(size_t size) : _region(size, std::vector<Tile>(size, Tile::GRASS)) {}
   size_t size() const { return _region.size(); }
 
-  Tile flipCell(int i, int j) {
-    return _region[i][j] = (_region[i][j] == Tile::GRASS) ? Tile::WATER : Tile::GRASS;
+  Tile flipCell(sf::Vector2i v) {
+    return _region[v.x][v.y] = (_region[v.x][v.y] == Tile::GRASS) ? Tile::WATER : Tile::GRASS;
   }
 
-  void setCell(int i, int j, Tile t) {
-    _region[i][j] = t;
+  void setCell(sf::Vector2i v, Tile t) {
+    _region[v.x][v.y] = t;
   }
 
   virtual void draw(sf::RenderTarget& rw, sf::RenderStates states) const {
@@ -42,6 +42,11 @@ public:
            sf::VideoMode::getFullscreenModes()[0].height;
   }
   Game();
+
+  sf::Vector2i getMouseTile() {
+    sf::Vector2f coords = _window.mapPixelToCoords(sf::Mouse::getPosition(), _view);
+    return sf::Vector2i(static_cast<int>(coords.x / World::tile_size), static_cast<int>(coords.y / World::tile_size));
+  }
 
   void loop();
   void handleEvent(const sf::Event& event);
