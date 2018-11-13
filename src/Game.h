@@ -50,7 +50,7 @@ public:
 
   virtual void draw(sf::RenderTarget& rw, sf::RenderStates states) const {
     _region_draw(rw);
-  };
+  }
 };
 
 class Game {
