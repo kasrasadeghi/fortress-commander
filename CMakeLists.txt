@@ -10,6 +10,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # When in debug mode, we run Address Sanitizer to find memory errors
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g -fsanitize=address")
 
+set(PROJECT_TRDPARTY_DIR 3rdparty/)
+
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 include(cmake/clang-format.cmake)
