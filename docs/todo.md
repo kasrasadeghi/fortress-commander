@@ -10,5 +10,7 @@
 - it crashes when detecting mouse position
 - clean up lock camera code
 
+- click the map to change the tile
+- render the world based on the tiles
 - place buildings
 - make a map
