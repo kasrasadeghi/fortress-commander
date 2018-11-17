@@ -62,11 +62,18 @@ void Game::handleEvent(const sf::Event& event) {
   }
 
   if (_mode == ControlMode::BUILD) {
+    // build structures instead of editing the world
     if (event.type == sf::Event::MouseButtonPressed) {
       _paint = _world.flipCell(getMouseTile());
     }
     if (event.type == sf::Event::MouseMoved && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
       _world.setCell(getMouseTile(), _paint);
+    }
+  }
+  if (_mode == ControlMode::UNIT) {
+    if (event.type == sf::Event::MouseButtonPressed) {
+      // check if the add unit is in bounds
+      _world.addUnit(Unit(getMouseCoords()));
     }
   }
 }
@@ -144,9 +151,7 @@ void World::_drawRegion(sf::RenderTarget& window) const {
 }
 
 void World::_drawUnits(sf::RenderTarget& window) const {
-  sf::CircleShape c(.5f);
-  c.setFillColor(sf::Color::Red);
-  c.setPosition(_unit_coords);
-
-  window.draw(c);
+  for (const Unit& u : _units) {
+    window.draw(u);
+  }
 }

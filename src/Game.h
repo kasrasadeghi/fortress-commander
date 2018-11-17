@@ -3,11 +3,16 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
+#include "Unit.h"
+
 enum class Tile { NONE, GRASS, WATER };
 
 class World : public sf::Drawable {
   std::vector<std::vector<Tile>> _region; // this should be a square
   sf::Vector2f _unit_coords = sf::Vector2f(10.f, 10.f);
+
+  std::vector<Unit> _units;
+  //std::vector<Structure> _structures;
 
   void _drawRegion(sf::RenderTarget& window) const;
   void _drawUnits(sf::RenderTarget& window) const;
@@ -39,6 +44,10 @@ public:
 
   World(size_t size) : _region(size, std::vector<Tile>(size, Tile::GRASS)) {}
   size_t size() const { return _region.size(); }
+
+  void addUnit(Unit u) {
+    _units.push_back(u);
+  }
 
   Tile flipCell(sf::Vector2i v) {
     _snapToRegion(v);

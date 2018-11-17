@@ -18,8 +18,13 @@
   - the cell flips were out of bounds
 - standardize semi-java case naming conventions (only under for private);
 - draw a single unit
-
+- add a unit in UNIT mode
 - draw multiple units stored in vector
+
+- build structures instead of flipping cells
+  - maybe a region edit mode?
+- check if unit construction is in bounds
+- check if structure construction is in bounds
 - move units
 - make view_size a float for zoom in and out
 - modes
