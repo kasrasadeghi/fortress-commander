@@ -53,6 +53,9 @@ void Game::handleEvent(const sf::Event& event) {
     if (event.key.code == sf::Keyboard::B) {
       _mode = ControlMode::BUILD;
     }
+    if (event.key.code == sf::Keyboard::U) {
+      _mode = ControlMode::UNIT;
+    }
     if (event.key.code == sf::Keyboard::Escape) {
       _mode = ControlMode::NONE;
     }
@@ -138,4 +141,10 @@ void World::_drawRegion(sf::RenderTarget& window) const {
       window.draw(r);
     }
   }
+}
+
+void World::_drawUnits(sf::RenderTarget& window) const {
+  sf::CircleShape c(20.f);
+  c.setFillColor(sf::Color::Red);
+  c.setPosition(_unit_coords);
 }
