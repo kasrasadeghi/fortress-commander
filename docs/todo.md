@@ -18,6 +18,9 @@
   - the cell flips were out of bounds
 - standardize semi-java case naming conventions (only under for private);
 
+- make view_size a float for zoom in and out
+- modes
+  - build. unit, etc
 - zoom in and out
 - place buildings
 - make a map
