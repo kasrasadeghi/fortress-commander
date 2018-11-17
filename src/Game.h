@@ -56,41 +56,22 @@ public:
 class BuildManager : public sf::Drawable {
   /// layouts assumed to be rectangular, at least containing zeros
   /// layouts center of mass assumed to be similar to layout if all values were 1
-  std::vector<std::vector<int>> _currentLayout; 
   sf::Vector2i _currTile;
 public:
-  BuildManager() {
-    _currentLayout = {
-      {1, 1, 1},
-      {1, 1, 1},
-      {1, 1, 1}
-    };
-  }
-
-  const std::vector<std::vector<int>> layout() const {
-    return _currentLayout;
-  }
-
   void setMouseTile(sf::Vector2i coords) {
     _currTile = coords;
   }
 
   virtual void draw(sf::RenderTarget& t, sf::RenderStates states) const {
-    const auto s = _currentLayout.size();
-
-    for (int i = -1; i <= 1; ++i) {
-      for (int j = -1; j <= 1; ++j) {
-        sf::RectangleShape r(sf::Vector2f(World::tile_size, World::tile_size));
-        r.setPosition((_currTile.x + i) * World::tile_size, (_currTile.y + j) * World::tile_size);
-        r.setFillColor(sf::Color(255, 200, 200, 200));
-        t.draw(r);
-      }
-    }
+    sf::RectangleShape r(sf::Vector2f(World::tile_size, World::tile_size));
+    r.setPosition(_currTile.x * World::tile_size, _currTile.y * World::tile_size);
+    r.setFillColor(sf::Color(255, 200, 200, 200));
+    t.draw(r);
   }
 };
 
 enum class ControlMode {
-  NONE, DEFAULT, UNIT
+  NONE, BUILD, UNIT
 };
 
 class Game {
@@ -100,7 +81,7 @@ class Game {
   sf::Clock _clock;
   Tile _paint = Tile::GRASS;
 
-  bool _buildMode = true;
+  ControlMode _mode = ControlMode::NONE;
   BuildManager _buildManager;
 
 public:

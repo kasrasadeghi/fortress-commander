@@ -33,7 +33,7 @@ void Game::loop() {
     _window.clear();
 
     _window.draw(_world);
-    if (_buildMode) {
+    if (_mode == ControlMode::BUILD) {
       _buildManager.setMouseTile(getMouseTile());
       _window.draw(_buildManager);
     }
@@ -51,17 +51,20 @@ void Game::handleEvent(const sf::Event& event) {
       _window.close();
     }
     if (event.key.code == sf::Keyboard::B) {
-      _buildMode = true;
+      _mode = ControlMode::BUILD;
     }
     if (event.key.code == sf::Keyboard::Escape) {
-      _buildMode = false;
+      _mode = ControlMode::NONE;
     }
   }
-  if (event.type == sf::Event::MouseButtonPressed) {
-    _paint = _world.flipCell(getMouseTile());
-  }
-  if (event.type == sf::Event::MouseMoved && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
-    _world.setCell(getMouseTile(), _paint);
+
+  if (_mode == ControlMode::BUILD) {
+    if (event.type == sf::Event::MouseButtonPressed) {
+      _paint = _world.flipCell(getMouseTile());
+    }
+    if (event.type == sf::Event::MouseMoved && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+      _world.setCell(getMouseTile(), _paint);
+    }
   }
 }
 
@@ -99,9 +102,10 @@ void Game::handleViewInput(const sf::Time& dt) {
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
     _view.move(d, 0);
   }
-
-  if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
-    _world.setCell(getMouseTile(), _paint);
+  if (_mode == ControlMode::BUILD) {
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+      _world.setCell(getMouseTile(), _paint);
+    }
   }
 
   auto topLeft = _view.getCenter() - (_view.getSize() / 2.f);
