@@ -137,14 +137,16 @@ void World::_drawRegion(sf::RenderTarget& window) const {
       sf::RectangleShape r(sf::Vector2f(tile_size, tile_size));
       r.setPosition(sf::Vector2f(i * tile_size, j * tile_size));
 
-      r.setFillColor(Tile::GRASS == _region[i][j] ? sf::Color::Green : sf::Color::Blue);
+      r.setFillColor(Tile::GRASS == _region[i][j] ? sf::Color(60, 150, 40) : sf::Color::Blue);
       window.draw(r);
     }
   }
 }
 
 void World::_drawUnits(sf::RenderTarget& window) const {
-  sf::CircleShape c(20.f);
+  sf::CircleShape c(.5f);
   c.setFillColor(sf::Color::Red);
   c.setPosition(_unit_coords);
+
+  window.draw(c);
 }

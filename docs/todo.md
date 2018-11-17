@@ -17,7 +17,10 @@
 - it just crashes sometimes??
   - the cell flips were out of bounds
 - standardize semi-java case naming conventions (only under for private);
+- draw a single unit
 
+- draw multiple units stored in vector
+- move units
 - make view_size a float for zoom in and out
 - modes
   - build. unit, etc
