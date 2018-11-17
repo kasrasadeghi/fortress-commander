@@ -33,6 +33,10 @@ void Game::loop() {
     _window.clear();
 
     _window.draw(_world);
+    if (_buildMode) {
+      _buildManager.setMouseTile(getMouseTile());
+      _window.draw(_buildManager);
+    }
 
     _window.display();
   }
@@ -42,8 +46,16 @@ void Game::handleEvent(const sf::Event& event) {
   if (event.type == sf::Event::Closed) {
     _window.close();
   }
-  if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
-    _window.close();
+  if (event.type == sf::Event::KeyPressed) {
+    if (event.key.code == sf::Keyboard::Q) {
+      _window.close();
+    }
+    if (event.key.code == sf::Keyboard::B) {
+      _buildMode = true;
+    }
+    if (event.key.code == sf::Keyboard::Escape) {
+      _buildMode = false;
+    }
   }
   if (event.type == sf::Event::MouseButtonPressed) {
     _paint = _world.flipCell(getMouseTile());
