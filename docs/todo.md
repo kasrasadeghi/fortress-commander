@@ -21,6 +21,7 @@
 - add a unit in UNIT mode
 - draw multiple units stored in vector
 
+- replace _region.size() with world_size constexpr in World
 - build structures instead of flipping cells
   - maybe a region edit mode?
 - check if unit construction is in bounds
