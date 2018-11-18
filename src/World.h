@@ -22,16 +22,16 @@ class World : public sf::Drawable {
       v.x = 0;
       result = false;
     } 
-    if (v.x >= _region.size()) {
-      v.x = _region.size() - 1;
+    if (v.x >= world_size) {
+      v.x = world_size - 1;
       result = false;
     } 
     if (0 > v.y) {
       v.y = 0;
       result = false;
     }
-    if (v.y >= _region.size()) {
-      v.y = _region.size() - 1;
+    if (v.y >= world_size) {
+      v.y = world_size - 1;
       result = false;
     }
     return result;

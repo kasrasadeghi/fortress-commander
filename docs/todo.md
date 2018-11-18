@@ -23,9 +23,9 @@
 - properly utilize tile_size so we can change it (needed for fonts)
 - add framerate
 - extract world
-
 - use world_size
   - replace _region.size() with world_size constexpr in World
+
 - build structures instead of flipping cells
   - maybe a region edit mode?
 - check if unit construction is in bounds

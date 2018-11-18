@@ -3,8 +3,8 @@
 
 
 void World::_drawRegion(sf::RenderTarget& window) const {
-  for (int i = 0; i < _region.size(); ++i) {
-    for (int j = 0; j < _region[0].size(); ++j) {
+  for (int i = 0; i < world_size; ++i) {
+    for (int j = 0; j < world_size; ++j) {
       sf::RectangleShape r(sf::Vector2f(tile_size, tile_size));
       r.setPosition(sf::Vector2f(i * tile_size, j * tile_size));
 
