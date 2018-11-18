@@ -25,6 +25,9 @@
 - extract world
 - use world_size
   - replace _region.size() with world_size constexpr in World
+- modes (completed 4 or 5 ago)
+  - build. unit, etc
+
 
 - build structures instead of flipping cells
   - maybe a region edit mode?
@@ -32,8 +35,6 @@
 - check if structure construction is in bounds
 - move units
 - make view_size a float for zoom in and out
-- modes
-  - build. unit, etc
 - zoom in and out
 - place buildings
 - make a map
