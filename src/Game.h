@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <sstream>
 
 #include "World.h"
 
@@ -16,6 +17,19 @@ class Game {
   Tile _paint = Tile::GRASS;
 
   ControlMode _mode = ControlMode::NONE;
+
+  template <typename T>
+  sf::Text makeText(T obj) {
+    std::stringstream ss;
+    ss << obj;
+    sf::Text t;
+    t.setFont(_font);
+    t.setString(ss.str());
+    t.setCharacterSize(24);
+    t.setFillColor(sf::Color::Black);
+
+    return t;
+  }
 
   void _mouseViewMove(float d) {
     constexpr int margin = 20;

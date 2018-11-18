@@ -5,7 +5,6 @@
 #include <SFML/Graphics.hpp>
 #include <stdio.h>
 
-#include <sstream>
 
 Game::Game()
     : _font(), _world(World::world_size),
@@ -25,15 +24,7 @@ void Game::loop() {
   while (_window.isOpen()) {
     auto dt = _clock.getElapsedTime();
     auto framerate = (1 / dt.asSeconds());
-    _clock.restart();
-
-    std::stringstream ss;
-    ss << framerate;
-    sf::Text t;
-    t.setFont(_font);
-    t.setString(ss.str());
-    t.setCharacterSize(24);
-    t.setFillColor(sf::Color::Black);
+    _clock.restart();    
 
     sf::Event event;
     while (_window.pollEvent(event)) { handleEvent(event); }
@@ -63,7 +54,7 @@ void Game::loop() {
     }
 
     _window.setView(_window.getDefaultView());
-    _window.draw(t);
+    _window.draw(makeText(framerate));
 
     _window.display();
   }
