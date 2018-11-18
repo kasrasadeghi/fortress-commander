@@ -46,7 +46,7 @@ void Game::loop() {
     _window.clear();
 
     _window.draw(_world);
-    if (_mode == ControlMode::BUILD) {
+    if (_mode == ControlMode::BUILD || _mode == ControlMode::TERRAIN) {
       const auto currTile = getMouseTile();
       sf::RectangleShape r(sf::Vector2f(World::tile_size, World::tile_size));
       r.setPosition(currTile.x * World::tile_size,
