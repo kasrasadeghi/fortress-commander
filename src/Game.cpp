@@ -79,28 +79,27 @@ void Game::handleEvent(const sf::Event& event) {
     if (event.key.code == sf::Keyboard::Escape) { _mode = ControlMode::NONE; }
   }
 
-  if (_mode == ControlMode::NONE) {
-    if (event.type == sf::Event::MouseButtonPressed) {
-      if (_world._units.size()) _world._units[0].pathTo(getMouseCoords());
+  if (event.type == sf::Event::MouseButtonPressed) {
+    switch(_mode) {
+      case ControlMode::NONE:
+        if (_world._units.size()) _world._units[0].pathTo(getMouseCoords());
+        break;
+      case ControlMode::BUILD:
+        //_world.addStructure(getMouseTile());
+        break;
+      case ControlMode::TERRAIN:
+        _paint = _world.flipCell(getMouseTile());
+        break;
+      case ControlMode::UNIT:
+        // check if the add unit is in bounds
+        _world._units.push_back(Unit(getMouseCoords()));
+        break;
     }
   }
-  if (_mode == ControlMode::BUILD) {
-    //_world.addStructure(getMouseTile());
-  }
-  if (_mode == ControlMode::TERRAIN) {
-    if (event.type == sf::Event::MouseButtonPressed) {
-      _paint = _world.flipCell(getMouseTile());
-    }
-    if (event.type == sf::Event::MouseMoved &&
-        sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
-      _world.setCell(getMouseTile(), _paint);
-    }
-  }
-  if (_mode == ControlMode::UNIT) {
-    if (event.type == sf::Event::MouseButtonPressed) {
-      // check if the add unit is in bounds
-      _world._units.push_back(Unit(getMouseCoords()));
-    }
+
+  if (_mode == ControlMode::TERRAIN && event.type == sf::Event::MouseMoved &&
+      sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+    _world.setCell(getMouseTile(), _paint);
   }
 }
 
