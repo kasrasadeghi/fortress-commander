@@ -3,8 +3,11 @@
 #include <SFML/Graphics.hpp>
 #include <stdio.h>
 
+#include <sstream>
+
 Game::Game()
-    : _world(World::world_size),
+    : _font(),
+      _world(World::world_size),
       _view(sf::Vector2f((view_size * World::tile_size) / 2.f * widthScalingFactor(),
                          (view_size * World::tile_size) / 2.f),
             sf::Vector2f(view_size * World::tile_size * widthScalingFactor(),
@@ -14,6 +17,8 @@ Game::Game()
   _window.setView(_view);
   _clock.restart();
   _window.setFramerateLimit(60);
+
+  if (!_font.loadFromFile("arial.ttf")) exit(1);
 }
 
 void Game::loop() {
@@ -21,6 +26,14 @@ void Game::loop() {
     auto dt = _clock.getElapsedTime();
     auto framerate = (1 / dt.asSeconds());
     _clock.restart();
+
+    std::stringstream ss;
+    ss << framerate;
+    sf::Text t;
+    t.setFont(_font);
+    t.setString(ss.str());
+    t.setCharacterSize(24);
+    t.setFillColor(sf::Color::Black);
 
     sf::Event event;
     while (_window.pollEvent(event)) {
@@ -37,6 +50,9 @@ void Game::loop() {
       _buildManager.setMouseTile(getMouseTile());
       _window.draw(_buildManager);
     }
+
+    _window.setView(_window.getDefaultView());
+    _window.draw(t);
 
     _window.display();
   }

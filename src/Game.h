@@ -41,7 +41,7 @@ class World : public sf::Drawable {
 
 public:
   constexpr static float tile_size = 1.f;
-  constexpr static int world_size = 50;
+  constexpr static int world_size = 100;
 
   World(size_t size) : _region(size, std::vector<Tile>(size, Tile::GRASS)) {}
   size_t size() const { return _region.size(); }
@@ -88,6 +88,7 @@ enum class ControlMode {
 };
 
 class Game {
+  sf::Font _font;
   World _world;
   sf::View _view;
   sf::RenderWindow _window;
