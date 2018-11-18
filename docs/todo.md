@@ -29,11 +29,11 @@
   - build. unit, etc
 
 
+- move units
 - build structures instead of flipping cells
   - maybe a region edit mode?
 - check if unit construction is in bounds
 - check if structure construction is in bounds
-- move units
 - view.zoom for scroll wheel?
   - https://www.youtube.com/watch?v=FSoFJAmh96g
 - load a map from a file
