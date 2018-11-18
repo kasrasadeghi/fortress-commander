@@ -37,3 +37,6 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     sfml-window
     sfml-system
 )
+
+# copy over ttf file
+file(COPY arial.ttf DESTINATION ${CMAKE_BINARY_DIR})
