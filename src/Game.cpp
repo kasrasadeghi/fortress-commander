@@ -118,6 +118,7 @@ void Game::handleViewInput(const sf::Time& dt) {
     }
   }
 
+  // lock view to world
   auto topLeft = _view.getCenter() - (_view.getSize() / 2.f);
   auto bottomRight = _view.getCenter() + (_view.getSize() / 2.f);
 
