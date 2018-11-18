@@ -7,24 +7,22 @@
 
 class BuildManager : public sf::Drawable {
   /// layouts assumed to be rectangular, at least containing zeros
-  /// layouts center of mass assumed to be similar to layout if all values were 1
+  /// center of mass assumed to be similar to layout if all values were 1
   sf::Vector2i _currTile;
+
 public:
-  void setMouseTile(sf::Vector2i coords) {
-    _currTile = coords;
-  }
+  void setMouseTile(sf::Vector2i coords) { _currTile = coords; }
 
   virtual void draw(sf::RenderTarget& t, sf::RenderStates states) const {
     sf::RectangleShape r(sf::Vector2f(World::tile_size, World::tile_size));
-    r.setPosition(_currTile.x * World::tile_size, _currTile.y * World::tile_size);
+    r.setPosition(_currTile.x * World::tile_size,
+                  _currTile.y * World::tile_size);
     r.setFillColor(sf::Color(255, 200, 200, 200));
     t.draw(r);
   }
 };
 
-enum class ControlMode {
-  NONE, BUILD, UNIT
-};
+enum class ControlMode { NONE, BUILD, UNIT };
 
 class Game {
   sf::Font _font;
@@ -51,7 +49,8 @@ public:
 
   sf::Vector2i getMouseTile() {
     sf::Vector2f coords = getMouseCoords();
-    return sf::Vector2i(static_cast<int>(coords.x / World::tile_size), static_cast<int>(coords.y / World::tile_size));
+    return sf::Vector2i(static_cast<int>(coords.x / World::tile_size),
+                        static_cast<int>(coords.y / World::tile_size));
   }
 
   void loop();

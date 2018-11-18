@@ -7,9 +7,9 @@
 #include <sstream>
 
 Game::Game()
-    : _font(),
-      _world(World::world_size),
-      _view(sf::Vector2f((view_size * World::tile_size) / 2.f * widthScalingFactor(),
+    : _font(), _world(World::world_size),
+      _view(sf::Vector2f((view_size * World::tile_size) / 2.f *
+                             widthScalingFactor(),
                          (view_size * World::tile_size) / 2.f),
             sf::Vector2f(view_size * World::tile_size * widthScalingFactor(),
                          view_size * World::tile_size)),
@@ -19,7 +19,9 @@ Game::Game()
   _clock.restart();
   _window.setFramerateLimit(60);
 
-  if (!_font.loadFromFile("arial.ttf")) exit(1);
+  if (!_font.loadFromFile("arial.ttf")) {
+    exit(1);
+  }
 }
 
 void Game::loop() {
@@ -83,7 +85,8 @@ void Game::handleEvent(const sf::Event& event) {
     if (event.type == sf::Event::MouseButtonPressed) {
       _paint = _world.flipCell(getMouseTile());
     }
-    if (event.type == sf::Event::MouseMoved && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+    if (event.type == sf::Event::MouseMoved &&
+        sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
       _world.setCell(getMouseTile(), _paint);
     }
   }
@@ -149,7 +152,8 @@ void Game::handleViewInput(const sf::Time& dt) {
     _view.setCenter(_view.getCenter().x, viewRadius);
   }
   if (bottomRight.x > worldBorder) {
-    _view.setCenter(worldBorder - (viewRadius * widthScalingFactor()), _view.getCenter().y);
+    _view.setCenter(worldBorder - (viewRadius * widthScalingFactor()),
+                    _view.getCenter().y);
   }
   if (bottomRight.y > worldBorder) {
     _view.setCenter(_view.getCenter().x, worldBorder - viewRadius);
