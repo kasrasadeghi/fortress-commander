@@ -108,42 +108,9 @@ void Game::handleViewInput(const sf::Time& dt) {
   constexpr float speed = 20 * tile_size;
   float d = (speed * dt).asSeconds();
 
-  // mouse
-  constexpr int margin = 20;
-  auto pos = sf::Mouse::getPosition();
-  if (pos.x < margin) { _view.move(-d, 0); }
-  if (pos.y < margin) { _view.move(0, -d); }
+  _mouseViewMove(d);
 
-  if (pos.x > _window.getSize().x - margin) { _view.move(d, 0); }
-  if (pos.y > _window.getSize().y - margin) { _view.move(0, d); }
+  _keyboardViewMove(d);
 
-  // keyboard
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) { _view.move(0, -d); }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) { _view.move(0, d); }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) { _view.move(-d, 0); }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) { _view.move(d, 0); }
-  if (_mode == ControlMode::TERRAIN) {
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
-      _world.setCell(getMouseTile(), _paint);
-    }
-  }
-
-  // lock view to world
-  auto topLeft = _view.getCenter() - (_view.getSize() / 2.f);
-  auto bottomRight = _view.getCenter() + (_view.getSize() / 2.f);
-
-  const auto viewRadius = (view_size * tile_size) / 2.f;
-  const auto worldBorder = World::world_size * tile_size;
-
-  if (topLeft.x < 0) {
-    _view.setCenter(viewRadius * widthScalingFactor(), _view.getCenter().y);
-  }
-  if (topLeft.y < 0) { _view.setCenter(_view.getCenter().x, viewRadius); }
-  if (bottomRight.x > worldBorder) {
-    _view.setCenter(worldBorder - (viewRadius * widthScalingFactor()),
-                    _view.getCenter().y);
-  }
-  if (bottomRight.y > worldBorder) {
-    _view.setCenter(_view.getCenter().x, worldBorder - viewRadius);
-  }
+  _reboundViewToWorld();
 }
