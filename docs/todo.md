@@ -35,5 +35,6 @@
 - check if structure construction is in bounds
 - move units
 - view.zoom for scroll wheel?
+  - https://www.youtube.com/watch?v=FSoFJAmh96g
 - load a map from a file
 - make a map
