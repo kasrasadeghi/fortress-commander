@@ -5,6 +5,8 @@
 
 #include "World.h"
 
+#include "ECS/Manager.h"
+
 enum class ControlMode { NONE, BUILD, UNIT, TERRAIN };
 
 class Game {
@@ -14,6 +16,8 @@ class Game {
   sf::RenderWindow _window;
   sf::Clock _clock;
   Tile _paint = Tile::GRASS;
+
+  ECS::Manager _manager;
 
   ControlMode _mode = ControlMode::NONE;
 

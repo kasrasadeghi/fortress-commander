@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "Unit.h"
+#include "Components.h"
 
 #include <SFML/Graphics.hpp>
 #include <stdio.h>
@@ -14,12 +15,22 @@ Game::Game()
             sf::Vector2f(view_size * World::tile_size * widthScalingFactor(),
                          view_size * World::tile_size)),
       _window(sf::VideoMode::getFullscreenModes()[0], "Fortress Commander",
-              sf::Style::Fullscreen) {
+              sf::Style::Fullscreen),
+      _manager() {
   _window.setView(_view);
   _clock.restart();
   _window.setFramerateLimit(60);
 
   if (!_font.loadFromFile("arial.ttf")) { exit(1); }
+
+  ECS::Entity entity = _manager.createEntity();
+  std::cout << entity << std::endl;
+
+  _manager.createComponentStore<PositionComponent>();
+
+  _manager.addComponent<PositionComponent>(entity, PositionComponent(sf::Vector2f(1.f, 1.f)));
+
+  //_manager.registerEntity(entity);
 }
 
 void Game::loop() {
