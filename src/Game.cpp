@@ -19,9 +19,7 @@ Game::Game()
   _clock.restart();
   _window.setFramerateLimit(60);
 
-  if (!_font.loadFromFile("arial.ttf")) {
-    exit(1);
-  }
+  if (!_font.loadFromFile("arial.ttf")) { exit(1); }
 }
 
 void Game::loop() {
@@ -39,14 +37,10 @@ void Game::loop() {
     t.setFillColor(sf::Color::Black);
 
     sf::Event event;
-    while (_window.pollEvent(event)) {
-      handleEvent(event);
-    }
+    while (_window.pollEvent(event)) { handleEvent(event); }
 
     handleViewInput(dt);
-    for (Unit& u : _world._units) {
-      u.update(dt);
-    }
+    for (Unit& u : _world._units) { u.update(dt); }
 
     _window.setView(_view);
     _window.clear();
@@ -62,9 +56,10 @@ void Game::loop() {
     }
 
     if (_mode == ControlMode::UNIT) {
+      constexpr auto radius = Unit::unit_size * World::tile_size;
       const auto curr = getMouseCoords();
       sf::CircleShape r(Unit::unit_size * World::tile_size);
-      r.setPosition(curr.x, curr.y);
+      r.setPosition(curr.x - radius, curr.y - radius);
       r.setFillColor(sf::Color(255, 200, 200, 150));
       _window.draw(r);
     }
@@ -77,30 +72,18 @@ void Game::loop() {
 }
 
 void Game::handleEvent(const sf::Event& event) {
-  if (event.type == sf::Event::Closed) {
-    _window.close();
-  }
+  if (event.type == sf::Event::Closed) { _window.close(); }
   if (event.type == sf::Event::KeyPressed) {
-    if (event.key.code == sf::Keyboard::Q) {
-      _window.close();
-    }
-    if (event.key.code == sf::Keyboard::B) {
-      _mode = ControlMode::BUILD;
-    }
-    if (event.key.code == sf::Keyboard::U) {
-      _mode = ControlMode::UNIT;
-    }
-    if (event.key.code == sf::Keyboard::T) {
-      _mode = ControlMode::TERRAIN;
-    }
-    if (event.key.code == sf::Keyboard::Escape) {
-      _mode = ControlMode::NONE;
-    }
+    if (event.key.code == sf::Keyboard::Q) { _window.close(); }
+    if (event.key.code == sf::Keyboard::B) { _mode = ControlMode::BUILD; }
+    if (event.key.code == sf::Keyboard::U) { _mode = ControlMode::UNIT; }
+    if (event.key.code == sf::Keyboard::T) { _mode = ControlMode::TERRAIN; }
+    if (event.key.code == sf::Keyboard::Escape) { _mode = ControlMode::NONE; }
   }
 
   if (_mode == ControlMode::NONE) {
-    if (event.type == sf::Event::MouseButtonPressed) {    
-      _world._units[0].pathTo(getMouseCoords());
+    if (event.type == sf::Event::MouseButtonPressed) {
+      if (_world._units.size()) _world._units[0].pathTo(getMouseCoords());
     }
   }
   if (_mode == ControlMode::BUILD) {
@@ -130,33 +113,17 @@ void Game::handleViewInput(const sf::Time& dt) {
   // mouse
   constexpr int margin = 20;
   auto pos = sf::Mouse::getPosition();
-  if (pos.x < margin) {
-    _view.move(-d, 0);
-  }
-  if (pos.y < margin) {
-    _view.move(0, -d);
-  }
+  if (pos.x < margin) { _view.move(-d, 0); }
+  if (pos.y < margin) { _view.move(0, -d); }
 
-  if (pos.x > _window.getSize().x - margin) {
-    _view.move(d, 0);
-  }
-  if (pos.y > _window.getSize().y - margin) {
-    _view.move(0, d);
-  }
+  if (pos.x > _window.getSize().x - margin) { _view.move(d, 0); }
+  if (pos.y > _window.getSize().y - margin) { _view.move(0, d); }
 
   // keyboard
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-    _view.move(0, -d);
-  }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-    _view.move(0, d);
-  }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-    _view.move(-d, 0);
-  }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-    _view.move(d, 0);
-  }
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) { _view.move(0, -d); }
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) { _view.move(0, d); }
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) { _view.move(-d, 0); }
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) { _view.move(d, 0); }
   if (_mode == ControlMode::TERRAIN) {
     if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
       _world.setCell(getMouseTile(), _paint);
@@ -173,9 +140,7 @@ void Game::handleViewInput(const sf::Time& dt) {
   if (topLeft.x < 0) {
     _view.setCenter(viewRadius * widthScalingFactor(), _view.getCenter().y);
   }
-  if (topLeft.y < 0) {
-    _view.setCenter(_view.getCenter().x, viewRadius);
-  }
+  if (topLeft.y < 0) { _view.setCenter(_view.getCenter().x, viewRadius); }
   if (bottomRight.x > worldBorder) {
     _view.setCenter(worldBorder - (viewRadius * widthScalingFactor()),
                     _view.getCenter().y);

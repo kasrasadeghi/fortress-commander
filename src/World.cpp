@@ -15,7 +15,5 @@ void World::_drawRegion(sf::RenderTarget& window) const {
 }
 
 void World::_drawUnits(sf::RenderTarget& window) const {
-  for (const Unit& u : _units) {
-    window.draw(u);
-  }
+  for (const Unit& u : _units) { window.draw(u); }
 }

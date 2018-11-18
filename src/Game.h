@@ -22,7 +22,7 @@ public:
   }
 };
 
-enum class ControlMode { NONE, BUILD, UNIT, TERRAIN};
+enum class ControlMode { NONE, BUILD, UNIT, TERRAIN };
 
 class Game {
   sf::Font _font;
