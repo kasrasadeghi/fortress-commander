@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "Unit.h"
 
 #include <SFML/Graphics.hpp>
 #include <stdio.h>
@@ -139,7 +140,7 @@ void Game::handleViewInput(const sf::Time& dt) {
   auto bottomRight = _view.getCenter() + (_view.getSize() / 2.f);
 
   const auto viewRadius = (view_size * World::tile_size) / 2.f;
-  const auto worldBorder = _world.size() * World::tile_size;
+  const auto worldBorder = World::world_size * World::tile_size;
 
   if (topLeft.x < 0) {
     _view.setCenter(viewRadius * widthScalingFactor(), _view.getCenter().y);
@@ -152,23 +153,5 @@ void Game::handleViewInput(const sf::Time& dt) {
   }
   if (bottomRight.y > worldBorder) {
     _view.setCenter(_view.getCenter().x, worldBorder - viewRadius);
-  }
-}
-
-void World::_drawRegion(sf::RenderTarget& window) const {
-  for (int i = 0; i < _region.size(); ++i) {
-    for (int j = 0; j < _region[0].size(); ++j) {
-      sf::RectangleShape r(sf::Vector2f(tile_size, tile_size));
-      r.setPosition(sf::Vector2f(i * tile_size, j * tile_size));
-
-      r.setFillColor(Tile::GRASS == _region[i][j] ? sf::Color(60, 150, 40) : sf::Color::Blue);
-      window.draw(r);
-    }
-  }
-}
-
-void World::_drawUnits(sf::RenderTarget& window) const {
-  for (const Unit& u : _units) {
-    window.draw(u);
   }
 }
