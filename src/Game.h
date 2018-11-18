@@ -22,7 +22,7 @@ public:
   }
 };
 
-enum class ControlMode { NONE, BUILD, UNIT };
+enum class ControlMode { NONE, BUILD, UNIT, TERRAIN};
 
 class Game {
   sf::Font _font;
@@ -47,10 +47,14 @@ public:
     return _window.mapPixelToCoords(sf::Mouse::getPosition(), _view);
   }
 
-  sf::Vector2i getMouseTile() {
-    sf::Vector2f coords = getMouseCoords();
+  static sf::Vector2i mapCoordsToTile(sf::Vector2f coords) {
     return sf::Vector2i(static_cast<int>(coords.x / World::tile_size),
                         static_cast<int>(coords.y / World::tile_size));
+  }
+
+  sf::Vector2i getMouseTile() {
+    sf::Vector2f coords = getMouseCoords();
+    return mapCoordsToTile(coords);
   }
 
   void loop();

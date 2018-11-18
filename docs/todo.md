@@ -27,9 +27,10 @@
   - replace _region.size() with world_size constexpr in World
 - modes (completed 4 or 5 ago)
   - build. unit, etc
-
-
 - move units
+
+
+- unit selection
 - build structures instead of flipping cells
   - maybe a region edit mode?
 - check if unit construction is in bounds

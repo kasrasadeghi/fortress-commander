@@ -44,6 +44,9 @@ void Game::loop() {
     }
 
     handleViewInput(dt);
+    for (Unit& u : _world._units) {
+      u.update(dt);
+    }
 
     _window.setView(_view);
     _window.clear();
@@ -87,13 +90,23 @@ void Game::handleEvent(const sf::Event& event) {
     if (event.key.code == sf::Keyboard::U) {
       _mode = ControlMode::UNIT;
     }
+    if (event.key.code == sf::Keyboard::T) {
+      _mode = ControlMode::TERRAIN;
+    }
     if (event.key.code == sf::Keyboard::Escape) {
       _mode = ControlMode::NONE;
     }
   }
 
+  if (_mode == ControlMode::NONE) {
+    if (event.type == sf::Event::MouseButtonPressed) {    
+      _world._units[0].pathTo(getMouseCoords());
+    }
+  }
   if (_mode == ControlMode::BUILD) {
-    // build structures instead of editing the world
+    //_world.addStructure(getMouseTile());
+  }
+  if (_mode == ControlMode::TERRAIN) {
     if (event.type == sf::Event::MouseButtonPressed) {
       _paint = _world.flipCell(getMouseTile());
     }
@@ -105,7 +118,7 @@ void Game::handleEvent(const sf::Event& event) {
   if (_mode == ControlMode::UNIT) {
     if (event.type == sf::Event::MouseButtonPressed) {
       // check if the add unit is in bounds
-      _world.addUnit(Unit(getMouseCoords()));
+      _world._units.push_back(Unit(getMouseCoords()));
     }
   }
 }
@@ -144,7 +157,7 @@ void Game::handleViewInput(const sf::Time& dt) {
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
     _view.move(d, 0);
   }
-  if (_mode == ControlMode::BUILD) {
+  if (_mode == ControlMode::TERRAIN) {
     if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
       _world.setCell(getMouseTile(), _paint);
     }
