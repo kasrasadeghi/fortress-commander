@@ -1,6 +1,6 @@
 #include "Game.h"
-#include "Unit.h"
 #include "Components.h"
+#include "Unit.h"
 
 #include <SFML/Graphics.hpp>
 #include <stdio.h>
@@ -28,7 +28,8 @@ Game::Game()
 
   _manager.createComponentStore<PositionComponent>();
 
-  _manager.addComponent<PositionComponent>(entity, PositionComponent(sf::Vector2f(1.f, 1.f)));
+  _manager.addComponent<PositionComponent>(
+      entity, PositionComponent(sf::Vector2f(1.f, 1.f)));
 
   //_manager.registerEntity(entity);
 }
