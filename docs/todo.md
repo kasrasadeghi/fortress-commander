@@ -34,7 +34,6 @@
 - check if unit construction is in bounds
 - check if structure construction is in bounds
 - move units
-- make view_size a float for zoom in and out
-- zoom in and out
-- place buildings
+- view.zoom for scroll wheel?
+- load a map from a file
 - make a map
