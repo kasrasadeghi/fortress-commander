@@ -50,8 +50,20 @@ void Game::loop() {
 
     _window.draw(_world);
     if (_mode == ControlMode::BUILD) {
-      _buildManager.setMouseTile(getMouseTile());
-      _window.draw(_buildManager);
+      const auto currTile = getMouseTile();
+      sf::RectangleShape r(sf::Vector2f(World::tile_size, World::tile_size));
+      r.setPosition(currTile.x * World::tile_size,
+                    currTile.y * World::tile_size);
+      r.setFillColor(sf::Color(255, 200, 200, 200));
+      _window.draw(r);
+    }
+
+    if (_mode == ControlMode::UNIT) {
+      const auto curr = getMouseCoords();
+      sf::CircleShape r(Unit::unit_size * World::tile_size);
+      r.setPosition(curr.x, curr.y);
+      r.setFillColor(sf::Color(255, 200, 200, 150));
+      _window.draw(r);
     }
 
     _window.setView(_window.getDefaultView());

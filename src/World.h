@@ -38,6 +38,7 @@ class World : public sf::Drawable {
   }
 
 public:
+  // many rendered things are used as k * tile_size, like unit_size, view_size
   constexpr static float tile_size = 1.f;
   constexpr static int world_size = 100;
 
