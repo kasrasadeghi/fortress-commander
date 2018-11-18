@@ -18,7 +18,7 @@ class Game {
   ControlMode _mode = ControlMode::NONE;
 
 public:
-  constexpr static int view_size = 20; // how many tiles the view should see
+  constexpr static float view_size = 20 * tile_size;
   static float widthScalingFactor() {
     return 1.f * sf::VideoMode::getFullscreenModes()[0].width /
            sf::VideoMode::getFullscreenModes()[0].height;
@@ -30,8 +30,8 @@ public:
   }
 
   static sf::Vector2i mapCoordsToTile(sf::Vector2f coords) {
-    return sf::Vector2i(static_cast<int>(coords.x / World::tile_size),
-                        static_cast<int>(coords.y / World::tile_size));
+    return sf::Vector2i(static_cast<int>(coords.x / tile_size),
+                        static_cast<int>(coords.y / tile_size));
   }
 
   sf::Vector2i getMouseTile() {

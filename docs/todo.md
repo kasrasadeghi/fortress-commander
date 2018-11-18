@@ -30,10 +30,10 @@
 - move units
 - center unit creation holo
 - render unit centered at pos
-
 - extract tile_size from world
   - so we don't have cyclic dependencies and post-scaling
   - check radius of unit
+
 - unit selection
 - build structures instead of flipping cells
   - maybe a region edit mode?

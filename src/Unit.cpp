@@ -3,10 +3,9 @@
 #include "World.h"
 
 void Unit::draw(sf::RenderTarget& rw, sf::RenderStates states) const {
-  constexpr auto radius = unit_size * World::tile_size;
-  sf::CircleShape c(unit_size * World::tile_size);
+  sf::CircleShape c(unit_size);
   c.setFillColor(sf::Color::Red);
-  c.setPosition(_pos - sf::Vector2f(radius, radius));
+  c.setPosition(_pos - sf::Vector2f(unit_size, unit_size));
 
   rw.draw(c);
 }

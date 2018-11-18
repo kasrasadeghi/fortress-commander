@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "Config.h"
 #include "Unit.h"
 
 #include <SFML/Graphics.hpp>
@@ -8,11 +9,9 @@
 
 Game::Game()
     : _font(), _world(World::world_size),
-      _view(sf::Vector2f((view_size * World::tile_size) / 2.f *
-                             widthScalingFactor(),
-                         (view_size * World::tile_size) / 2.f),
-            sf::Vector2f(view_size * World::tile_size * widthScalingFactor(),
-                         view_size * World::tile_size)),
+      _view(sf::Vector2f((view_size) / 2.f * widthScalingFactor(),
+                         (view_size) / 2.f),
+            sf::Vector2f(view_size * widthScalingFactor(), view_size)),
       _window(sf::VideoMode::getFullscreenModes()[0], "Fortress Commander",
               sf::Style::Fullscreen) {
   _window.setView(_view);
@@ -48,18 +47,17 @@ void Game::loop() {
     _window.draw(_world);
     if (_mode == ControlMode::BUILD || _mode == ControlMode::TERRAIN) {
       const auto currTile = getMouseTile();
-      sf::RectangleShape r(sf::Vector2f(World::tile_size, World::tile_size));
-      r.setPosition(currTile.x * World::tile_size,
-                    currTile.y * World::tile_size);
+      sf::RectangleShape r(sf::Vector2f(tile_size, tile_size));
+      r.setPosition(currTile.x * tile_size, currTile.y * tile_size);
       r.setFillColor(sf::Color(255, 200, 200, 200));
       _window.draw(r);
     }
 
     if (_mode == ControlMode::UNIT) {
-      constexpr auto radius = Unit::unit_size * World::tile_size;
+      constexpr auto radius = Unit::unit_size;
       const auto curr = getMouseCoords();
-      sf::CircleShape r(Unit::unit_size * World::tile_size);
-      r.setPosition(curr.x - radius, curr.y - radius);
+      sf::CircleShape r(Unit::unit_size);
+      r.setPosition(curr.x - Unit::unit_size, curr.y - Unit::unit_size);
       r.setFillColor(sf::Color(255, 200, 200, 150));
       _window.draw(r);
     }
@@ -107,7 +105,7 @@ void Game::handleEvent(const sf::Event& event) {
 }
 
 void Game::handleViewInput(const sf::Time& dt) {
-  constexpr float speed = 20 * World::tile_size;
+  constexpr float speed = 20 * tile_size;
   float d = (speed * dt).asSeconds();
 
   // mouse
@@ -134,8 +132,8 @@ void Game::handleViewInput(const sf::Time& dt) {
   auto topLeft = _view.getCenter() - (_view.getSize() / 2.f);
   auto bottomRight = _view.getCenter() + (_view.getSize() / 2.f);
 
-  const auto viewRadius = (view_size * World::tile_size) / 2.f;
-  const auto worldBorder = World::world_size * World::tile_size;
+  const auto viewRadius = (view_size * tile_size) / 2.f;
+  const auto worldBorder = World::world_size * tile_size;
 
   if (topLeft.x < 0) {
     _view.setCenter(viewRadius * widthScalingFactor(), _view.getCenter().y);
