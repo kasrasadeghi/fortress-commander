@@ -41,6 +41,7 @@ class World : public sf::Drawable {
 
 public:
   constexpr static float tile_size = 1.f;
+  constexpr static int world_size = 50;
 
   World(size_t size) : _region(size, std::vector<Tile>(size, Tile::GRASS)) {}
   size_t size() const { return _region.size(); }
@@ -97,7 +98,7 @@ class Game {
   BuildManager _buildManager;
 
 public:
-  constexpr static int view_size = 20;
+  constexpr static int view_size = 20; // how many tiles the view should see
   static float widthScalingFactor() {
     return 1.f * sf::VideoMode::getFullscreenModes()[0].width /
            sf::VideoMode::getFullscreenModes()[0].height;

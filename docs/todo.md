@@ -20,7 +20,7 @@
 - draw a single unit
 - add a unit in UNIT mode
 - draw multiple units stored in vector
-
+- properly utilize tile_size so we can change it (needed for fonts)
 
 - extract world
 - add framerate

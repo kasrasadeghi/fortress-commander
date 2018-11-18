@@ -4,9 +4,9 @@
 #include <stdio.h>
 
 Game::Game()
-    : _world(50),
-      _view(sf::Vector2f(view_size / 2.f * widthScalingFactor(),
-                         view_size / 2.f),
+    : _world(World::world_size),
+      _view(sf::Vector2f((view_size * World::tile_size) / 2.f * widthScalingFactor(),
+                         (view_size * World::tile_size) / 2.f),
             sf::Vector2f(view_size * World::tile_size * widthScalingFactor(),
                          view_size * World::tile_size)),
       _window(sf::VideoMode::getFullscreenModes()[0], "Fortress Commander",
@@ -18,8 +18,8 @@ Game::Game()
 
 void Game::loop() {
   while (_window.isOpen()) {
-    auto t = _clock.getElapsedTime();
-    auto framerate = (1 / t.asSeconds());
+    auto dt = _clock.getElapsedTime();
+    auto framerate = (1 / dt.asSeconds());
     _clock.restart();
 
     sf::Event event;
@@ -27,7 +27,7 @@ void Game::loop() {
       handleEvent(event);
     }
 
-    handleViewInput(t);
+    handleViewInput(dt);
 
     _window.setView(_view);
     _window.clear();
@@ -79,7 +79,7 @@ void Game::handleEvent(const sf::Event& event) {
 }
 
 void Game::handleViewInput(const sf::Time& dt) {
-  constexpr float speed = 10;
+  constexpr float speed = 20 * World::tile_size;
   float d = (speed * dt).asSeconds();
 
   // mouse
@@ -122,7 +122,7 @@ void Game::handleViewInput(const sf::Time& dt) {
   auto topLeft = _view.getCenter() - (_view.getSize() / 2.f);
   auto bottomRight = _view.getCenter() + (_view.getSize() / 2.f);
 
-  const auto viewRadius = view_size / 2.f;
+  const auto viewRadius = (view_size * World::tile_size) / 2.f;
   const auto worldBorder = _world.size() * World::tile_size;
 
   if (topLeft.x < 0) {

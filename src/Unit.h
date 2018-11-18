@@ -9,7 +9,7 @@ class Unit : public sf::Drawable {
   UnitType _type; // friendly or hostile
 
 public:
-  constexpr static float unit_size = 0.5f;
+  constexpr static float unit_size = 0.5f * 30; // todo tile_size, not 30
 
   Unit(sf::Vector2f pos/*, UnitType type*/)
     : _pos(pos)/*, _type(type)*/
