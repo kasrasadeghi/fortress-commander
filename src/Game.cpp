@@ -3,15 +3,13 @@
 // #include "Unit.h"
 
 #include <SFML/Graphics.hpp>
-#include <stdio.h>
 #include <iostream>
 
-
 Game::Game()
-     : //_font(), _world(World::world_size),
-    //   _view(sf::Vector2f((view_size) / 2.f * widthScalingFactor(),
-    //                      (view_size) / 2.f),
-    //         sf::Vector2f(view_size * widthScalingFactor(), view_size)),
+    : //_font(), _world(World::world_size),
+      //   _view(sf::Vector2f((view_size) / 2.f * widthScalingFactor(),
+      //                      (view_size) / 2.f),
+      //         sf::Vector2f(view_size * widthScalingFactor(), view_size)),
       _window("Fortress Commander") {
   _window.setKeyCallback([this](auto&&... args) { keyCallback(args...); });
   // _window.setView(_view);
@@ -19,7 +17,7 @@ Game::Game()
   // // _window.setFramerateLimit(60);
   // auto v = sf::VideoMode::getDesktopMode();
   // std::cout << v.width << ", " << v.height << std::endl;
-  
+
   // if (!_font.loadFromFile("arial.ttf")) { exit(1); }
 }
 
@@ -27,7 +25,7 @@ void Game::loop() {
   while (_window.isOpen()) {
     // auto dt = _clock.getElapsedTime();
     // auto framerate = (1 / dt.asSeconds());
-    // _clock.restart();    
+    // _clock.restart();
 
     // sf::Event event;
     // while (_window.pollEvent(event)) { handleEvent(event); }
@@ -35,7 +33,6 @@ void Game::loop() {
     // handleViewInput(dt);
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-
 
     // if(_window.getKey(GLFW_KEY_ESCAPE) == GLFW_PRESS) _window.close();
 
@@ -61,6 +58,10 @@ void Game::loop() {
   }
 }
 
+void Game::keyCallback(int key, int scancode, int action, int mods) {
+  if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) { _window.close(); }
+}
+
 // void Game::handleEvent(const sf::Event& event) {
 //   if (event.type == sf::Event::Closed) { _window.close(); }
 //   if (event.type == sf::Event::KeyPressed) {
@@ -68,7 +69,8 @@ void Game::loop() {
 //     if (event.key.code == sf::Keyboard::B) { _mode = ControlMode::BUILD; }
 //     if (event.key.code == sf::Keyboard::U) { _mode = ControlMode::UNIT; }
 //     if (event.key.code == sf::Keyboard::T) { _mode = ControlMode::TERRAIN; }
-//     if (event.key.code == sf::Keyboard::Escape) { _mode = ControlMode::NONE; }
+//     if (event.key.code == sf::Keyboard::Escape) { _mode = ControlMode::NONE;
+//     }
 //   }
 
 //   if (event.type == sf::Event::MouseButtonPressed) {

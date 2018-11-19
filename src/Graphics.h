@@ -1,16 +1,19 @@
 #pragma once
 
+// glad must come before glfw3
 #include <glad/glad.h>
+
 #include <GLFW/glfw3.h>
-#include <iostream>
+
 #include <functional>
+#include <iostream>
 
-
-// this plumbing is necessary because 
+// this plumbing is necessary because
 // a lambda that captures can't be used as a function ptr
 using KeyCallback = std::function<void(int, int, int, int)>;
 static KeyCallback __keyCallback;
-static void __keyCallbackWrapper(GLFWwindow* window, int k, int s, int a, int m) {
+static void __keyCallbackWrapper(GLFWwindow* window, int k, int s, int a,
+                                 int m) {
   __keyCallback(k, s, a, m);
 }
 
@@ -18,7 +21,7 @@ class RenderWindow {
   GLFWwindow* _window;
   int _width;
   int _height;
-  
+
 public:
   RenderWindow(const char* name) {
     glfwInit();
@@ -44,7 +47,7 @@ public:
     glfwMakeContextCurrent(_window);
 
     // load opengl
-    if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
       std::cout << "Failed to initialize GLAD" << std::endl;
       glfwTerminate();
       exit(-1);
@@ -56,7 +59,7 @@ public:
   bool isOpen() { return not glfwWindowShouldClose(_window); }
   void swapBuffers() { glfwSwapBuffers(_window); }
 
-  int getKey(int key_code) { return glfwGetKey(_window, key_code); }        
+  int getKey(int key_code) { return glfwGetKey(_window, key_code); }
   void close() { glfwSetWindowShouldClose(_window, true); }
 
   static void frameBufferSizeCallback(GLFWwindow* w, int width, int height) {
