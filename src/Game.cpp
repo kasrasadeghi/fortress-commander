@@ -24,44 +24,26 @@ Game::Game()
   // if (!_font.loadFromFile("arial.ttf")) { exit(1); }
 }
 
-GLuint makeTriangle(const std::vector<float>& vertices) {
-  GLuint VBO, VAO;
-  glGenVertexArrays(1, &VAO);
-  glGenBuffers(1, &VBO);
-  // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
-  glBindVertexArray(VAO);
-
-  glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
-  
-  // position attribute
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-  glEnableVertexAttribArray(0);
-  // color attribute
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-  glEnableVertexAttribArray(1);
-
-  return VAO;
-}
-
 void Game::loop() {
   Shader shader("shaders/triangle.vs", "shaders/triangle.fs");
-  std::vector<float> vertices {
+  // std::vector<float> vertices ;
+
+  TriangleShape bottom_tri ({
     // positions         // colors
     -0.7f,  0.7f, 0.0f,  1.0f, 0.5f, 0.2f, // top left
      0.3f, -0.7f, 0.0f,  1.0f, 0.5f, 0.2f, // bottom right
     -0.7f, -0.7f, 0.0f,  1.0f, 0.5f, 0.2f  // bottom left 
-  };
+  });
 
-  std::vector<float> vertices2 {
+  TriangleShape upper_tri ({
     // positions         // colors
     -0.3f,  0.7f, 0.0f,  1.0f, 1.0f, 0.0f,
      0.7f,  0.7f, 0.0f,  1.0f, 1.0f, 0.0f,
      0.7f, -0.7f, 0.0f,  1.0f, 1.0f, 0.0f  
-  };
+  });
   
-  GLuint VAO = makeTriangle(vertices);
-  GLuint VAO2 = makeTriangle(vertices2);
+  // GLuint VAO = makeTriangle(vertices);
+  // GLuint VAO2 = makeTriangle(vertices2);
 
   while (_window.isOpen()) {
     // auto dt = _clock.getElapsedTime();
@@ -76,10 +58,10 @@ void Game::loop() {
     glClear(GL_COLOR_BUFFER_BIT);
 
     shader.use();
-    glBindVertexArray(VAO);
+    glBindVertexArray(bottom_tri.VAO);
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
-    glBindVertexArray(VAO2);
+    glBindVertexArray(upper_tri.VAO);
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
     // if(_window.getKey(GLFW_KEY_ESCAPE) == GLFW_PRESS) _window.close();
