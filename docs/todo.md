@@ -1,3 +1,5 @@
+# misc
+## done
 - render grid
 - view grid
 - keyboard move view
@@ -35,6 +37,7 @@
   - check radius of unit
 - extract holos
 
+## todo
 - unit selection
 - extract tile
   - put static holo in there
@@ -48,3 +51,6 @@
   - https://www.youtube.com/watch?v=FSoFJAmh96g
 - load a map from a file
 - make a map
+
+# glfw-opengl
+- render tiles
