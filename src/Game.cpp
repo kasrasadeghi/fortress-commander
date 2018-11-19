@@ -6,6 +6,8 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
+#include <vector>
+
 Game::Game()
     : //_font(), _world(World::world_size),
       //   _view(sf::Vector2f((view_size) / 2.f * widthScalingFactor(),
@@ -22,7 +24,7 @@ Game::Game()
   // if (!_font.loadFromFile("arial.ttf")) { exit(1); }
 }
 
-GLuint makeTriangle(float* vertices, size_t size) {
+GLuint makeTriangle(const std::vector<float>& vertices) {
   GLuint VBO, VAO;
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
@@ -30,8 +32,8 @@ GLuint makeTriangle(float* vertices, size_t size) {
   glBindVertexArray(VAO);
 
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
-
+  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
+  
   // position attribute
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
   glEnableVertexAttribArray(0);
@@ -44,23 +46,22 @@ GLuint makeTriangle(float* vertices, size_t size) {
 
 void Game::loop() {
   Shader shader("shaders/triangle.vs", "shaders/triangle.fs");
-  float vertices[] = {
-      // positions         // colors
-      -0.7f,  0.7f, 0.0f,  1.0f, 0.5f, 0.2f, // top left
-       0.3f, -0.7f, 0.0f,  1.0f, 0.5f, 0.2f, // bottom right
-      -0.7f, -0.7f, 0.0f,  1.0f, 0.5f, 0.2f  // bottom left 
+  std::vector<float> vertices {
+    // positions         // colors
+    -0.7f,  0.7f, 0.0f,  1.0f, 0.5f, 0.2f, // top left
+     0.3f, -0.7f, 0.0f,  1.0f, 0.5f, 0.2f, // bottom right
+    -0.7f, -0.7f, 0.0f,  1.0f, 0.5f, 0.2f  // bottom left 
   };
 
-  float vertices2[] = {
-      // positions         // colors
-      -0.3f,  0.7f, 0.0f,  1.0f, 0.5f, 0.2f,
-       0.7f,  0.7f, 0.0f,  1.0f, 0.5f, 0.2f,
-       0.7f, -0.7f, 0.0f,  1.0f, 0.5f, 0.2f  
+  std::vector<float> vertices2 {
+    // positions         // colors
+    -0.3f,  0.7f, 0.0f,  1.0f, 1.0f, 0.0f,
+     0.7f,  0.7f, 0.0f,  1.0f, 1.0f, 0.0f,
+     0.7f, -0.7f, 0.0f,  1.0f, 1.0f, 0.0f  
   };
   
-  GLuint VAO = makeTriangle(vertices, sizeof(vertices));
- 
-
+  GLuint VAO = makeTriangle(vertices);
+  GLuint VAO2 = makeTriangle(vertices2);
 
   while (_window.isOpen()) {
     // auto dt = _clock.getElapsedTime();
@@ -76,6 +77,9 @@ void Game::loop() {
 
     shader.use();
     glBindVertexArray(VAO);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    glBindVertexArray(VAO2);
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
     // if(_window.getKey(GLFW_KEY_ESCAPE) == GLFW_PRESS) _window.close();
