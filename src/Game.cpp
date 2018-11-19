@@ -37,20 +37,10 @@ void Game::loop() {
 
     _window.draw(_world);
     if (_mode == ControlMode::BUILD || _mode == ControlMode::TERRAIN) {
-      const auto currTile = getMouseTile();
-      sf::RectangleShape r(sf::Vector2f(tile_size, tile_size));
-      r.setPosition(currTile.x * tile_size, currTile.y * tile_size);
-      r.setFillColor(sf::Color(255, 200, 200, 200));
-      _window.draw(r);
+      _window.draw(World::tileHolo(getMouseTile()));
     }
-
     if (_mode == ControlMode::UNIT) {
-      constexpr auto radius = Unit::unit_size;
-      const auto curr = getMouseCoords();
-      sf::CircleShape r(Unit::unit_size);
-      r.setPosition(curr.x - Unit::unit_size, curr.y - Unit::unit_size);
-      r.setFillColor(sf::Color(255, 200, 200, 150));
-      _window.draw(r);
+      _window.draw(Unit::holo(getMouseCoords()));
     }
 
     _window.setView(_window.getDefaultView());

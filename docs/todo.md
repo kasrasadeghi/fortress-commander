@@ -33,8 +33,11 @@
 - extract tile_size from world
   - so we don't have cyclic dependencies and post-scaling
   - check radius of unit
+- extract holos
 
 - unit selection
+- extract tile
+  - put static holo in there
 - build structures instead of flipping cells
   - maybe a region edit mode?
 - check if unit construction is in bounds

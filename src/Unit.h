@@ -14,6 +14,13 @@ public:
 
   Unit(sf::Vector2f pos) : _pos(pos), _target(pos) {}
 
+  static sf::CircleShape holo(sf::Vector2f curr) {
+    sf::CircleShape r(Unit::unit_size);
+    r.setPosition(curr.x - Unit::unit_size, curr.y - Unit::unit_size);
+    r.setFillColor(sf::Color(255, 200, 200, 150));
+    return r;
+  }
+
   virtual void draw(sf::RenderTarget& rw, sf::RenderStates states) const;
 
   void pathTo(sf::Vector2f coords);

@@ -44,6 +44,13 @@ public:
 
   World(size_t size) : _region(size, std::vector<Tile>(size, Tile::GRASS)) {}
 
+  static sf::RectangleShape tileHolo(sf::Vector2i tile_index) {
+    sf::RectangleShape r(sf::Vector2f(tile_size, tile_size));
+    r.setPosition(tile_index.x * tile_size, tile_index.y * tile_size);
+    r.setFillColor(sf::Color(255, 200, 200, 200));
+    return r;
+  }
+
   Tile flipCell(sf::Vector2i v) {
     _snapToRegion(v);
     return _region[v.x][v.y] =
