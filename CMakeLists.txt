@@ -14,6 +14,7 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g -fsanitize=address")
 # include(cmake/clang-format.cmake)
 include(cmake/sfml.cmake)
 include(cmake/glad_glfw.cmake)
+include(cmake/utils.cmake)
 
 set(PROJECT_NAME fortress-commander)
 project(${PROJECT_NAME})
@@ -27,4 +28,4 @@ setup_sfml(${PROJECT_NAME})
 setup_glad_glfw(${PROJECT_NAME})
 
 # copy over ttf file
-file(COPY arial.ttf DESTINATION ${CMAKE_BINARY_DIR})
+copy_to_bin_dir(arial.ttf shaders)

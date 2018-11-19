@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "Shader.h"
 // #include "Config.h"
 // #include "Unit.h"
 
@@ -22,6 +23,44 @@ Game::Game()
 }
 
 void Game::loop() {
+  Shader shader("shaders/triangle.vs", "shaders/triangle.fs");
+  float vertices[] = {
+      // positions         // colors
+      -0.7f,  0.7f, 0.0f,  1.0f, 0.5f, 0.2f, // top left
+       0.3f, -0.7f, 0.0f,  1.0f, 0.5f, 0.2f, // bottom right
+      -0.7f, -0.7f, 0.0f,  1.0f, 0.5f, 0.2f  // bottom left 
+  };
+
+  float vertices2[] = {
+      // positions         // colors
+      -0.3f,  0.7f, 0.0f,  1.0f, 0.5f, 0.2f,
+       0.7f,  0.7f, 0.0f,  1.0f, 0.5f, 0.2f,
+       0.7f, -0.7f, 0.0f,  1.0f, 0.5f, 0.2f  
+  };
+
+  // float vertices[] = {
+  //   // positions        // colors
+  //   -0.7f,  0.7f, 0.0f, 1.0f, 0.0f, 0.0f, 
+  //    0.3f, -0.7f, 0.0f, 0.0f, 1.0f, 0.0f,
+  //   -0.7f,  0.7f, 0.0f, 0.0f, 0.0f, 1.0f,
+  // };
+  unsigned int VBO, VAO;
+  glGenVertexArrays(1, &VAO);
+  glGenBuffers(1, &VBO);
+  // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
+  glBindVertexArray(VAO);
+
+  glBindBuffer(GL_ARRAY_BUFFER, VBO);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+  // position attribute
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+  glEnableVertexAttribArray(0);
+  // color attribute
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+  glEnableVertexAttribArray(1);
+
+
   while (_window.isOpen()) {
     // auto dt = _clock.getElapsedTime();
     // auto framerate = (1 / dt.asSeconds());
@@ -33,6 +72,10 @@ void Game::loop() {
     // handleViewInput(dt);
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
+
+    shader.use();
+    glBindVertexArray(VAO);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
 
     // if(_window.getKey(GLFW_KEY_ESCAPE) == GLFW_PRESS) _window.close();
 
