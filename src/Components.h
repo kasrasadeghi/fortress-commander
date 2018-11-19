@@ -3,12 +3,12 @@
 #include "ECS/Component.h"
 
 struct TransformComponent : public ECS::Component {
-  sf::Vector2f _pos;
-  float _rot;
+  sf::Vector2f pos;
+  float rot;
 
   static const ECS::ComponentType _type;
 
-  TransformComponent() : _pos(0.f, 0.f), _rot(0.f) {}
-  TransformComponent(sf::Vector2f pos, float rot) : _pos(pos), _rot(rot) {}
+  TransformComponent() : pos(0.f, 0.f), rot(0.f) {}
+  TransformComponent(sf::Vector2f pos, float rot) : pos(pos), rot(rot) {}
 };
 const ECS::ComponentType TransformComponent::_type = 1;

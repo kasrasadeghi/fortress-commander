@@ -23,7 +23,7 @@ find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
 message(STATUS "SFML libraries found: " ${SFML_LIBRARIES})
 message(STATUS "SFML include dir found: " ${SFML_INCLUDE_DIR})
 
-file(GLOB SRC_FILES src/*.cpp)
+file(GLOB_RECURSE SRC_FILES src/*.cpp)
 
 add_executable(${PROJECT_NAME} ${SRC_FILES})
 

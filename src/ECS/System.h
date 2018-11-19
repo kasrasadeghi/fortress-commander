@@ -14,6 +14,7 @@ class System {
   ComponentTypeSet _requiredComponents;
   std::set<Entity> _matchingEntities;
 
+protected:
   Manager& _manager;
 
 public:

@@ -1,6 +1,9 @@
 #pragma once
 
 #include <unordered_map>
+#include <map>
+#include <vector>
+#include <cstdint>
 
 #include "Entity.h"
 #include "Component.h"
@@ -14,6 +17,9 @@ class Manager {
   std::vector<System::Ptr> _systems;
 
 public:
+  Manager();
+  ~Manager();
+
   template <typename C>
   bool createComponentStore() {
     static_assert(std::is_base_of<Component, C>::value, "C must be a descendant of Component");
