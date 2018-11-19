@@ -14,9 +14,15 @@
 class Shader {
 public:
   unsigned int ID;
+  Shader() {}
   Shader(const char* vertexPath, const char* fragmentPath,
          const char* geometryPath = nullptr) {
-    // 1. retrieve the vertex/fragment source code from filePath
+    load(vertexPath, fragmentPath, geometryPath);
+  }
+
+  void load(const char* vertexPath, const char* fragmentPath,
+         const char* geometryPath = nullptr) {
+     // 1. retrieve the vertex/fragment source code from filePath
     std::string vertexCode;
     std::string fragmentCode;
     std::string geometryCode;
@@ -89,7 +95,7 @@ public:
     if (geometryPath != nullptr) glDeleteShader(geometry);
   }
   // activate the shader
-  void use() { glUseProgram(ID); }
+  void use() const { glUseProgram(ID); }
 
   // utility uniform functions
   void setBool(const std::string& name, bool value) const {

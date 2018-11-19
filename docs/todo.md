@@ -53,4 +53,6 @@
 - make a map
 
 # glfw-opengl
+- cache shaders
+- rectangle shape
 - render tiles

@@ -25,9 +25,6 @@ Game::Game()
 }
 
 void Game::loop() {
-  Shader shader("shaders/triangle.vs", "shaders/triangle.fs");
-  // std::vector<float> vertices ;
-
   TriangleShape bottom_tri ({
     // positions         // colors
     -0.7f,  0.7f, 0.0f,  1.0f, 0.5f, 0.2f, // top left
@@ -57,7 +54,6 @@ void Game::loop() {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    shader.use();
     bottom_tri.draw();
     upper_tri.draw();
 

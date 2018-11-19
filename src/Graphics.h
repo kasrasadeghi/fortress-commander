@@ -1,5 +1,6 @@
 #pragma once
 
+
 // glad must come before glfw3
 #include <glad/glad.h>
 
@@ -7,6 +8,8 @@
 
 #include <functional>
 #include <iostream>
+
+#include "Shader.h"
 
 // this plumbing is necessary because
 // a lambda that captures can't be used as a function ptr
@@ -75,6 +78,7 @@ public:
 class TriangleShape {
   std::array<float, 18> _vertices;
 public:
+  const Shader _shader {"shaders/triangle.vs", "shaders/triangle.fs"};
   GLuint VAO;
 
   TriangleShape(std::array<float, 18> vertices) {
@@ -96,6 +100,7 @@ public:
   }
 
   void draw() {
+    _shader.use();
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, 3);
   }
