@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <memory>
 #include <set>
+#include <iostream>
 
 #include "Entity.h"
 #include "Component.h"

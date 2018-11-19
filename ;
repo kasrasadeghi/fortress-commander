@@ -26,7 +26,6 @@ std::size_t Manager::registerEntity(const Entity entity) {
 
   auto entityComponents = entityIt->second;
 
-  int systemNum = 0;
   for (auto system = _systems.begin(); system != _systems.end(); ++system) {
     const auto& systemRequiredComponents = (*system)->getRequiredComponents();
 
@@ -59,7 +58,9 @@ std::size_t Manager::unregisterEntity(const Entity entity) {
 std::size_t Manager::updateEntities(float dt) {
   std::size_t updatedEntities = 0;
 
+  int systemNum = 0;
   for (auto system = _systems.begin(); system != _systems.end(); ++system) {
+    std::cout << "Updating system " << systemNum++ << std::endl;
     updatedEntities += (*system)->updateEntities(dt);
   }
 

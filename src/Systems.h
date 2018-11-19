@@ -17,6 +17,5 @@ public:
 
   virtual void updateEntity(float dt, ECS::Entity entity) override {
     _manager.getComponentStore<TransformComponent>().get(entity).pos += sf::Vector2f(_moveAmount, _moveAmount);
-    std::cout << "update " << dt << "\t" << entity << std::endl;
   }
 };

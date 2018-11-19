@@ -1,5 +1,4 @@
 #include "World.h"
-#include "Unit.h"
 
 void World::_drawRegion(sf::RenderTarget& window) const {
   for (int i = 0; i < world_size; ++i) {

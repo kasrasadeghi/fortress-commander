@@ -1,12 +1,11 @@
 #include "Game.h"
-#include "Components.h"
+
+#include <stdio.h>
+#include <sstream>
+
 #include "Systems.h"
-#include "Unit.h"
 
 #include <SFML/Graphics.hpp>
-#include <stdio.h>
-
-#include <sstream>
 
 Game::Game()
     : _font(), _world(World::world_size),
@@ -25,14 +24,6 @@ Game::Game()
   if (!_font.loadFromFile("arial.ttf")) { exit(1); }
 
   _manager.createComponentStore<TransformComponent>();
-
-  ECS::Entity entity = _manager.createEntity();
-  std::cout << entity << std::endl;
-
-  _manager.addComponent<TransformComponent>(
-      entity, TransformComponent(sf::Vector2f(1.f, 1.f), 0.f));
-  _manager.registerEntity(entity);
-
   _manager.addSystem(ECS::System::Ptr(new MoveSystem(_manager)));
 }
 
@@ -117,7 +108,7 @@ void Game::handleEvent(const sf::Event& event) {
   if (_mode == ControlMode::UNIT) {
     if (event.type == sf::Event::MouseButtonPressed) {
       // check if the add unit is in bounds
-      _world._units.push_back(Unit(getMouseCoords()));
+      _world._units.push_back(Unit(getMouseCoords(), &_manager));
     }
   }
 }

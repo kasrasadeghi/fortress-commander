@@ -1,11 +1,13 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+
 #include <iostream>
 
-#include "World.h"
-
 #include "ECS/Manager.h"
+
+#include "World.h"
+#include "Components.h"
 
 enum class ControlMode { NONE, BUILD, UNIT, TERRAIN };
 

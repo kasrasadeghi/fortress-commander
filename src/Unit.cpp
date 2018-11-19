@@ -1,6 +1,15 @@
 #include "Unit.h"
+
 #include "VecMath.h"
-#include "World.h"
+#include "Game.h"
+
+Unit::Unit(sf::Vector2f pos, ECS::Manager* manager /*, UnitType type*/)
+  : _pos(pos), _target(pos), _manager(manager)/*, _type(type)*/ {
+  _id = _manager->createEntity();
+
+  _manager->addComponent<TransformComponent>(_id, TransformComponent(sf::Vector2f(1.f, 1.f), 0.f));
+  _manager->registerEntity(_id);
+}
 
 void Unit::draw(sf::RenderTarget& rw, sf::RenderStates states) const {
   constexpr auto radius = unit_size * World::tile_size;
@@ -14,6 +23,8 @@ void Unit::draw(sf::RenderTarget& rw, sf::RenderStates states) const {
 void Unit::pathTo(sf::Vector2f coords) { _target = coords; }
 
 void Unit::update(const sf::Time& dt) {
+  _pos = _manager->getComponentStore<TransformComponent>().get(_id).pos;
+  /*
   if (_target == _pos) return;
 
   const auto dir = norm(_target - _pos);
@@ -23,4 +34,5 @@ void Unit::update(const sf::Time& dt) {
   } else {
     _pos = _target;
   }
+  */
 }

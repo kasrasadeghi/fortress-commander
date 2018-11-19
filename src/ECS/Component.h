@@ -3,6 +3,9 @@
 #include <cstdint>
 #include <memory>
 #include <set>
+#include <unordered_map>
+
+#include "Entity.h"
 
 namespace ECS {
 using ComponentType = std::size_t;
