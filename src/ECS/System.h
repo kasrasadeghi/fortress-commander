@@ -19,8 +19,8 @@ class System {
 public:
   using Ptr = std::shared_ptr<System>;
 
-  explicit System(Manager& manager);
-  virtual ~System();
+  explicit System(Manager& manager) : _manager(manager) {}
+  virtual ~System() {};
 
   const ComponentTypeSet& getRequiredComponents() const {
     return _requiredComponents;
@@ -45,7 +45,16 @@ public:
 
   // Call every updateEntity(dt, entity) on this System's set of entities
   // Returns the amount of entities that were updated
-  std::size_t updateEntities(float dt);
+  std::size_t updateEntities(float dt) {
+    std::size_t updatedEntities = 0;
+
+    for (auto entity = _matchingEntities.begin(); entity != _matchingEntities.end(); ++entity) {
+      updateEntity(dt, *entity); // each user class should specialize this virtual pure function
+      ++updatedEntities;
+    }
+
+    return updatedEntities;
+  }
 
   // Each user class should specialize this pure virtual method to change
   // how the system updates

@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "Components.h"
+#include "Systems.h"
 #include "Unit.h"
 
 #include <SFML/Graphics.hpp>
@@ -26,12 +27,12 @@ Game::Game()
   ECS::Entity entity = _manager.createEntity();
   std::cout << entity << std::endl;
 
-  _manager.createComponentStore<PositionComponent>();
+  _manager.createComponentStore<TransformComponent>();
 
-  _manager.addComponent<PositionComponent>(
-      entity, PositionComponent(sf::Vector2f(1.f, 1.f)));
+  _manager.addComponent<TransformComponent>(
+      entity, TransformComponent(sf::Vector2f(1.f, 1.f), 0.f));
 
-  //_manager.registerEntity(entity);
+  MoveSystem moveSystem(_manager);
 }
 
 void Game::loop() {

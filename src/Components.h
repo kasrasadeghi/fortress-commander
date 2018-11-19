@@ -2,12 +2,13 @@
 
 #include "ECS/Component.h"
 
-struct PositionComponent : public ECS::Component {
+struct TransformComponent : public ECS::Component {
   sf::Vector2f _pos;
+  float _rot;
 
   static const ECS::ComponentType _type;
 
-  PositionComponent() : _pos(0.f, 0.f) {}
-  PositionComponent(sf::Vector2f pos) : _pos(pos) {}
+  TransformComponent() : _pos(0.f, 0.f), _rot(0.f) {}
+  TransformComponent(sf::Vector2f pos, float rot) : _pos(pos), _rot(rot) {}
 };
-const ECS::ComponentType PositionComponent::_type = 1;
+const ECS::ComponentType TransformComponent::_type = 1;
