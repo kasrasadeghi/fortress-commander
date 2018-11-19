@@ -58,11 +58,8 @@ void Game::loop() {
     glClear(GL_COLOR_BUFFER_BIT);
 
     shader.use();
-    glBindVertexArray(bottom_tri.VAO);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
-
-    glBindVertexArray(upper_tri.VAO);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    bottom_tri.draw();
+    upper_tri.draw();
 
     // if(_window.getKey(GLFW_KEY_ESCAPE) == GLFW_PRESS) _window.close();
 
