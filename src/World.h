@@ -53,8 +53,7 @@ public:
 
   Tile flipCell(sf::Vector2i v) {
     _snapToRegion(v);
-    return _region[v.x][v.y] =
-               (_region[v.x][v.y] == Tile::GRASS) ? Tile::WATER : Tile::GRASS;
+    return _region[v.x][v.y] = (_region[v.x][v.y] == Tile::GRASS) ? Tile::WATER : Tile::GRASS;
   }
 
   void setCell(sf::Vector2i v, Tile t) {

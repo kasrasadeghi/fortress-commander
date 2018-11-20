@@ -1,6 +1,5 @@
 #pragma once
 
-
 // glad must come before glfw3
 #include <glad/glad.h>
 
@@ -15,8 +14,7 @@
 // a lambda that captures can't be used as a function ptr
 using KeyCallback = std::function<void(int, int, int, int)>;
 static KeyCallback __keyCallback;
-static void __keyCallbackWrapper(GLFWwindow* window, int k, int s, int a,
-                                 int m) {
+static void __keyCallbackWrapper(GLFWwindow* window, int k, int s, int a, int m) {
   __keyCallback(k, s, a, m);
 }
 
@@ -77,20 +75,20 @@ public:
 
 class TriangleShape {
   std::array<float, 18> _vertices;
-public:
-  const Shader _shader {"shaders/triangle.vs", "shaders/triangle.fs"};
-  GLuint VAO;
+  const Shader _shader{"shaders/triangle.vs", "shaders/triangle.fs"};
 
-  TriangleShape(std::array<float, 18> vertices) {
+  void _create() {
     GLuint VBO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
-    // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
+    // bind the Vertex Array Object first, then bind and set vertex buffer(s),
+    // and then configure vertex attributes(s).
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
-    
+    glBufferData(GL_ARRAY_BUFFER, _vertices.size() * sizeof(float), _vertices.data(),
+                 GL_STATIC_DRAW);
+
     // position attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
@@ -98,6 +96,11 @@ public:
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
   }
+
+public:
+  GLuint VAO;
+
+  TriangleShape(std::array<float, 18> vertices) : _vertices(vertices) { _create(); }
 
   void draw() {
     _shader.use();

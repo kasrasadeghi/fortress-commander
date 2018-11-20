@@ -25,6 +25,7 @@ Game::Game()
 }
 
 void Game::loop() {
+  // clang-format off
   TriangleShape bottom_tri ({
     // positions         // colors
     -0.7f,  0.7f, 0.0f,  1.0f, 0.5f, 0.2f, // top left
@@ -38,9 +39,7 @@ void Game::loop() {
      0.7f,  0.7f, 0.0f,  1.0f, 1.0f, 0.0f,
      0.7f, -0.7f, 0.0f,  1.0f, 1.0f, 0.0f  
   });
-  
-  // GLuint VAO = makeTriangle(vertices);
-  // GLuint VAO2 = makeTriangle(vertices2);
+  // clang-format on
 
   while (_window.isOpen()) {
     // auto dt = _clock.getElapsedTime();
@@ -56,8 +55,6 @@ void Game::loop() {
 
     bottom_tri.draw();
     upper_tri.draw();
-
-    // if(_window.getKey(GLFW_KEY_ESCAPE) == GLFW_PRESS) _window.close();
 
     // for (Unit& u : _world._units) { u.update(dt); }
 
