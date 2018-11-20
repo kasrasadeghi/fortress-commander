@@ -20,10 +20,11 @@ static void __keyCallbackWrapper(GLFWwindow* window, int k, int s, int a, int m)
 
 class RenderWindow {
   GLFWwindow* _window;
-  int _width;
-  int _height;
 
 public:
+  int _width;
+  int _height;
+  
   RenderWindow(const char* name) {
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -73,9 +74,9 @@ public:
   }
 };
 
-class TriangleShape {
+class TricolorTriangleShape {
   std::array<float, 18> _vertices;
-  const Shader _shader{"shaders/triangle.vs", "shaders/triangle.fs"};
+  const Shader _tricolor_shader{"shaders/tricolor_triangle.vs", "shaders/tricolor_triangle.fs"};
 
   void _create() {
     GLuint VBO;
@@ -100,10 +101,49 @@ class TriangleShape {
 public:
   GLuint VAO;
 
-  TriangleShape(std::array<float, 18> vertices) : _vertices(vertices) { _create(); }
+  TricolorTriangleShape(std::array<float, 18> vertices) : _vertices(vertices) { _create(); }
 
   void draw() {
-    _shader.use();
+    _tricolor_shader.use();
+    glBindVertexArray(VAO);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+  }
+};
+
+class UnicolorTriangleShape {
+  std::array<float, 6> _vertices;
+  glm::vec3 _color{0.f, 0.f, 0.f};
+  Shader _unicolor_shader{"shaders/unicolor_triangle.vs", "shaders/unicolor_triangle.fs"};
+
+  void _create() {
+    GLuint VBO;
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+    // bind the Vertex Array Object first, then bind and set vertex buffer(s),
+    // and then configure vertex attributes(s).
+    glBindVertexArray(VAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, _vertices.size() * sizeof(float), _vertices.data(),
+                 GL_STATIC_DRAW);
+
+    // position attribute
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+  }
+
+public:
+  GLuint VAO;
+
+  UnicolorTriangleShape(std::array<float, 6> vertices) : _vertices(vertices) { _create(); }
+
+  void setColor(GLfloat r, GLfloat g, GLfloat b) {
+    _color = glm::vec3(r, g, b);
+  }
+
+  void draw() {
+    _unicolor_shader.use();
+    _unicolor_shader.setVec3("aColor", _color);
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, 3);
   }
