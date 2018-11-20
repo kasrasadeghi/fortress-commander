@@ -53,41 +53,6 @@ void Game::loop() {
   
   Shader shader {"shaders/view_triangle.vs", "shaders/view_triangle.fs"};
   
-
-  {
-    // clang-format off
-    // TriangleShape bottom_tri ({
-    //   // positions         // colors
-    //   -0.7f,  0.7f, 0.0f,  1.0f, 0.5f, 0.2f, // top left
-    //    0.3f, -0.7f, 0.0f,  1.0f, 0.5f, 0.2f, // bottom right
-    //   -0.7f, -0.7f, 0.0f,  1.0f, 0.5f, 0.2f  // bottom left 
-    // });
-
-    // TriangleShape upper_tri ({
-    //   // positions         // colors
-    //   -0.3f,  0.7f, 0.0f,  1.0f, 1.0f, 0.0f,
-    //    0.7f,  0.7f, 0.0f,  1.0f, 1.0f, 0.0f,
-    //    0.7f, -0.7f, 0.0f,  1.0f, 1.0f, 0.0f  
-    // });
-    // UnicolorTriangleShape bottom_tri ({
-    // // positions         
-    //   -0.7f,  0.7f,
-    //    0.3f, -0.7f,
-    //   -0.7f, -0.7f,
-    // });
-    // bottom_tri.setColor(1, 0.5, 0.2);
-
-    // UnicolorTriangleShape upper_tri ({
-    //   // positions       
-    //   -0.3f,  0.7f,
-    //    0.7f,  0.7f,
-    //    0.7f, -0.7f,
-    // });
-    // upper_tri.setColor(1.f, 1.f, 0.f);
-
-    // clang-format on
-  }
-
   GLuint quadVAO;
 
   GLfloat vertices[] = { 
