@@ -92,13 +92,10 @@ void Game::loop() {
 
   GLfloat vertices[] = { 
     // Pos     
-    0.0f, 1.0f,
-    1.0f, 0.0f,
-    0.0f, 0.0f,
-
-    0.0f, 1.0f,
-    1.0f, 1.0f,
-    1.0f, 0.0f,
+    1.f, 1.f,
+    1.f, 0.f,
+    0.f, 1.f,
+    0.f, 0.f,
   };
 
   GLuint VBO;
@@ -127,7 +124,7 @@ void Game::loop() {
 
 
     glBindVertexArray(quadVAO);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 6);
     glBindVertexArray(0);
 
     // for (Unit& u : _world._units) { u.update(dt); }
