@@ -143,7 +143,7 @@ public:
 
   void draw() {
     _unicolor_shader.use();
-    _unicolor_shader.setVec3("aColor", _color);
+    _unicolor_shader.setVec3("color", _color);
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, 3);
   }
