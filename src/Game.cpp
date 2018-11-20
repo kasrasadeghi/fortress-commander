@@ -55,7 +55,7 @@ void Game::loop() {
   auto c_ = proj * m * c;
 
   
-  std::cout << glm::to_string(proj) << std::endl;
+  // std::cout << glm::to_string(proj) << std::endl;
   UnicolorTriangleShape triangle({
     a_[0], a_[1],
     b_[0], b_[1],
@@ -63,17 +63,8 @@ void Game::loop() {
   });
   triangle.setColor(1.f, .7f, 0.f);
   
-  // Shader shader {"shaders/view_triangle.vs", "shaders/view_triangle.fs"};
-  // shader.setMat4("projection", proj);
-  // shader.setMat4("model", m);
-  // shader.setVec3("aColor", 1.f, .7f, 0.f);
-
-
-
-
-
-
-
+  Shader shader {"shaders/view_triangle.vs", "shaders/view_triangle.fs"};
+  
 
   {
     // clang-format off
@@ -109,44 +100,49 @@ void Game::loop() {
     // clang-format on
   }
 
-  // GLuint quadVAO;
+  GLuint quadVAO;
 
-  // GLfloat vertices[] = { 
-  //   // Pos     
-  //   0.0f, 1.0f,
-  //   1.0f, 0.0f,
-  //   0.0f, 0.0f,
+  GLfloat vertices[] = { 
+    // Pos     
+    0.0f, 1.0f,
+    1.0f, 0.0f,
+    0.0f, 0.0f,
 
-  //   // 0.0f, 1.0f,
-  //   // 1.0f, 1.0f,
-  //   // 1.0f, 0.0f,
-  // };
+    // 0.0f, 1.0f,
+    // 1.0f, 1.0f,
+    // 1.0f, 0.0f,
+  };
 
-  // GLuint VBO;
-  // glGenVertexArrays(1, &quadVAO);
-  // glGenBuffers(1, &VBO);
-  // // bind the Vertex Array Object first, then bind and set vertex buffer(s),
-  // // and then configure vertex attributes(s).
-  // glBindVertexArray(quadVAO);
+  GLuint VBO;
+  glGenVertexArrays(1, &quadVAO);
+  glGenBuffers(1, &VBO);
+  // bind the Vertex Array Object first, then bind and set vertex buffer(s),
+  // and then configure vertex attributes(s).
+  glBindVertexArray(quadVAO);
 
-  // glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  // glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+  glBindBuffer(GL_ARRAY_BUFFER, VBO);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-  // // position attribute
-  // glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
-  // glEnableVertexAttribArray(0);
+  // position attribute
+  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+  glEnableVertexAttribArray(0);
 
 
   while (_window.isOpen()) {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    triangle.draw();
+    // triangle.draw();
 
-    // shader.use();
-    // glBindVertexArray(quadVAO);
-    // glDrawArrays(GL_TRIANGLES, 0, 3);
-    // glBindVertexArray(0);
+    shader.use();
+    shader.setMat4("projection", proj);
+    shader.setMat4("model", m);
+    shader.setVec3("color", 1.f, .7f, 0.f);
+
+
+    glBindVertexArray(quadVAO);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glBindVertexArray(0);
 
     // for (Unit& u : _world._units) { u.update(dt); }
 
