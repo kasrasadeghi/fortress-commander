@@ -10,25 +10,21 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # When in debug mode, we run Address Sanitizer to find memory errors
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g -fsanitize=address")
 
-set(PROJECT_TRDPARTY_DIR 3rdparty/)
-
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-
-include(cmake/clang-format.cmake)
 
 set(PROJECT_NAME fortress-commander)
 project(${PROJECT_NAME})
 
+# set(SFML_STATIC_LIBRARIES TRUE)
+set(SFML_DIR ${PROJECT_SOURCE_DIR}/SFML-install/lib/cmake/SFML)
+message(STATUS ${SFML_DIR})
 find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
-message(STATUS "SFML libraries found: " ${SFML_LIBRARIES})
-message(STATUS "SFML include dir found: " ${SFML_INCLUDE_DIR})
 
 file(GLOB SRC_FILES src/*.cpp)
 
 add_executable(${PROJECT_NAME} ${SRC_FILES})
 
 target_include_directories(${PROJECT_NAME} PUBLIC
-    ${SFML_INCLUDE_DIR}
+    SFML-install/include
 )
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
@@ -38,5 +34,5 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     sfml-system
 )
 
-# copy over ttf file
+# # copy over ttf file
 file(COPY arial.ttf DESTINATION ${CMAKE_BINARY_DIR})

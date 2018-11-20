@@ -48,3 +48,6 @@
   - https://www.youtube.com/watch?v=FSoFJAmh96g
 - load a map from a file
 - make a map
+
+# glfw-windowimpl-sfml
+- build sfml in project
