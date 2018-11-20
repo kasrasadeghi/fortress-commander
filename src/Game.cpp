@@ -38,30 +38,18 @@ void Game::loop() {
 
   glm::vec2 position(200, 200);
   glm::vec2 size(600, 600);
+  GLfloat rotate(0);
 
   glm::mat4 m(1);
   m = glm::translate(m, glm::vec3(position, 0.f));
+
+  m = glm::translate(m, glm::vec3(position[0] *  .5f, position[1] *  .5f, 0.f));
+  m = glm::rotate(m, rotate, glm::vec3(0.f, 0.f, 1.f));
+  m = glm::translate(m, glm::vec3(position[0] * -.5f, position[1] * -.5f, 0.f));
+
   m = glm::scale(m, glm::vec3(size, 1.f));
 
   glm::mat4 proj = glm::ortho(0.f, 3440.f, 1440.f, 0.f, -1.f, 1.f);
-
-  std::cout << glm::to_string(m * a) << std::endl;
-  std::cout << glm::to_string(m * b) << std::endl;
-  std::cout << glm::to_string(m * c) << std::endl;
-
-
-  auto a_ = proj * m * a;
-  auto b_ = proj * m * b;
-  auto c_ = proj * m * c;
-
-  
-  // std::cout << glm::to_string(proj) << std::endl;
-  UnicolorTriangleShape triangle({
-    a_[0], a_[1],
-    b_[0], b_[1],
-    c_[0], c_[1],
-  });
-  triangle.setColor(1.f, .7f, 0.f);
   
   Shader shader {"shaders/view_triangle.vs", "shaders/view_triangle.fs"};
   
@@ -108,9 +96,9 @@ void Game::loop() {
     1.0f, 0.0f,
     0.0f, 0.0f,
 
-    // 0.0f, 1.0f,
-    // 1.0f, 1.0f,
-    // 1.0f, 0.0f,
+    0.0f, 1.0f,
+    1.0f, 1.0f,
+    1.0f, 0.0f,
   };
 
   GLuint VBO;
@@ -132,8 +120,6 @@ void Game::loop() {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    // triangle.draw();
-
     shader.use();
     shader.setMat4("projection", proj);
     shader.setMat4("model", m);
@@ -141,7 +127,7 @@ void Game::loop() {
 
 
     glBindVertexArray(quadVAO);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
     glBindVertexArray(0);
 
     // for (Unit& u : _world._units) { u.update(dt); }
