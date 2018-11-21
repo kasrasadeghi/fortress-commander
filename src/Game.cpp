@@ -1,5 +1,5 @@
 #include "Game.h"
-#include "Shader.h"
+#include "Graphics.h"
 // #include "Config.h"
 // #include "Unit.h"
 
@@ -36,8 +36,8 @@ void Game::loop() {
   glm::vec4 b(1.0, 0.0, 0.f, 1.f);
   glm::vec4 c(0.0, 0.0, 0.f, 1.f);
 
-  glm::vec2 position(200, 200);
-  glm::vec2 size(600, 600);
+  glm::vec2 position(50, 50);
+  glm::vec2 size(10, 10);
   GLfloat rotate(0);
 
   glm::mat4 m(1);
