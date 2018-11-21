@@ -3,7 +3,6 @@
 // #include "Config.h"
 // #include "Unit.h"
 
-#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 #define GLM_ENABLE_EXPERIMENTAL
@@ -32,12 +31,8 @@ Game::Game()
 
 void Game::loop() {
 
-  glm::vec4 a(0.0, 1.0, 0.f, 1.f);
-  glm::vec4 b(1.0, 0.0, 0.f, 1.f);
-  glm::vec4 c(0.0, 0.0, 0.f, 1.f);
-
-  glm::vec2 position(50, 50);
-  glm::vec2 size(10, 10);
+  glm::vec2 position(90, 90);
+  glm::vec2 size(20, 20);
   GLfloat rotate(0);
 
   glm::mat4 m(1);
@@ -49,7 +44,11 @@ void Game::loop() {
 
   m = glm::scale(m, glm::vec3(size, 1.f));
 
-  glm::mat4 proj = glm::ortho(0.f, 3440.f, 1440.f, 0.f, -1.f, 1.f);
+  glm::vec2 center(100.f, 100.f);
+  glm::vec2 radius(20.f, 20.f);
+
+  // glm::mat4 proj = glm::ortho(0.f, 3440.f, 1440.f, 0.f, -1.f, 1.f);
+  glm::mat4 proj = glm::ortho(center[0] - radius[0], center[0] + radius[0], center[1] - radius[1], center[1] + radius[1], -1.f, 1.f);
   
   Shader shader {"shaders/view_triangle.vs", "shaders/view_triangle.fs"};
   
