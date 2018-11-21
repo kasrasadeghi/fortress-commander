@@ -15,17 +15,29 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g -fsanitize=address")
 include(cmake/sfml.cmake)
 include(cmake/glad_glfw.cmake)
 include(cmake/utils.cmake)
+include(cmake/gtest.cmake)
 
 set(PROJECT_NAME fortress-commander)
 project(${PROJECT_NAME})
 
-file(GLOB SRC_FILES src/*.cpp glad/src/*.c)
+set(SRC_FILES
+  src/Game.cpp
+  src/Unit.cpp
+  src/World.cpp
+  src/Graphics/Shape.cpp
+  glad/src/glad.c
+)
 
-add_executable(${PROJECT_NAME} ${SRC_FILES})
+add_executable(${PROJECT_NAME} src/main.cpp ${SRC_FILES})
+add_executable(${PROJECT_NAME}_TEST src/Test.cpp ${SRC_FILES})
 
 setup_sfml(${PROJECT_NAME})
+setup_sfml(${PROJECT_NAME}_TEST)
 
 setup_glad_glfw(${PROJECT_NAME})
+setup_glad_glfw(${PROJECT_NAME}_TEST)
+
+setup_gtest(${PROJECT_NAME}_TEST)
 
 # copy over ttf file
 copy_to_bin_dir(arial.ttf shaders)

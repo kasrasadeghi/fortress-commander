@@ -5,12 +5,12 @@ function(setup_glad_glfw executable)
   message(STATUS "GLFW libraries found: " ${GLFW_LIBRARIES})
   message(STATUS "GLFW include dir found: " ${GLFW_INCLUDE_DIR})
 
-  target_include_directories(${PROJECT_NAME} PUBLIC
+  target_include_directories(${executable} PUBLIC
     ${GLFW_INCLUDE_DIR}
     glad/include
   )
 
-  target_link_libraries(${PROJECT_NAME} PUBLIC
+  target_link_libraries(${executable} PUBLIC
     ${GLFW_LIBRARIES}
     dl # libdl needed for glad's dynamic linking
   )
