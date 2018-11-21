@@ -5,6 +5,8 @@
 
 #include <GLFW/glfw3.h>
 
+#include <glm/gtc/matrix_transform.hpp>
+
 #include <functional>
 
 
@@ -69,5 +71,9 @@ public:
   void setKeyCallback(KeyCallback keyCallback) {
     __keyCallback = keyCallback;
     glfwSetKeyCallback(_window, __keyCallbackWrapper);
+  }
+
+  glm::mat4 getDefaultView() {
+    return glm::ortho(0.f, 3440.f, 1440.f, 0.f, -1.f, 1.f);
   }
 };
