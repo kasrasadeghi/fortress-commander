@@ -3,22 +3,33 @@
 #include "Game.h"
 #include "Graphics.h"
 
+Game g; // sets up opengl
 
-// TEST(Shape, model_proj_view) {
-int main() {
-  Game g;
-
-
+TEST(Construction, Shader) {
   const Shader _shader {"shaders/view_triangle.vs", "shaders/view_triangle.fs"};
+}
 
-  // RectangleShape r;
-  // r.position(90, 90).size(20, 20);
+TEST(Construction, RectangleShape) {
+  RectangleShape r;
+}
 
-  // glm::vec2 position(90, 90);
-  // glm::vec2 size(20, 20);
-  // GLfloat rotate(0);
+TEST(Shape, RectBuilder_NonCrashing) {
+  RectangleShape r;
+  r.position(90, 90).size(20, 20);
+}
 
-  // EXPECT_EQ(r._position, position);
+TEST(Shape, RectBuilder_Value) {
+  RectangleShape r;
+  r.position(90, 90).size(20, 20);
+
+  glm::vec2 position(90, 90);
+  glm::vec2 size(20, 20);
+  GLfloat rotate(0);
+
+  EXPECT_EQ(r._position, position);
+  //TODO make _position and other shape things private and use a viewer friend with a #define or something
+}
+  
 
   // auto& v = r._base_vertices;
   // auto a = glm::vec2(v[0], v[1]);
@@ -36,7 +47,7 @@ int main() {
   //   r.model();
   //   EXPECT_EQ(m, r._model);
   // } 
-}
+// }
 
 // TEST(Shape, view) {
 //   auto view = View().center(100.f, 100.f).radius(20.f, 20.f);
