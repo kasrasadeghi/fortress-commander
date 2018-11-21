@@ -30,66 +30,19 @@ Game::Game()
 }
 
 void Game::loop() {
+  RectangleShape r;
+  r.position(90, 90).size(20, 20);
 
-  glm::vec2 position(90, 90);
-  glm::vec2 size(20, 20);
-  GLfloat rotate(0);
-
-  glm::mat4 m(1);
-  m = glm::translate(m, glm::vec3(position, 0.f));
-
-  m = glm::translate(m, glm::vec3(position[0] *  .5f, position[1] *  .5f, 0.f));
-  m = glm::rotate(m, rotate, glm::vec3(0.f, 0.f, 1.f));
-  m = glm::translate(m, glm::vec3(position[0] * -.5f, position[1] * -.5f, 0.f));
-
-  m = glm::scale(m, glm::vec3(size, 1.f));
-
-  glm::vec2 center(100.f, 100.f);
-  glm::vec2 radius(20.f, 20.f);
-
-  // glm::mat4 proj = glm::ortho(0.f, 3440.f, 1440.f, 0.f, -1.f, 1.f);
-  glm::mat4 proj = glm::ortho(center[0] - radius[0], center[0] + radius[0], center[1] - radius[1], center[1] + radius[1], -1.f, 1.f);
-  
-  Shader shader {"shaders/view_triangle.vs", "shaders/view_triangle.fs"};
-  
-  GLuint quadVAO;
-
-  GLfloat vertices[] = { 
-    // Pos     
-    1.f, 1.f,
-    1.f, 0.f,
-    0.f, 1.f,
-    0.f, 0.f,
-  };
-
-  GLuint VBO;
-  glGenVertexArrays(1, &quadVAO);
-  glGenBuffers(1, &VBO);
-  // bind the Vertex Array Object first, then bind and set vertex buffer(s),
-  // and then configure vertex attributes(s).
-  glBindVertexArray(quadVAO);
-
-  glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-  // position attribute
-  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
-  glEnableVertexAttribArray(0);
-
+  auto view = View().center(100.f, 100.f).radius(20.f, 20.f); 
 
   while (_window.isOpen()) {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    shader.use();
-    shader.setMat4("projection", proj);
-    shader.setMat4("model", m);
-    shader.setVec3("color", 1.f, .7f, 0.f);
+    r.draw(view);
 
 
-    glBindVertexArray(quadVAO);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 6);
-    glBindVertexArray(0);
+    
 
     // for (Unit& u : _world._units) { u.update(dt); }
 

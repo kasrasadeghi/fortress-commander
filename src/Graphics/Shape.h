@@ -1,28 +1,67 @@
 #pragma once
 
 #include "Shader.h"
+#include "View.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <array>
 
 class Shape {
-protected:
+public:
+  const Shader _shader {"shaders/view_triangle.vs", "shaders/view_triangle.fs"};
+
   glm::vec2 _position;
   glm::vec2 _size;
-  GLfloat   _float;
+  GLfloat   _rotate = 0;
+  glm::mat4 _model;
 
-  glm::mat4 getModel() {
+  void _create(const float* vertices, std::size_t byte_size) {
+    GLuint VBO;
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+
+    glBindVertexArray(VAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, byte_size, vertices, GL_STATIC_DRAW);
+
+    // position attribute
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+  }
+public:
+  GLuint VAO; // TODO: should this be public?
+
+  Shape& position(GLfloat x, GLfloat y) {
+    _position = glm::vec2(x, y);
+    return *this;
+  }
+
+  Shape& size(GLfloat w, GLfloat h) {
+    _size = glm::vec2(w, h);
+    return *this;
+  }
+
+  Shape& rotate(GLfloat r) {
+    _rotate = r;
+    return *this;
+  }
+
+  glm::mat4& model() {
     glm::mat4 m(1);
     m = glm::translate(m, glm::vec3(_position, 0.f));
 
     m = glm::translate(m, glm::vec3(_position[0] *  .5f, _position[1] *  .5f, 0.f));
-    m = glm::rotate(m, _float, glm::vec3(0.f, 0.f, 1.f));
+    m = glm::rotate(m, _rotate, glm::vec3(0.f, 0.f, 1.f));
     m = glm::translate(m, glm::vec3(_position[0] * -.5f, _position[1] * -.5f, 0.f));
 
     m = glm::scale(m, glm::vec3(_size, 1.f));
-    return m;
+    _model = m;
+    return _model;
   }
+
+  virtual void draw(View view) = 0;
 };
 
 class TricolorTriangleShape {
@@ -100,26 +139,23 @@ public:
   }
 };
 
-class RectangleShape {
-  Shader shader {"shaders/view_triangle.vs", "shaders/view_triangle.fs"};
+class RectangleShape : public Shape {
 
 public:
   static const std::array<float, 8> _base_vertices;
 
-  void _create() {
-    GLuint VBO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, _base_vertices.size() * sizeof(float), _base_vertices.data(), GL_STATIC_DRAW);
-
-    // position attribute
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
+  RectangleShape() {
+    _create(_base_vertices.data(), _base_vertices.size() * sizeof(float));
   }
 
-  GLuint VAO;
+  void draw(View view) override {
+    _shader.use();
+    _shader.setMat4("projection", view.proj());
+    _shader.setMat4("model", model());
+    _shader.setVec3("color", 1.f, .7f, 0.f);
+
+    glBindVertexArray(VAO);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    glBindVertexArray(0);
+  }
 };

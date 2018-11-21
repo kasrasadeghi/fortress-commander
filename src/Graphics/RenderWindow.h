@@ -36,10 +36,6 @@ public:
     _width = vm->width;
     _height = vm->height;
 
-    // std::cout << _width << ", " << _height << std::endl;
-    // glfwTerminate();
-    // exit(0);
-
     _window = glfwCreateWindow(_width, _height, name, monitor, NULL);
     if (_window == NULL) {
       std::cout << "Failed to create GLFW window" << std::endl;
@@ -74,6 +70,6 @@ public:
   }
 
   glm::mat4 getDefaultView() {
-    return glm::ortho(0.f, 3440.f, 1440.f, 0.f, -1.f, 1.f);
+    return glm::ortho(0.f, static_cast<float>(_width), static_cast<float>(_height), 0.f, -1.f, 1.f);
   }
 };
