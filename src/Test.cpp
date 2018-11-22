@@ -65,3 +65,18 @@ TEST(Shape, view) {
   auto view_check = glm::ortho(80.f, 120.f, 120.f, 80.f, -1.f, 1.f);
   EXPECT_EQ(glm::to_string(view.proj()), glm::to_string(view_check));
 }
+
+TEST(What, what) {
+  glm::vec3 v(10.f, 20.f, 0.f);
+  glm::mat4 m(2.f);
+  m = glm::translate(m, v);
+  // m = glm::translate(m, v);
+
+  // std::cout << glm::to_string(result) << std::endl;
+  for (int i = 0; i < 4; ++i) {
+    for (int j = 0; j < 4; ++j) {
+      std::cout << m[j][i] << "  ";
+    }
+    std::cout << std::endl;
+  }
+}

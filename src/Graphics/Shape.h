@@ -69,9 +69,9 @@ public:
     glm::mat4 m(1);
     m = glm::translate(m, glm::vec3(_position, 0.f));
 
-    m = glm::translate(m, glm::vec3(_position[0] *  .5f, _position[1] *  .5f, 0.f));
+    m = glm::translate(m, glm::vec3(_position * .5f, 0.f));
     m = glm::rotate(m, _rotate, glm::vec3(0.f, 0.f, 1.f));
-    m = glm::translate(m, glm::vec3(_position[0] * -.5f, _position[1] * -.5f, 0.f));
+    m = glm::translate(m, glm::vec3(_position * -.5f, 0.f));
 
     m = glm::scale(m, glm::vec3(_size, 1.f));
     _model = m;
@@ -102,6 +102,6 @@ public:
 
     glBindVertexArray(_VAO);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-    // glBindVertexArray(0);
+    glBindVertexArray(0);
   }
 };
