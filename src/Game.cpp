@@ -1,6 +1,6 @@
 #include "Game.h"
 #include "Graphics.h"
-// #include "Config.h"
+#include "Config.h"
 // #include "Unit.h"
 
 #include <glm/gtc/matrix_transform.hpp>
@@ -8,7 +8,7 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/string_cast.hpp>
 // #include <glm/glm.hpp>
-// #include <SFML/Graphics.hpp>
+#include <SFML/Graphics.hpp>
 
 #include <iostream>
 #include <vector>
@@ -21,34 +21,38 @@ Game::Game()
       //         sf::Vector2f(view_size * widthScalingFactor(), view_size)),
       _window("Fortress Commander") {
   _window.setKeyCallback([this](auto&&... args) { keyCallback(args...); });
-  // _clock.restart();
-  // // _window.setFramerateLimit(60);
-  // auto v = sf::VideoMode::getDesktopMode();
-  // std::cout << v.width << ", " << v.height << std::endl;
+  glfwSwapInterval(1);
 
   // if (!_font.loadFromFile("arial.ttf")) { exit(1); }
 }
 
 void Game::loop() {
 
-  auto view = View().center(10.f, 10.f).radius(20.f * _window.widthScalingFactor(), 20.f);
+  auto view = View()
+    .center(view_size/2.f * 16.f/9, view_size/2.f)
+    .radius(view_size/2.f * 16.f/9, view_size/2.f);
+
+  // float last_time = glfwGetTime();
+
 
   while (_window.isOpen()) {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
+  
+    // float dt = glfwGetTime() - last_time;
+    // last_time = glfwGetTime();
+    // std::cout << 1.f/ dt << std::endl;
+
+    
 
     // RectangleShape r;
     // r.position(0, 0).size(20, 20);
     // r.draw(view);
 
+    // for (Unit& u : _world._units) { u.update(dt); }
+    
     _world.draw(view);
 
-    // for (Unit& u : _world._units) { u.update(dt); }
-
-    // _window.setView(_view);
-    // _window.clear();
-
-    // _window.draw(_world);
     // if (_mode == ControlMode::BUILD || _mode == ControlMode::TERRAIN) {
     //   _window.draw(World::tileHolo(getMouseTile()));
     // }

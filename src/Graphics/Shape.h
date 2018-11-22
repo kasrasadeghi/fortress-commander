@@ -55,6 +55,10 @@ public:
     _color = glm::vec3(r, g, b);
     return *this;
   }
+  Shape& color(glm::vec3 c) {
+    _color = c;
+    return *this;
+  }
 
   const glm::vec2& position() { return _position; }
   const glm::vec2& size() { return _size; }
