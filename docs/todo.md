@@ -56,3 +56,4 @@
 - cache shaders
 - rectangle shape
 - render tiles
+- make view actually work
