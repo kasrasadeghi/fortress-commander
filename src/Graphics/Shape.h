@@ -14,6 +14,7 @@ protected:
   glm::vec2 _position;
   glm::vec2 _size;
   GLfloat   _rotate = 0;
+  glm::vec3 _color{1, 1, 1};
   glm::mat4 _model;
 
   void _create(const float* vertices, std::size_t byte_size) {
@@ -46,6 +47,11 @@ public:
 
   Shape& rotate(GLfloat r) {
     _rotate = r;
+    return *this;
+  }
+
+  Shape& color(GLfloat r, GLfloat g, GLfloat b) {
+    _color = glm::vec3(r, g, b);
     return *this;
   }
 
@@ -84,7 +90,7 @@ public:
     _shader.use();
     _shader.setMat4("projection", view.proj());
     _shader.setMat4("model", computeModel());
-    _shader.setVec3("color", 1.f, .7f, 0.f);
+    _shader.setVec3("color", _color);
 
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
