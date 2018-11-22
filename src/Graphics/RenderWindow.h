@@ -72,4 +72,8 @@ public:
   glm::mat4 getDefaultView() {
     return glm::ortho(0.f, static_cast<float>(_width), static_cast<float>(_height), 0.f, -1.f, 1.f);
   }
+
+  float widthScalingFactor() {
+    return 1.f * _width / _height;
+  }
 };

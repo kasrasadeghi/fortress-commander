@@ -1,18 +1,20 @@
 #include "World.h"
 #include "Unit.h"
+#include "Graphics.h"
 
-void World::_drawRegion(sf::RenderTarget& window) const {
-  for (int i = 0; i < world_size; ++i) {
-    for (int j = 0; j < world_size; ++j) {
-      sf::RectangleShape r(sf::Vector2f(tile_size, tile_size));
-      r.setPosition(sf::Vector2f(i * tile_size, j * tile_size));
+void World::_drawRegion(View view) const {
+  for (int i = 0; i < 1; ++i) {
+    for (int j = 0; j < 1; ++j) {
+      RectangleShape r;
+      r.size(tile_size, tile_size).position(i * tile_size, j * tile_size);
 
-      r.setFillColor(Tile::GRASS == _region[i][j] ? sf::Color(60, 150, 40) : sf::Color::Blue);
-      window.draw(r);
+      // r.color(Tile::GRASS == _region[i][j] ? glm::vec3(60.f / 255.f, 150.f / 255.f, 40.f / 255.f) : glm::vec3(0, 0, 1));
+      // window.draw(r);
+      r.draw(view);
     }
   }
 }
 
-void World::_drawUnits(sf::RenderTarget& window) const {
-  for (const Unit& u : _units) { window.draw(u); }
-}
+// void World::_drawUnits(sf::RenderTarget& window) const {
+//   for (const Unit& u : _units) { window.draw(u); }
+// }

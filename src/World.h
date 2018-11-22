@@ -1,41 +1,42 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
+// #include <SFML/Graphics.hpp>
 
+#include "Graphics.h"
 #include "Unit.h"
 
 enum class Tile { NONE, GRASS, WATER };
 
-class World : public sf::Drawable {
+class World /* : public sf::Drawable */ {
   std::vector<std::vector<Tile>> _region; // this should be a square
 
-  std::vector<Unit> _units;
+  // std::vector<Unit> _units;
   // std::vector<Structure> _structures;
 
-  void _drawRegion(sf::RenderTarget& window) const;
-  void _drawUnits(sf::RenderTarget& window) const;
+  void _drawRegion(View view) const;
+  // void _drawUnits() const;
 
   /// stuff to make out of bounds clicks snap back to bounds
-  bool _snapToRegion(sf::Vector2i& v) {
-    bool result = true;
-    if (0 > v.x) {
-      v.x = 0;
-      result = false;
-    }
-    if (v.x >= world_size) {
-      v.x = world_size - 1;
-      result = false;
-    }
-    if (0 > v.y) {
-      v.y = 0;
-      result = false;
-    }
-    if (v.y >= world_size) {
-      v.y = world_size - 1;
-      result = false;
-    }
-    return result;
-  }
+  // bool _snapToRegion(sf::Vector2i& v) {
+  //   bool result = true;
+  //   if (0 > v.x) {
+  //     v.x = 0;
+  //     result = false;
+  //   }
+  //   if (v.x >= world_size) {
+  //     v.x = world_size - 1;
+  //     result = false;
+  //   }
+  //   if (0 > v.y) {
+  //     v.y = 0;
+  //     result = false;
+  //   }
+  //   if (v.y >= world_size) {
+  //     v.y = world_size - 1;
+  //     result = false;
+  //   }
+  //   return result;
+  // }
 
   friend class Game;
 
@@ -44,25 +45,25 @@ public:
 
   World(size_t size) : _region(size, std::vector<Tile>(size, Tile::GRASS)) {}
 
-  static sf::RectangleShape tileHolo(sf::Vector2i tile_index) {
-    sf::RectangleShape r(sf::Vector2f(tile_size, tile_size));
-    r.setPosition(tile_index.x * tile_size, tile_index.y * tile_size);
-    r.setFillColor(sf::Color(255, 200, 200, 200));
-    return r;
-  }
+  // static sf::RectangleShape tileHolo(sf::Vector2i tile_index) {
+  //   sf::RectangleShape r(sf::Vector2f(tile_size, tile_size));
+  //   r.setPosition(tile_index.x * tile_size, tile_index.y * tile_size);
+  //   r.setFillColor(sf::Color(255, 200, 200, 200));
+  //   return r;
+  // }
 
-  Tile flipCell(sf::Vector2i v) {
-    _snapToRegion(v);
-    return _region[v.x][v.y] = (_region[v.x][v.y] == Tile::GRASS) ? Tile::WATER : Tile::GRASS;
-  }
+  // Tile flipCell(sf::Vector2i v) {
+  //   _snapToRegion(v);
+  //   return _region[v.x][v.y] = (_region[v.x][v.y] == Tile::GRASS) ? Tile::WATER : Tile::GRASS;
+  // }
 
-  void setCell(sf::Vector2i v, Tile t) {
-    _snapToRegion(v);
-    _region[v.x][v.y] = t;
-  }
+  // void setCell(sf::Vector2i v, Tile t) {
+  //   _snapToRegion(v);
+  //   _region[v.x][v.y] = t;
+  // }
 
-  virtual void draw(sf::RenderTarget& rw, sf::RenderStates states) const {
-    _drawRegion(rw);
-    _drawUnits(rw);
+  virtual void draw(View view) const {
+    _drawRegion(view);
+    // _drawUnits(rw);
   }
 };

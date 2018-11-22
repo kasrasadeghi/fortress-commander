@@ -14,13 +14,13 @@
 #include <vector>
 
 Game::Game()
-    : //_font(), _world(World::world_size),
+    : //_font(), 
+      _world(World::world_size),
       //   _view(sf::Vector2f((view_size) / 2.f * widthScalingFactor(),
       //                      (view_size) / 2.f),
       //         sf::Vector2f(view_size * widthScalingFactor(), view_size)),
       _window("Fortress Commander") {
   _window.setKeyCallback([this](auto&&... args) { keyCallback(args...); });
-  // _window.setView(_view);
   // _clock.restart();
   // // _window.setFramerateLimit(60);
   // auto v = sf::VideoMode::getDesktopMode();
@@ -30,16 +30,18 @@ Game::Game()
 }
 
 void Game::loop() {
-  RectangleShape r;
-  r.position(90, 90).size(20, 20);
 
-  auto view = View().center(100.f, 100.f).radius(20.f, 20.f); 
+  auto view = View().center(10.f, 10.f).radius(20.f * _window.widthScalingFactor(), 20.f); 
 
   while (_window.isOpen()) {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    r.draw(view);
+    // RectangleShape r;
+    // r.position(0, 0).size(20, 20);
+    // r.draw(view);
+
+    _world.draw(view);
 
 
     

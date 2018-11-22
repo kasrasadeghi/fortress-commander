@@ -1,20 +1,20 @@
 #pragma once
 
 #include "Graphics.h"
-#include <SFML/Graphics.hpp>
+// #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <sstream>
 
-// #include "World.h"
+#include "World.h"
 
 enum class ControlMode { NONE, BUILD, UNIT, TERRAIN };
 
 class Game {
   // sf::Font _font;
-  // World _world;
+  World _world;
+  RenderWindow _window;
   // sf::View _view;
   // sf::Clock _clock;
-  RenderWindow _window;
   // Tile _paint = Tile::GRASS;
 
   ControlMode _mode = ControlMode::NONE;
@@ -77,10 +77,7 @@ class Game {
 
 public:
   //   constexpr static float view_size = 20 * tile_size;
-  //   static float widthScalingFactor() {
-  //     return 1.f * sf::VideoMode::getFullscreenModes()[0].width /
-  //            sf::VideoMode::getFullscreenModes()[0].height;
-  //   }
+ 
   Game();
 
   //   sf::Vector2f getMouseCoords() {
