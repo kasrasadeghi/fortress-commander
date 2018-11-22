@@ -1,6 +1,10 @@
-#include <gtest/gtest.h> //TODO
+#include <gtest/gtest.h>
 
 #include <glm/gtc/matrix_transform.hpp>
+
+
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/string_cast.hpp>
 
 #include "Game.h"
 #include "Graphics.h"
@@ -8,7 +12,7 @@
 Game g; // sets up opengl
 
 TEST(Construction, Shader) {
-  const Shader _shader{"shaders/view_triangle.vs", "shaders/view_triangle.fs"};
+  const Shader _shader{"triangle"};
 }
 
 TEST(Construction, RectangleShape) { RectangleShape r; }
@@ -57,6 +61,7 @@ TEST(Shape, model) {
 
 TEST(Shape, view) {
   auto view = View().center(100.f, 100.f).radius(20.f, 20.f);
-  auto view_check = glm::ortho(80.f, 120.f, 80.f, 120.f, -1.f, 1.f);
-  EXPECT_EQ(view.proj(), view_check);
+  // sfml default view where 0,0 is top left
+  auto view_check = glm::ortho(80.f, 120.f, 120.f, 80.f, -1.f, 1.f);
+  EXPECT_EQ(glm::to_string(view.proj()), glm::to_string(view_check));
 }

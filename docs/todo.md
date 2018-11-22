@@ -57,3 +57,11 @@
 - rectangle shape
 - render tiles
 - make view actually work
+- fixed rectangleshape memory leak
+
+- move around using WSAD
+- move around using mouse
+- terrain paint
+- unit placement
+- holos
+- units moving
