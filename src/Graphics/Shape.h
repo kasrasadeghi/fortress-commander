@@ -14,7 +14,6 @@ protected:
 
   glm::vec2 _position;
   glm::vec2 _size;
-  GLfloat   _rotate = 0;
   glm::vec3 _color{1, 1, 1};
   glm::mat4 _model;
 
@@ -46,11 +45,6 @@ public:
     return *this;
   }
 
-  Shape& rotate(GLfloat r) {
-    _rotate = r;
-    return *this;
-  }
-
   Shape& color(GLfloat r, GLfloat g, GLfloat b) {
     _color = glm::vec3(r, g, b);
     return *this;
@@ -62,15 +56,12 @@ public:
 
   const glm::vec2& position() { return _position; }
   const glm::vec2& size() { return _size; }
-  const GLfloat& rotate() { return _rotate; }
   const glm::mat4& model() { return _model; }
 
   const glm::mat4& computeModel() {
     glm::mat4 m(1);
 
-    m = glm::translate(m, glm::vec3(_position * 1.5f, 0.f));
-    m = glm::rotate(m, _rotate, glm::vec3(0.f, 0.f, 1.f));
-    m = glm::translate(m, glm::vec3(_position * -.5f, 0.f));
+    m = glm::translate(m, glm::vec3(_position, 0.f));
 
     m = glm::scale(m, glm::vec3(_size, 1.f));
     _model = m;
