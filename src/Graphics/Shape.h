@@ -79,6 +79,8 @@ public:
   }
 
   virtual void draw(View view) = 0;
+
+  virtual ~Shape() {};
 };
 
 class RectangleShape : public Shape {
@@ -89,6 +91,8 @@ public:
   RectangleShape() {
     _create(_base_vertices.data(), _base_vertices.size() * sizeof(float));
   }
+  
+  ~RectangleShape() {};
 
   void draw(View view) override {
     _shader.use();
