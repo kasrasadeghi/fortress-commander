@@ -77,7 +77,7 @@ class Game {
 
 public:
   //   constexpr static float view_size = 20 * tile_size;
- 
+
   Game();
 
   //   sf::Vector2f getMouseCoords() {

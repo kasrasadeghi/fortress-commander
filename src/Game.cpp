@@ -14,7 +14,7 @@
 #include <vector>
 
 Game::Game()
-    : //_font(), 
+    : //_font(),
       _world(World::world_size),
       //   _view(sf::Vector2f((view_size) / 2.f * widthScalingFactor(),
       //                      (view_size) / 2.f),
@@ -31,7 +31,7 @@ Game::Game()
 
 void Game::loop() {
 
-  auto view = View().center(10.f, 10.f).radius(20.f * _window.widthScalingFactor(), 20.f); 
+  auto view = View().center(10.f, 10.f).radius(20.f * _window.widthScalingFactor(), 20.f);
 
   while (_window.isOpen()) {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -42,9 +42,6 @@ void Game::loop() {
     // r.draw(view);
 
     _world.draw(view);
-
-
-    
 
     // for (Unit& u : _world._units) { u.update(dt); }
 
