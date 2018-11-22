@@ -29,7 +29,7 @@ public:
 
   void computeProj() {
     _proj = glm::ortho(_center[0] - _radius[0], _center[0] + _radius[0], 
-                       _center[1] - _radius[1], _center[1] + _radius[1], 
+                       _center[1] + _radius[1], _center[1] - _radius[1],  
                        -1.f, 1.f);
     _dirty = false;
   }
