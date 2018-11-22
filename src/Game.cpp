@@ -43,15 +43,12 @@ void Game::loop() {
     // last_time = glfwGetTime();
     // std::cout << 1.f/ dt << std::endl;
 
-    
-
-    // RectangleShape r;
-    // r.position(0, 0).size(20, 20);
-    // r.draw(view);
-
     // for (Unit& u : _world._units) { u.update(dt); }
     
+    float s = glfwGetTime();
     _world.draw(view);
+    float e = glfwGetTime();
+    printf("%f\n", 1.f/ (e - s));
 
     // if (_mode == ControlMode::BUILD || _mode == ControlMode::TERRAIN) {
     //   _window.draw(World::tileHolo(getMouseTile()));
