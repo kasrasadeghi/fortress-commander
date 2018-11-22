@@ -9,7 +9,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # When in debug mode, we run Address Sanitizer to find memory errors
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -fmax-errors=1 -Wno-unused-parameter")
-set(CMAKE_CXX_FLAGS_DEBUG "-g ")
+# set(CMAKE_CXX_FLAGS_DEBUG "-g -fsanitize=address")
+set(CMAKE_CXX_FLAGS_DEBUG "-g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 # list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
