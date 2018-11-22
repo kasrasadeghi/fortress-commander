@@ -67,9 +67,8 @@ public:
 
   const glm::mat4& computeModel() {
     glm::mat4 m(1);
-    m = glm::translate(m, glm::vec3(_position, 0.f));
 
-    m = glm::translate(m, glm::vec3(_position * .5f, 0.f));
+    m = glm::translate(m, glm::vec3(_position * 1.5f, 0.f));
     m = glm::rotate(m, _rotate, glm::vec3(0.f, 0.f, 1.f));
     m = glm::translate(m, glm::vec3(_position * -.5f, 0.f));
 
