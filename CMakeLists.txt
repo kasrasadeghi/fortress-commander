@@ -28,16 +28,16 @@ set(SRC_FILES
   glad/src/glad.c
 )
 
-add_executable(${PROJECT_NAME} src/main.cpp ${SRC_FILES})
-add_executable(${PROJECT_NAME}_TEST src/Test.cpp ${SRC_FILES})
-
-setup_sfml(${PROJECT_NAME})
-setup_sfml(${PROJECT_NAME}_TEST)
-
-setup_glad_glfw(${PROJECT_NAME})
-setup_glad_glfw(${PROJECT_NAME}_TEST)
-
-setup_gtest(${PROJECT_NAME}_TEST)
+if(TEST)
+  add_executable(${PROJECT_NAME}_TEST src/Test.cpp ${SRC_FILES})
+  setup_sfml(${PROJECT_NAME}_TEST)
+  setup_glad_glfw(${PROJECT_NAME}_TEST)
+  setup_gtest(${PROJECT_NAME}_TEST)
+else(TEST)
+  add_executable(${PROJECT_NAME} src/main.cpp ${SRC_FILES})
+  setup_sfml(${PROJECT_NAME})
+  setup_glad_glfw(${PROJECT_NAME})
+endif(TEST)
 
 # copy over ttf file
 copy_to_bin_dir(arial.ttf shaders)
