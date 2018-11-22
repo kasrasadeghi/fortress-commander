@@ -27,6 +27,8 @@ public:
     return _proj;
   }
 
+  bool dirty() { return _dirty; }
+
   void computeProj() {
     _proj = glm::ortho(_center[0] - _radius[0], _center[0] + _radius[0], 
                        _center[1] + _radius[1], _center[1] - _radius[1],  

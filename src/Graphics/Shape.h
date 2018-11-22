@@ -78,7 +78,7 @@ public:
     return _model;
   }
 
-  virtual void draw(View view) = 0;
+  virtual void draw(View& view) = 0;
 
   virtual ~Shape() {};
 };
@@ -94,14 +94,14 @@ public:
   
   ~RectangleShape() {};
 
-  void draw(View view) override {
+  void draw(View& view) override {
     _shader.use();
-    _shader.setMat4("projection", view.proj());
+    if (view.dirty()) _shader.setMat4("projection", view.proj());
     _shader.setMat4("model", computeModel());
     _shader.setVec3("color", _color);
 
     glBindVertexArray(_VAO);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-    glBindVertexArray(0);
+    // glBindVertexArray(0);
   }
 };
