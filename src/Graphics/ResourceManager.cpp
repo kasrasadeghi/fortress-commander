@@ -1,6 +1,6 @@
 #include "ResourceManager.h"
 
-static std::unordered_map<std::string, Shader> _shader_map {};
+std::unordered_map<std::string, Shader> ResourceManager::_shader_map {};
 
 Shader& ResourceManager::loadShader(std::string name) {
   // get or construct in place from _shader_map

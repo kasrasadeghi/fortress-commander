@@ -2,6 +2,7 @@
 
 #include "Shader.h"
 #include "View.h"
+#include "ResourceManager.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -9,7 +10,7 @@
 
 class Shape {
 protected:
-  const Shader _shader {"shaders/view_triangle.vs", "shaders/view_triangle.fs"};
+  Shader& _shader = ResourceManager::loadShader("view_triangle");
 
   glm::vec2 _position;
   glm::vec2 _size;
