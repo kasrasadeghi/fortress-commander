@@ -28,9 +28,9 @@ TEST(Shape, RectBuilder_Value) {
   glm::vec2 size(20, 20);
   GLfloat rotate(0);
 
-  EXPECT_EQ(r._position, position);
-  EXPECT_EQ(r._size, size);
-  EXPECT_EQ(r._rotate, rotate);
+  EXPECT_EQ(r.position(), position);
+  EXPECT_EQ(r.size(), size);
+  EXPECT_EQ(r.rotate(), rotate);
 
   //TODO make _position and other shape things private and use a viewer friend with a #define or something
 }
@@ -52,8 +52,8 @@ TEST(Shape, model) {
 
   m = glm::scale(m, glm::vec3(size, 1.f));
 
-  r.model();
-  EXPECT_EQ(m, r._model);
+  r.computeModel();
+  EXPECT_EQ(m, r.model());
 }
 
 TEST(Shape, view) {

@@ -8,7 +8,7 @@
 #include <array>
 
 class Shape {
-public:
+protected:
   const Shader _shader {"shaders/view_triangle.vs", "shaders/view_triangle.fs"};
 
   glm::vec2 _position;
@@ -30,6 +30,7 @@ public:
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
   }
+
 public:
   GLuint VAO; // TODO: should this be public?
 
@@ -48,7 +49,13 @@ public:
     return *this;
   }
 
-  glm::mat4& model() {
+  const glm::vec2& position() { return _position; }
+  const glm::vec2& size() { return _size; }
+  const GLfloat& rotate() { return _rotate; }
+  const glm::mat4& model() { return _model; }
+  const Shader& shader() { return _shader; }
+
+  const glm::mat4& computeModel() {
     glm::mat4 m(1);
     m = glm::translate(m, glm::vec3(_position, 0.f));
 
@@ -151,7 +158,7 @@ public:
   void draw(View view) override {
     _shader.use();
     _shader.setMat4("projection", view.proj());
-    _shader.setMat4("model", model());
+    _shader.setMat4("model", computeModel());
     _shader.setVec3("color", 1.f, .7f, 0.f);
 
     glBindVertexArray(VAO);
