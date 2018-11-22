@@ -18,23 +18,23 @@ protected:
   glm::vec3 _color{1, 1, 1};
   glm::mat4 _model;
 
-  void _create(const float* vertices, std::size_t byte_size) {
+  ///_create should be called once per _base_vertices to assign a child's static VAO
+  void _create(GLuint* VAO, const float* vertices, std::size_t byte_size) {
     GLuint VBO;
-    glGenVertexArrays(1, &VAO);
+    glGenVertexArrays(1, VAO);
     glGenBuffers(1, &VBO);
-
-    glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, byte_size, vertices, GL_STATIC_DRAW);
 
     // position attribute
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+    glBindVertexArray(*VAO);
     glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);  
+    glBindVertexArray(0);
   }
-
 public:
-  GLuint VAO; // TODO: should this be public?
 
   Shape& position(GLfloat x, GLfloat y) {
     _position = glm::vec2(x, y);
@@ -84,12 +84,12 @@ public:
 };
 
 class RectangleShape : public Shape {
-
-public:
+  static GLuint _VAO;
   static const std::array<float, 8> _base_vertices;
 
+public:
   RectangleShape() {
-    _create(_base_vertices.data(), _base_vertices.size() * sizeof(float));
+    if (not _VAO) _create(&_VAO, _base_vertices.data(), _base_vertices.size() * sizeof(float));
   }
   
   ~RectangleShape() {};
@@ -100,7 +100,7 @@ public:
     _shader.setMat4("model", computeModel());
     _shader.setVec3("color", _color);
 
-    glBindVertexArray(VAO);
+    glBindVertexArray(_VAO);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     glBindVertexArray(0);
   }

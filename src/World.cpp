@@ -3,10 +3,9 @@
 #include "Unit.h"
 
 void World::_drawRegion(View view) const {
-  RectangleShape r;
-
   for (int i = 0; i < world_size; ++i) {
     for (int j = 0; j < world_size; ++j) {
+      RectangleShape r;
       r.size(tile_size, tile_size).position(i * tile_size, j * tile_size);
 
       r.color((/* Tile::GRASS == _region[i][j] */ (i + j) % 2) 

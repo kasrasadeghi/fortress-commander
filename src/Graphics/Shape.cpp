@@ -6,3 +6,5 @@ const std::array<float, 8> RectangleShape::_base_vertices = {
   0.f, 1.f,
   0.f, 0.f,
 };
+
+GLuint RectangleShape::_VAO = 0;
