@@ -10,7 +10,7 @@
 
 class Shape {
 protected:
-  Shader& _shader = ResourceManager::loadShader("view_triangle");
+  Shader& _shader = ResourceManager::getShader(SHADER_INDEX::TRIANGLE);
 
   glm::vec2 _position;
   glm::vec2 _size;
@@ -60,7 +60,6 @@ public:
   const glm::vec2& size() { return _size; }
   const GLfloat& rotate() { return _rotate; }
   const glm::mat4& model() { return _model; }
-  const Shader& shader() { return _shader; }
 
   const glm::mat4& computeModel() {
     glm::mat4 m(1);

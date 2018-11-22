@@ -2,11 +2,14 @@
 #include <fstream>
 #include <unordered_map>
 
+enum class SHADER_INDEX {
+  TRIANGLE = 0,
+};
+
 #include "Shader.h"
 class ResourceManager {
 
-  //TODO: consider using a enum class and an array to hold all of the shaders
-  static std::unordered_map<std::string, Shader> _shader_map;
+  static std::array<Shader, 1> _shaders;
 
 public:
   /// fast readfile compared with other methods
@@ -29,5 +32,5 @@ public:
     return "";
   }
 
-  static Shader& loadShader(std::string);
+  static Shader& getShader(SHADER_INDEX);
 };

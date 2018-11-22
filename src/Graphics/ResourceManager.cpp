@@ -1,16 +1,10 @@
 #include "ResourceManager.h"
+#include <string>
 
-std::unordered_map<std::string, Shader> ResourceManager::_shader_map {};
+std::array<Shader, 1> ResourceManager::_shaders { std::string("triangle") };
 
-Shader& ResourceManager::loadShader(std::string name) {
-  // get or construct in place from _shader_map
-  auto ptr = _shader_map.find(name);
-  if (ptr == _shader_map.end()) {
-    return _shader_map
-        .emplace(std::piecewise_construct, std::forward_as_tuple(name),
-                 std::forward_as_tuple("shaders/" + name + ".vs", "shaders/" + name + ".fs"))
-        .first->second;
-  } else {
-    return ptr->second;
-  }
+Shader& ResourceManager::getShader(SHADER_INDEX i) {
+  Shader& s = _shaders[static_cast<std::size_t>(i)];
+  if (s.ID == 0) s.load();
+  return s;
 }

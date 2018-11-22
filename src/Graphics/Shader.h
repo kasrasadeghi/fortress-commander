@@ -13,11 +13,13 @@
 
 class Shader {
 public:
-  unsigned int ID;
-  Shader(std::string vertexPath, std::string fragmentPath, std::string geometryPath = "") {
-    load(vertexPath, fragmentPath, geometryPath);
-  }
+  /// https://www.khronos.org/opengl/wiki/OpenGL_Object#Object_zero
+  unsigned int ID = 0; // the 0 opengl object is null for shaders
+  std::string _name;
 
+  Shader(std::string name): _name(name) {};
+
+  void load() { load("shaders/" + _name + ".vs", "shaders/" + _name + ".fs"); }
   void load(std::string vertexPath, std::string fragmentPath, std::string geometryPath = "");
   // activate the shader
   void use() const { glUseProgram(ID); }
