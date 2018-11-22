@@ -71,6 +71,28 @@ public:
   virtual void draw(View view) = 0;
 };
 
+class RectangleShape : public Shape {
+
+public:
+  static const std::array<float, 8> _base_vertices;
+
+  RectangleShape() {
+    _create(_base_vertices.data(), _base_vertices.size() * sizeof(float));
+  }
+
+  void draw(View view) override {
+    _shader.use();
+    _shader.setMat4("projection", view.proj());
+    _shader.setMat4("model", computeModel());
+    _shader.setVec3("color", 1.f, .7f, 0.f);
+
+    glBindVertexArray(VAO);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    glBindVertexArray(0);
+  }
+};
+
+////////////////// DEPRECATED ///////////////////////////
 class TricolorTriangleShape {
   std::array<float, 18> _vertices;
   const Shader _tricolor_shader{"shaders/tricolor_triangle.vs", "shaders/tricolor_triangle.fs"};
@@ -143,26 +165,5 @@ public:
     _unicolor_shader.setVec3("color", _color);
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, 3);
-  }
-};
-
-class RectangleShape : public Shape {
-
-public:
-  static const std::array<float, 8> _base_vertices;
-
-  RectangleShape() {
-    _create(_base_vertices.data(), _base_vertices.size() * sizeof(float));
-  }
-
-  void draw(View view) override {
-    _shader.use();
-    _shader.setMat4("projection", view.proj());
-    _shader.setMat4("model", computeModel());
-    _shader.setVec3("color", 1.f, .7f, 0.f);
-
-    glBindVertexArray(VAO);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-    glBindVertexArray(0);
   }
 };
