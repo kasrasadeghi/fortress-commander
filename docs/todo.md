@@ -75,7 +75,8 @@
   - instanced colors by sectioning ?
   - sending more instances at once ?
   - precomputation of noninstanced vertex rectangles ?
-  - vertex instances instead of uniforms- unit placement
+  - vertex instances instead of uniforms
+- unit placement
 - terrain paint
 - holos
 - units moving
