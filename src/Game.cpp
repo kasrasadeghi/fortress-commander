@@ -17,6 +17,7 @@ Game::Game()
     : _world(World::world_size),
       _window("Fortress Commander") {
   _window.setKeyCallback([this](auto&&... args) { keyCallback(args...); });
+  _window.setMouseCallback([this](auto&&... args) { mouseCallback(args...); });
   glfwSwapInterval(1);
   _view
     .center(view_size/2.f * _window.widthScalingFactor(), view_size/2.f)
@@ -41,7 +42,7 @@ void Game::loop() {
     // float s = glfwGetTime();
     _world.draw(_view);
     // float e = glfwGetTime();
-    printf("%f\n", 1.f/ (dt));
+    // printf("%f\n", 1.f/ (dt));
 
     // if (_mode == ControlMode::BUILD || _mode == ControlMode::TERRAIN) {
     //   _window.draw(World::tileHolo(getMouseTile()));
@@ -61,6 +62,13 @@ void Game::loop() {
 
 void Game::keyCallback(int key, int scancode, int action, int mods) {
   if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) { _window.close(); }
+}
+
+void Game::mouseCallback(int button, int action, int mods) {
+  if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS) {
+    auto p = getMouseTile();
+    std::cout << p.x << ", " << p.y << std::endl;
+  }
 }
 
 // void Game::handleEvent(const sf::Event& event) {

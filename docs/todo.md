@@ -70,7 +70,7 @@
 
   - mouse movement
 
-- terrain paint
 - unit placement
+- terrain paint
 - holos
 - units moving

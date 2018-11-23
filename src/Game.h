@@ -80,23 +80,30 @@ public:
 
   Game();
 
-  //   sf::Vector2f getMouseCoords() {
-  //     return _window.mapPixelToCoords(sf::Mouse::getPosition(), _view);
-  //   }
+    glm::vec2 getMouseCoords() {
+      return pixelToCoords(_window.mousePos());
+    }
+    
+    glm::vec2 pixelToCoords(glm::vec2 p) {
+      // coords = V' W v
+      // W : window -> opengl
+      // V : game   -> opengl so V' : opengl -> game
+      return  _view.inv() * _window.defaultView().proj() * glm::vec4(p.x, p.y, 0, 1);
+    }
 
-  //   static sf::Vector2i mapCoordsToTile(sf::Vector2f coords) {
-  //     return sf::Vector2i(static_cast<int>(coords.x / tile_size),
-  //                         static_cast<int>(coords.y / tile_size));
-  //   }
+    static glm::vec<2, int> mapCoordsToTile(glm::vec2 coords) {
+      return glm::vec<2, int>(static_cast<int>(coords.x / tile_size),
+                              static_cast<int>(coords.y / tile_size));
+    }
 
-  //   sf::Vector2i getMouseTile() {
-  //     sf::Vector2f coords = getMouseCoords();
-  //     return mapCoordsToTile(coords);
-  //   }
+    glm::vec<2, int> getMouseTile() {
+      return mapCoordsToTile(getMouseCoords());
+    }
 
   void loop();
 
   void keyCallback(int key, int scancode, int action, int mods);
+  void mouseCallback(int button, int action, int mods);
   // void handleEvent(const sf::Event& event);
 
   // void handleViewInput(const sf::Time& dt);

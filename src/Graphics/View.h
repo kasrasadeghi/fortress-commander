@@ -7,6 +7,7 @@ class View {
   glm::vec2 _center;
   glm::vec2 _radius;
   glm::mat4 _proj;
+  glm::mat4 _inv;
   bool _dirty;
 
 public:
@@ -23,8 +24,15 @@ public:
   }
 
   glm::mat4& proj() {
-    if (_dirty) computeProj();
+    // if (_dirty) //TODO commented because it interferes with keyboard control (???)
+      computeProj();
     return _proj;
+  }
+
+  glm::mat4& inv() {
+    // if (_dirty) //TODO commented because it interferes with keyboard control (???)    
+      computeProj();
+    return _inv;
   }
 
   float left()   { return _center[0] - _radius[0]; }
@@ -42,6 +50,7 @@ public:
     _proj = glm::ortho(left(), right(), 
                        top(), bottom(),  
                        -1.f, 1.f);
+    _inv  = glm::inverse(_proj);
     _dirty = false;
   }
 };

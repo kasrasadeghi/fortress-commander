@@ -5,6 +5,8 @@
 
 #include <GLFW/glfw3.h>
 
+#include "View.h"
+
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <iostream>
@@ -19,12 +21,19 @@ static void __keyCallbackWrapper(GLFWwindow* window, int k, int s, int a, int m)
   __keyCallback(k, s, a, m);
 }
 
+using MouseCallback = std::function<void(int, int, int)>;
+static MouseCallback __mouseCallback;
+static void __mouseCallbackWrapper(GLFWwindow* window, int b, int a, int m) {
+  __mouseCallback(b, a, m);
+}
+
 class RenderWindow {
   GLFWwindow* _window;
 
 public:
   int _width;
   int _height;
+  View _default;
   
   RenderWindow(const char* name) {
     glfwInit();
@@ -53,13 +62,37 @@ public:
     }
     glfwSetFramebufferSizeCallback(_window, frameBufferSizeCallback);
     glViewport(0, 0, _width, _height);
+
+    float height = static_cast<float>(_height);
+    float width = static_cast<float>(_width);
+
+    _default.center(width/2, height/2).radius(width/2, height/2);
   }
 
-  bool isOpen() { return not glfwWindowShouldClose(_window); }
+  // clang-format off
+  GLFWwindow* window() { return _window; }
+  int height()         { return _height; }
+  int width()          { return _width;  }
+
+  bool isOpen()      { return not glfwWindowShouldClose(_window); }
   void swapBuffers() { glfwSwapBuffers(_window); }
+  void close()       { glfwSetWindowShouldClose(_window, true); }
+
+  View& defaultView()        { return _default; }
+  float widthScalingFactor() { return 1.f * _width / _height; }
+  // clang-format on
+
+  /////////////////// Callbacks and Input ///////////////
 
   int getKey(int key_code) { return glfwGetKey(_window, key_code); }
-  void close() { glfwSetWindowShouldClose(_window, true); }
+
+  glm::vec2 mousePos() {
+    // NOTE: this mouse position is "relative to the client area of the window"
+    // according to glfw
+    double xpos, ypos;
+    glfwGetCursorPos(_window, &xpos, &ypos);
+    return glm::vec2(xpos, ypos);
+  }
 
   static void frameBufferSizeCallback(GLFWwindow* w, int width, int height) {
     glViewport(0, 0, width, height);
@@ -69,14 +102,8 @@ public:
     __keyCallback = keyCallback;
     glfwSetKeyCallback(_window, __keyCallbackWrapper);
   }
-
-  glm::mat4 getDefaultView() {
-    return glm::ortho(0.f, static_cast<float>(_width), static_cast<float>(_height), 0.f, -1.f, 1.f);
+  void setMouseCallback(MouseCallback mouseCallback) {
+    __mouseCallback = mouseCallback;
+    glfwSetMouseButtonCallback(_window, __mouseCallbackWrapper);
   }
-
-  float widthScalingFactor() {
-    return 1.f * _width / _height;
-  }
-
-  GLFWwindow* window() { return _window; }
 };
