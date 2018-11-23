@@ -60,17 +60,19 @@
 - graphics optimization
   - cpu culling
   - instanced rectangle optimization
-
-  - instanced colors too ?
-  - vertex instances instead of uniforms
-
-- make view actually work
+- view
   - correct screen size
   - keyboard movement
+  - mouse callback
+- set modes
 
+- view
   - mouse movement
-
-- unit placement
+  - lock view to world
+  - cursor callback
+- graphics optimization
+  - instanced colors too ?
+  - vertex instances instead of uniforms- unit placement
 - terrain paint
 - holos
 - units moving

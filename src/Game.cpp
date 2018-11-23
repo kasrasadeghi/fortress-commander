@@ -62,6 +62,13 @@ void Game::loop() {
 
 void Game::keyCallback(int key, int scancode, int action, int mods) {
   if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) { _window.close(); }
+
+  // TODO: temporary. normally left clicking on empty ground gets you out of a mode
+  if (key == GLFW_KEY_Q && action == GLFW_PRESS) { _mode = ControlMode::NONE; }
+  
+  if (key == GLFW_KEY_B && action == GLFW_PRESS) { _mode = ControlMode::BUILD; }
+  if (key == GLFW_KEY_U && action == GLFW_PRESS) { _mode = ControlMode::UNIT; }
+  if (key == GLFW_KEY_T && action == GLFW_PRESS) { _mode = ControlMode::TERRAIN; }
 }
 
 void Game::mouseCallback(int button, int action, int mods) {
@@ -69,19 +76,6 @@ void Game::mouseCallback(int button, int action, int mods) {
     auto p = getMouseTile();
     std::cout << p.x << ", " << p.y << std::endl;
   }
-}
-
-// void Game::handleEvent(const sf::Event& event) {
-//   if (event.type == sf::Event::Closed) { _window.close(); }
-//   if (event.type == sf::Event::KeyPressed) {
-//     if (event.key.code == sf::Keyboard::Q) { _window.close(); }
-//     if (event.key.code == sf::Keyboard::B) { _mode = ControlMode::BUILD; }
-//     if (event.key.code == sf::Keyboard::U) { _mode = ControlMode::UNIT; }
-//     if (event.key.code == sf::Keyboard::T) { _mode = ControlMode::TERRAIN; }
-//     if (event.key.code == sf::Keyboard::Escape) { _mode = ControlMode::NONE;
-//     }
-//   }
-
 //   if (event.type == sf::Event::MouseButtonPressed) {
 //     switch(_mode) {
 //       case ControlMode::NONE:
@@ -104,7 +98,7 @@ void Game::mouseCallback(int button, int action, int mods) {
 //       sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
 //     _world.setCell(getMouseTile(), _paint);
 //   }
-// }
+}
 
 void Game::handleTick(float dt) {
   constexpr float speed = 20 * tile_size;
