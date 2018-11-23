@@ -22,11 +22,11 @@ void World::_drawRegion(View& view) const {
 
   for (int i = 0; i < world_size; ++i) {
     for (int j = 0; j < world_size; ++j) {
-      if (
-        i * tile_size + 1< view.left() ||
-        view.right() < i * tile_size + 1 ||
-        j * tile_size + 1< view.bottom() || 
-        view.top() < j * tile_size + 1
+      if ( // cpu view culling
+        (i + 1) * tile_size  < view.left()   ||
+        view.right()         < i * tile_size ||
+        (j + 1) * tile_size  < view.bottom() || 
+        view.top()           < j * tile_size 
       ) continue;
       if (_region[i][j] == Tile::GRASS) grass.emplace_back(i * tile_size, j * tile_size);
       if (_region[i][j] == Tile::WATER) water.emplace_back(i * tile_size, j * tile_size);      
