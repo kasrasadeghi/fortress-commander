@@ -1,15 +1,17 @@
+#pragma once
+
 #include <string>
 #include <fstream>
 #include <unordered_map>
 
 enum class SHADER_INDEX {
-  TRIANGLE = 0,
+  TRIANGLE = 0, INSTANCED = 1
 };
 
 #include "Shader.h"
 class ResourceManager {
 
-  static std::array<Shader, 1> _shaders;
+  static std::array<Shader, 2> _shaders;
 
 public:
   /// fast readfile compared with other methods

@@ -8,6 +8,7 @@
 
 #include "Game.h"
 #include "Graphics.h"
+#include "Graphics/Instanced.h"
 
 Game g; // sets up opengl
 
@@ -59,34 +60,10 @@ TEST(Shape, view) {
   EXPECT_EQ(view.proj(), view_check);
 }
 
-TEST(What, what) {
-  // glm::vec3 v(10.f, 20.f, 0.f);
-  // glm::mat4 m(2.f);
-  // m = glm::translate(m, v);
-  // // m = glm::translate(m, v);
-
-  // // std::cout << glm::to_string(result) << std::endl;
+TEST(InstancedRectangle, EvensComputation) {
+  InstancedRectangle r;
+  r.color(.4, .5, .1).size(1, 1);
   
+  std::vector<glm::vec2> offsets;
 
-  RectangleShape r;
-  r.position(0, 0).size(10, 10);
-  auto m = r.computeModel();
-
-  auto m2 = r.position(20, 20).computeModel();
-  m = glm::translate(m, glm::vec3(2, 2, 0));
-
-  EXPECT_EQ(m, m2);
-
-  for (int i = 0; i < 4; ++i) {
-    for (int j = 0; j < 4; ++j) {
-      std::cout << m[j][i] << "  ";
-    }
-    std::cout << std::endl;
-  }
-  for (int i = 0; i < 4; ++i) {
-    for (int j = 0; j < 4; ++j) {
-      std::cout << m2[j][i] << "  ";
-    }
-    std::cout << std::endl;
-  }
 }

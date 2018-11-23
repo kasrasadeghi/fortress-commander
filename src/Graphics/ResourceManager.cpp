@@ -1,7 +1,7 @@
 #include "ResourceManager.h"
 #include <string>
 
-std::array<Shader, 1> ResourceManager::_shaders { std::string("triangle") };
+std::array<Shader, 2> ResourceManager::_shaders = { std::string("triangle"), std::string("instanced") };
 
 Shader& ResourceManager::getShader(SHADER_INDEX i) {
   Shader& s = _shaders[static_cast<std::size_t>(i)];

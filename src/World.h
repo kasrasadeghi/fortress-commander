@@ -13,7 +13,7 @@ class World /* : public sf::Drawable */ {
   // std::vector<Unit> _units;
   // std::vector<Structure> _structures;
 
-  void _drawRegion(View view) const;
+  void _drawRegion(View& view) const;
   // void _drawUnits() const;
 
   /// stuff to make out of bounds clicks snap back to bounds
