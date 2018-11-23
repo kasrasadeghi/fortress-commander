@@ -65,16 +65,16 @@
   - keyboard movement
   - mouse callback
   - mouse movement
+  - lock view to world
 - set modes
 
 - view
-  - lock view to world
   - cursor callback
 - graphics optimization
   - instanced colors too ?
   - instanced colors by sectioning ?
   - sending more instances at once ?
-  - precomputation ?
+  - precomputation of noninstanced vertex rectangles ?
   - vertex instances instead of uniforms- unit placement
 - terrain paint
 - holos
