@@ -72,6 +72,9 @@
   - cursor callback
 - graphics optimization
   - instanced colors too ?
+  - instanced colors by sectioning ?
+  - sending more instances at once ?
+  - precomputation ?
   - vertex instances instead of uniforms- unit placement
 - terrain paint
 - holos
