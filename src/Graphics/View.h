@@ -32,6 +32,9 @@ public:
   float top()    { return _center[1] + _radius[1]; }
   float bottom() { return _center[1] - _radius[1]; }
 
+  void move(float dx, float dy) {
+    _center += glm::vec2(dx, dy);
+  }
 
   bool dirty() { return _dirty; }
 

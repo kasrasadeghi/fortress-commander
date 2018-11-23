@@ -13,7 +13,7 @@ class Game {
   // sf::Font _font;
   World _world;
   RenderWindow _window;
-  // sf::View _view;
+  View _view;
   // sf::Clock _clock;
   // Tile _paint = Tile::GRASS;
 
@@ -42,17 +42,17 @@ class Game {
   //     if (pos.y > _window.getSize().y - margin) { _view.move(0, d); }
   //   }
 
-  //   void _keyboardViewMove(float d) {
-  //     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) { _view.move(0, -d); }
-  //     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) { _view.move(0, d); }
-  //     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) { _view.move(-d, 0); }
-  //     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) { _view.move(d, 0); }
-  //     if (_mode == ControlMode::TERRAIN) {
-  //       if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
-  //         _world.setCell(getMouseTile(), _paint);
-  //       }
-  //     }
-  //   }
+    void _keyboardViewMove(float d) { //TODO: window get key instead of _window.window()
+      if (glfwGetKey(_window.window(), GLFW_KEY_W) == GLFW_PRESS) { _view.move(0, -d); }
+      if (glfwGetKey(_window.window(), GLFW_KEY_S) == GLFW_PRESS) { _view.move(0, d); }
+      if (glfwGetKey(_window.window(), GLFW_KEY_A) == GLFW_PRESS) { _view.move(-d, 0); }
+      if (glfwGetKey(_window.window(), GLFW_KEY_D) == GLFW_PRESS) { _view.move(d, 0); }
+      // if (_mode == ControlMode::TERRAIN) {
+      //   if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+      //     _world.setCell(getMouseTile(), _paint);
+      //   }
+      // }
+    }
 
   //   void _reboundViewToWorld() {
   //     auto topLeft = _view.getCenter() - (_view.getSize() / 2.f);
@@ -100,4 +100,5 @@ public:
   // void handleEvent(const sf::Event& event);
 
   // void handleViewInput(const sf::Time& dt);
+  void handleTick(float dt);
 };

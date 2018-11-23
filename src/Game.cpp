@@ -14,41 +14,34 @@
 #include <vector>
 
 Game::Game()
-    : //_font(),
-      _world(World::world_size),
-      //   _view(sf::Vector2f((view_size) / 2.f * widthScalingFactor(),
-      //                      (view_size) / 2.f),
-      //         sf::Vector2f(view_size * widthScalingFactor(), view_size)),
+    : _world(World::world_size),
       _window("Fortress Commander") {
   _window.setKeyCallback([this](auto&&... args) { keyCallback(args...); });
   glfwSwapInterval(1);
-
+  _view
+    .center(view_size/2.f * _window.widthScalingFactor(), view_size/2.f)
+    .radius(view_size/2.f * _window.widthScalingFactor(), view_size/2.f);
   // if (!_font.loadFromFile("arial.ttf")) { exit(1); }
 }
 
 void Game::loop() {
-
-  auto view = View()
-    .center(view_size/2.f * 16.f/9, view_size/2.f)
-    .radius(view_size/2.f * 16.f/9, view_size/2.f);
-
-  // float last_time = glfwGetTime();
-
+  float last_time = glfwGetTime();
 
   while (_window.isOpen()) {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
   
-    // float dt = glfwGetTime() - last_time;
-    // last_time = glfwGetTime();
-    // std::cout << 1.f/ dt << std::endl;
+    float dt = glfwGetTime() - last_time;
+    last_time = glfwGetTime();
 
     // for (Unit& u : _world._units) { u.update(dt); }
+
+    handleTick(dt);
     
-    float s = glfwGetTime();
-    _world.draw(view);
-    float e = glfwGetTime();
-    printf("%f\n", 1.f/ (e - s));
+    // float s = glfwGetTime();
+    _world.draw(_view);
+    // float e = glfwGetTime();
+    printf("%f\n", 1.f/ (dt));
 
     // if (_mode == ControlMode::BUILD || _mode == ControlMode::TERRAIN) {
     //   _window.draw(World::tileHolo(getMouseTile()));
@@ -105,13 +98,13 @@ void Game::keyCallback(int key, int scancode, int action, int mods) {
 //   }
 // }
 
-// void Game::handleViewInput(const sf::Time& dt) {
-//   constexpr float speed = 20 * tile_size;
-//   float d = (speed * dt).asSeconds();
+void Game::handleTick(float dt) {
+  constexpr float speed = 20 * tile_size;
+  float d = speed * dt;
 
-//   _mouseViewMove(d);
+  // _mouseViewMove(d);
 
-//   _keyboardViewMove(d);
+  _keyboardViewMove(d);
 
-//   _reboundViewToWorld();
-// }
+  // _reboundViewToWorld();
+}

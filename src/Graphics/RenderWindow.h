@@ -77,4 +77,6 @@ public:
   float widthScalingFactor() {
     return 1.f * _width / _height;
   }
+
+  GLFWwindow* window() { return _window; }
 };
