@@ -106,6 +106,5 @@ public:
   void mouseCallback(int button, int action, int mods);
   // void handleEvent(const sf::Event& event);
 
-  // void handleViewInput(const sf::Time& dt);
   void handleTick(float dt);
 };
