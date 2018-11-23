@@ -104,7 +104,6 @@ public:
 
   void keyCallback(int key, int scancode, int action, int mods);
   void mouseCallback(int button, int action, int mods);
-  // void handleEvent(const sf::Event& event);
 
   void handleTick(float dt);
 };
