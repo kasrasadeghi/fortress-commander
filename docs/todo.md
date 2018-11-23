@@ -56,11 +56,20 @@
 - cache shaders
 - rectangle shape
 - render tiles
-- make view actually work
 - fixed rectangleshape memory leak
+- graphics optimization
+  - cpu culling
+  - instanced rectangle optimization
 
-- move around using WSAD
-- move around using mouse
+  - instanced colors too ?
+  - vertex instances instead of uniforms
+
+- make view actually work
+  - correct screen size
+  - keyboard movement
+
+  - mouse movement
+
 - terrain paint
 - unit placement
 - holos
