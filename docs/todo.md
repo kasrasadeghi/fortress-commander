@@ -64,10 +64,10 @@
   - correct screen size
   - keyboard movement
   - mouse callback
+  - mouse movement
 - set modes
 
 - view
-  - mouse movement
   - lock view to world
   - cursor callback
 - graphics optimization

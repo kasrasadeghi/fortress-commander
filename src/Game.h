@@ -32,15 +32,15 @@ class Game {
   //     return t;
   //   }
 
-  //   void _mouseViewMove(float d) {
-  //     constexpr int margin = 20;
-  //     auto pos = sf::Mouse::getPosition();
-  //     if (pos.x < margin) { _view.move(-d, 0); }
-  //     if (pos.y < margin) { _view.move(0, -d); }
+    void _mouseViewMove(float d) {
+      constexpr int margin = 20;
+      auto pos = _window.mousePos();
+      if (pos.x < margin) { _view.move(-d, 0); }
+      if (pos.y < margin) { _view.move(0, -d); }
 
-  //     if (pos.x > _window.getSize().x - margin) { _view.move(d, 0); }
-  //     if (pos.y > _window.getSize().y - margin) { _view.move(0, d); }
-  //   }
+      if (pos.x > _window.width() - margin) { _view.move(d, 0); }
+      if (pos.y > _window.height() - margin) { _view.move(0, d); }
+    }
 
     void _keyboardViewMove(float d) {
       if (_window.getKey(GLFW_KEY_W) == GLFW_PRESS) { _view.move(0, -d); }

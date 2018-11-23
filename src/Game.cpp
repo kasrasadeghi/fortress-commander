@@ -104,7 +104,7 @@ void Game::handleTick(float dt) {
   constexpr float speed = 20 * tile_size;
   float d = speed * dt;
 
-  // _mouseViewMove(d);
+  _mouseViewMove(d);
 
   _keyboardViewMove(d);
 
