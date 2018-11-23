@@ -7,8 +7,8 @@
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/string_cast.hpp>
-// #include <glm/glm.hpp>
-#include <SFML/Graphics.hpp>
+
+// #include <SFML/Graphics.hpp>
 
 #include <iostream>
 #include <vector>
