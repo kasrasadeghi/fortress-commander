@@ -35,12 +35,19 @@ private:
   }
 
 public:
+  static constexpr GLuint batch_size = 5000;
+
   InstancedRectangle() {
     if (not _VAO) _create(&_VAO, _base_vertices, 12 * sizeof(float));
   }
 
   InstancedRectangle& positions(const std::vector<glm::vec2>& pos) {
     _positions = pos;
+    return *this;
+  }
+
+  InstancedRectangle& positions(std::vector<glm::vec2>::iterator begin, std::vector<glm::vec2>::iterator end) {
+    _positions = std::vector<glm::vec2>(begin, end);
     return *this;
   }
 
@@ -67,8 +74,8 @@ public:
     _shader.setVec2("size", size());
     _shader.setVec3("color", _color);
 
-    // trasnfer positions
-    for (int i = 0; i < 100; ++i) {
+    // transfer positions
+    for (uint i = 0; i < batch_size; ++i) {
       std::stringstream a; a << i;
       auto s = "positions[" + a.str() + "]";
       _shader.setVec2(s, _positions[i]);
