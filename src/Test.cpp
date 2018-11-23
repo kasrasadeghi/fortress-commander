@@ -63,7 +63,37 @@ TEST(Shape, view) {
 TEST(InstancedRectangle, EvensComputation) {
   InstancedRectangle r;
   r.color(.4, .5, .1).size(1, 1);
-  
+
   std::vector<glm::vec2> offsets;
 
+  for (int i = 0; i < 10; ++i) {
+    for (int j = 0; j < 10; ++j) {
+      if ((i + j) % 2)
+        offsets.emplace_back(i * tile_size, j * tile_size);
+    }
+  }
+
+  View v;
+  v.center(5, 5).radius(5, 5);
+
+  for (uint i = 0; i < offsets.size(); ++i) {
+    glm::vec2 vertex(1.f, -1.f);
+    glm::vec2 vertex2(-1.f, 1.f);
+
+    auto size = r.size();
+    auto currpos = offsets[i];
+    glm::mat4 model(1.f);
+    // std::cout << glm::to_string(model) << std::endl;
+    model[0][0] = size[0];
+    model[1][1] = size[1];
+
+    model[3][0] = currpos[0];
+    model[3][1] = currpos[1];
+    
+    using namespace std;
+    using namespace glm;
+    cout << currpos[0] << ", " << currpos[1] << " -> ";
+    cout << to_string(v.proj() * model * vec4(vertex, 0.0, 1.0)) << "  ";
+    cout << to_string(v.proj() * model * vec4(vertex2, 0.0, 1.0)) << endl;
+  }  
 }
