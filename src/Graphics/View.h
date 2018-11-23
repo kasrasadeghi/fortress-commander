@@ -27,11 +27,17 @@ public:
     return _proj;
   }
 
+  float left()   { return _center[0] - _radius[0]; }
+  float right()  { return _center[0] + _radius[0]; }
+  float top()    { return _center[1] + _radius[1]; }
+  float bottom() { return _center[1] - _radius[1]; }
+
+
   bool dirty() { return _dirty; }
 
   void computeProj() {
-    _proj = glm::ortho(_center[0] - _radius[0], _center[0] + _radius[0], 
-                       _center[1] + _radius[1], _center[1] - _radius[1],  
+    _proj = glm::ortho(left(), right(), 
+                       top(), bottom(),  
                        -1.f, 1.f);
     _dirty = false;
   }
