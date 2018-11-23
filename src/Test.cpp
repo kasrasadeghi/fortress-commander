@@ -8,7 +8,6 @@
 
 #include "Game.h"
 #include "Graphics.h"
-#include "Graphics/Instanced.h"
 
 Game g; // sets up opengl
 
