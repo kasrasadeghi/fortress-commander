@@ -42,11 +42,11 @@ class Game {
   //     if (pos.y > _window.getSize().y - margin) { _view.move(0, d); }
   //   }
 
-    void _keyboardViewMove(float d) { //TODO: window get key instead of _window.window()
-      if (glfwGetKey(_window.window(), GLFW_KEY_W) == GLFW_PRESS) { _view.move(0, -d); }
-      if (glfwGetKey(_window.window(), GLFW_KEY_S) == GLFW_PRESS) { _view.move(0, d); }
-      if (glfwGetKey(_window.window(), GLFW_KEY_A) == GLFW_PRESS) { _view.move(-d, 0); }
-      if (glfwGetKey(_window.window(), GLFW_KEY_D) == GLFW_PRESS) { _view.move(d, 0); }
+    void _keyboardViewMove(float d) {
+      if (_window.getKey(GLFW_KEY_W) == GLFW_PRESS) { _view.move(0, -d); }
+      if (_window.getKey(GLFW_KEY_S) == GLFW_PRESS) { _view.move(0, d); }
+      if (_window.getKey(GLFW_KEY_A) == GLFW_PRESS) { _view.move(-d, 0); }
+      if (_window.getKey(GLFW_KEY_D) == GLFW_PRESS) { _view.move(d, 0); }
       // if (_mode == ControlMode::TERRAIN) {
       //   if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
       //     _world.setCell(getMouseTile(), _paint);
