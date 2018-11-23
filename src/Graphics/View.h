@@ -11,6 +11,9 @@ class View {
   bool _dirty;
 
 public:
+  glm::vec2 center() { return _center; }
+  glm::vec2 radius() { return _radius; }
+
   View& center(GLfloat cx, GLfloat cy) {
     _center = glm::vec2(cx, cy);
     _dirty = true;

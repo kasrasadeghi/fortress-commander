@@ -54,26 +54,27 @@ class Game {
       // }
     }
 
-  //   void _reboundViewToWorld() {
-  //     auto topLeft = _view.getCenter() - (_view.getSize() / 2.f);
-  //     auto bottomRight = _view.getCenter() + (_view.getSize() / 2.f);
+    void _reboundViewToWorld() {
+      auto topLeft = _view.center() - _view.radius();
+      auto bottomRight = _view.center() + _view.radius();
 
-  //     const auto viewRadius = (view_size * tile_size) / 2.f;
-  //     const auto worldBorder = World::world_size * tile_size;
+      const auto viewRadius = view_size / 2.f;
+      const auto worldBorder = World::world_size * tile_size;
+      const auto kw = _window.widthScalingFactor();
 
-  //     if (topLeft.x < 0) {
-  //       _view.setCenter(viewRadius * widthScalingFactor(),
-  //       _view.getCenter().y);
-  //     }
-  //     if (topLeft.y < 0) { _view.setCenter(_view.getCenter().x, viewRadius);
-  //     } if (bottomRight.x > worldBorder) {
-  //       _view.setCenter(worldBorder - (viewRadius * widthScalingFactor()),
-  //                       _view.getCenter().y);
-  //     }
-  //     if (bottomRight.y > worldBorder) {
-  //       _view.setCenter(_view.getCenter().x, worldBorder - viewRadius);
-  //     }
-  //   }
+      if (topLeft.x < 0) {
+        _view.center(viewRadius * kw, _view.center().y);
+      }
+      if (topLeft.y < 0) { 
+        _view.center(_view.center().x, viewRadius);
+      } 
+      if (bottomRight.x > worldBorder) {
+        _view.center(worldBorder - (viewRadius * kw), _view.center().y);
+      }
+      if (bottomRight.y > worldBorder) {
+        _view.center(_view.center().x, worldBorder - viewRadius);
+      }
+    }
 
 public:
     constexpr static float view_size = 20 * tile_size;
