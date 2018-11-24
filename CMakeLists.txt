@@ -30,7 +30,6 @@ set(SRC_FILES
   src/Graphics/Shape.cpp
   src/Graphics/Shader.cpp
   src/Graphics/ResourceManager.cpp
-  src/Graphics/Instanced.cpp
   glad/src/glad.c
 )
 
