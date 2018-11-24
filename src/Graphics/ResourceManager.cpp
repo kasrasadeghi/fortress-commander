@@ -1,8 +1,9 @@
 #include "ResourceManager.h"
 #include <string>
 
-std::array<Shader, 1> ResourceManager::_shaders = { 
-  std::string("instanced_array")
+std::array<Shader, 2> ResourceManager::_shaders = { 
+  std::string("instanced_array"),
+  std::string("text")
 };
 
 Shader& ResourceManager::getShader(SHADER_INDEX i) {

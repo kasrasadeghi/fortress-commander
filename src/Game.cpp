@@ -7,10 +7,9 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/string_cast.hpp>
 
-// #include <SFML/Graphics.hpp>
-
 #include <iostream>
 #include <vector>
+#include <sstream>
 
 Game::Game()
     : _world(World::world_size),
@@ -24,8 +23,16 @@ Game::Game()
   // if (!_font.loadFromFile("arial.ttf")) { exit(1); }
 }
 
+template<typename T>
+std::string str(T obj) {
+  std::stringstream ss;
+  ss << obj;
+  return ss.str();
+}
+
 void Game::loop() {
   float last_time = glfwGetTime();
+  TextRenderer t(_window.defaultView());
 
   while (_window.isOpen()) {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -39,6 +46,8 @@ void Game::loop() {
     handleTick(dt);
     
     _world.draw(_view);
+    
+    t.renderText(str(1.f / dt), 100, 50, 1, glm::vec3(0, 0, 0));
     // printf("%f\n", 1.f/ (dt));
 
     if (_mode == ControlMode::BUILD || _mode == ControlMode::TERRAIN) {
