@@ -53,6 +53,7 @@
 - make a map
 
 # glfw-opengl
+>- done
 - cache shaders
 - rectangle shape
 - render tiles
@@ -73,7 +74,13 @@
 - terrain holo
 >- feature parity!
 
+## advanced graphics
+- text rendering
+>- todo
+- text renderer takes in a view and draws to the view ?
+
 ## ergonomics and refactoring
+>- todo
 - single position constructor
 - shape renaming
 - alpha value color
@@ -83,6 +90,7 @@
 - vertex array and vertex buffer #refactoring
 
 ## further optimization
+>- todo
 - geometry shaders #graphics
 - instanced colors too ? #graphics
 - instanced colors by sectioning ? #graphics
