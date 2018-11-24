@@ -1,9 +1,7 @@
 #include "ResourceManager.h"
 #include <string>
 
-std::array<Shader, 3> ResourceManager::_shaders = { 
-  std::string("triangle"), 
-  std::string("instanced"),
+std::array<Shader, 1> ResourceManager::_shaders = { 
   std::string("instanced_array")
 };
 

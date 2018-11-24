@@ -27,7 +27,6 @@ set(SRC_FILES
   src/Game.cpp
   src/Unit.cpp
   src/World.cpp
-  src/Graphics/Shape.cpp
   src/Graphics/Shader.cpp
   src/Graphics/ResourceManager.cpp
   glad/src/glad.c
