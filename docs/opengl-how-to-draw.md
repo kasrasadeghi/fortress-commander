@@ -49,12 +49,28 @@ glBindVertexArray(VAO);
   // unbind the vertex buffer
   glBindBuffer(GL_ARRAY_BUFFER, 0);  
   
-  // do similar stuff
+  // instanced example
   glBindBuffer(GL_ARRAY_BUFFER, *posVBO);
     // set attribute 1
     glEnableVertexAttribArray(_1_);
     glVertexAttribPointer(_1_, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
     glVertexAttribDivisor(_1_, 1); // tell OpenGL to increment what element of this we're using every 1 instance
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+  // a buffer with more than one attribute per element, a glm::vec<5, float>
+  glBindBuffer(GL_ARRAY_BUFFER, *posVBO);
+    // set attribute 2
+    glEnableVertexAttribArray(_2_);
+    //                         v- size                v- how long the total is  v- starting position
+    glVertexAttribPointer(_2_, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    
+    // set attribute 3
+    glEnableVertexAttribArray(_3_);
+    glVertexAttribPointer(_3_, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(2 * sizeof(float)));
+    //                         ^- size                ^- how long the total is   ^- starting position
+    // the only bit that changes is the starting position because it occurs after previous attribute in the same buffer
+    // therefore each element looks like [ | ][ | | ]
+    //                                   ^_2_ ^_3_
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 glBindVertexArray(0);
