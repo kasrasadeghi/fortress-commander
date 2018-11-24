@@ -17,17 +17,9 @@ inline GLuint createVertexBuffer(const std::vector<glm::vec2>& vertices) {
   return VBO;
 }
 
-class InstancedArrayRectangle {
-  GLuint _VAO = 0;
-  GLuint _VBO = 0;
-  GLuint _instanceVBO = 0;
-  Shader& _shader = ResourceManager::getShader(SHADER_INDEX::INSTANCED_ARRAY);
-
-  glm::vec2 _size;
-  glm::vec3 _color{1, 1, 1};
-  const uint _position_count;
-
-  static GLuint _create(GLuint* vertVBO, GLuint* posVBO, const std::vector<glm::vec2>& vertices,
+class VertexArray {
+public:
+  static GLuint create(GLuint* vertVBO, GLuint* posVBO, const std::vector<glm::vec2>& vertices,
                       const std::vector<glm::vec2>& pos) {
 
     *posVBO = createVertexBuffer(pos);
@@ -50,6 +42,17 @@ class InstancedArrayRectangle {
     glBindVertexArray(0);
     return VAO;
   }
+};
+
+class InstancedArrayRectangle {
+  GLuint _VAO = 0;
+  GLuint _VBO = 0;
+  GLuint _instanceVBO = 0;
+  Shader& _shader = ResourceManager::getShader(SHADER_INDEX::INSTANCED_ARRAY);
+
+  glm::vec2 _size;
+  glm::vec3 _color{1, 1, 1};
+  const uint _position_count;
 
 public:
   static constexpr GLuint batch_size = 5000;
@@ -62,7 +65,7 @@ public:
     base_vertices.emplace_back(0.f, 1.f);
     base_vertices.emplace_back(0.f, 0.f);
     
-    _VAO = _create(&_VBO, &_instanceVBO, base_vertices, pos);
+    _VAO = VertexArray::create(&_VBO, &_instanceVBO, base_vertices, pos);
   }
 
   ~InstancedArrayRectangle() {
