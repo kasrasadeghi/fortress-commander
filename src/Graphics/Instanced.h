@@ -83,6 +83,7 @@ public:
     _color = glm::vec3(r, g, b);
     return *this;
   }
+
   InstancedArrayRectangle& color(glm::vec3 c) {
     _color = c;
     return *this;
@@ -98,6 +99,75 @@ public:
 
     glBindVertexArray(_VAO);
     glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 8, _position_count);
+    glBindVertexArray(0);
+  }
+};
+
+
+class InstancedCircle {
+  GLuint _VAO = 0;
+  GLuint _VBO = 0;
+  GLuint _instanceVBO = 0;
+  Shader& _shader = ResourceManager::getShader(SHADER_INDEX::INSTANCED_ARRAY);
+
+  glm::vec2 _size;
+  glm::vec3 _color{1, 1, 1};
+  const uint _position_count;
+
+  uint _size_count;
+
+public:
+  static constexpr GLuint batch_size = 5000;
+
+  InstancedCircle(uint size_count, const std::vector<glm::vec2>& pos): _position_count(pos.size()), _size_count(size_count) {
+    std::vector<glm::vec2> base_vertices;
+
+    base_vertices.emplace_back(0, 0);
+    
+    for (uint i = 0; i < size_count; ++i) {
+
+      float angle = i * 2 * glm::pi<float>() / size_count - glm::half_pi<float>();
+      float x = std::cos(angle) * 0.49;
+      float y = std::sin(angle) * 0.49;
+      base_vertices.emplace_back(x, y);
+    }
+
+    base_vertices.push_back(base_vertices[1]);
+
+    _VAO = VertexArray::create(&_VBO, &_instanceVBO, base_vertices, pos);
+  }
+
+  ~InstancedCircle() {
+    glDeleteVertexArrays(1, &_VAO);
+    glDeleteBuffers(1, &_VBO);
+    glDeleteBuffers(1, &_instanceVBO);
+  }
+
+  InstancedCircle& size(GLfloat w, GLfloat h) {
+    _size = glm::vec2(w, h);
+    return *this;
+  }
+
+  InstancedCircle& color(GLfloat r, GLfloat g, GLfloat b) {
+    _color = glm::vec3(r, g, b);
+    return *this;
+  }
+
+  InstancedCircle& color(glm::vec3 c) {
+    _color = c;
+    return *this;
+  }
+
+  const glm::vec2& size() { return _size; }
+
+  void draw(View& view) {
+    _shader.use();
+    _shader.setMat4("projection", view.proj());
+    _shader.setVec2("size", size());
+    _shader.setVec3("color", _color);
+
+    glBindVertexArray(_VAO);
+    glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, _size_count + 2, _position_count);
     glBindVertexArray(0);
   }
 };
