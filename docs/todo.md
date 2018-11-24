@@ -66,16 +66,17 @@
 - cpu culling #graphics
 - instanced rectangle optimization #graphics
 - instanced arrays #graphics
+- draw circle #graphics
 
 - vertex array and vertex buffer #refactoring
-- draw circle #graphics
 - cursor callback #view
-- instanced colors too ? #graphics
-- instanced colors by sectioning ? #graphics
-- sending more instances at once ? #graphics
-- precomputation of noninstanced vertex rectangles ? #graphics
 - geometry shaders #graphics
 - unit placement
 - terrain paint
 - holos
 - units moving
+
+- instanced colors too ? #graphics
+- instanced colors by sectioning ? #graphics
+- sending more instances at once ? #graphics
+- precomputation of noninstanced vertex rectangles ? #graphics
