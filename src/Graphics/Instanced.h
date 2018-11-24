@@ -27,15 +27,16 @@ class InstancedArrayRectangle {
   glm::vec3 _color{1, 1, 1};
   const uint _position_count;
 
-  static void _create(GLuint* VAO, GLuint* vertVBO, GLuint* posVBO, const std::vector<glm::vec2>& vertices,
+  static GLuint _create(GLuint* vertVBO, GLuint* posVBO, const std::vector<glm::vec2>& vertices,
                       const std::vector<glm::vec2>& pos) {
 
     *posVBO = createVertexBuffer(pos);
     *vertVBO = createVertexBuffer(vertices);
 
-    glGenVertexArrays(1, VAO);
-    glBindVertexArray(*VAO);
-      // base position attribute
+    GLuint VAO;
+    glGenVertexArrays(1, &VAO);
+
+    glBindVertexArray(VAO);
       glBindBuffer(GL_ARRAY_BUFFER, *vertVBO);
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
@@ -43,10 +44,11 @@ class InstancedArrayRectangle {
       glBindBuffer(GL_ARRAY_BUFFER, *posVBO);
         glEnableVertexAttribArray(1);
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+        glVertexAttribDivisor(1, 1); // tell OpenGL this is an instanced vertex attribute.
       glBindBuffer(GL_ARRAY_BUFFER, 0);
-      glVertexAttribDivisor(1, 1); // tell OpenGL this is an instanced vertex attribute.
 
     glBindVertexArray(0);
+    return VAO;
   }
 
 public:
@@ -60,7 +62,7 @@ public:
     base_vertices.emplace_back(0.f, 1.f);
     base_vertices.emplace_back(0.f, 0.f);
     
-    _create(&_VAO, &_VBO, &_instanceVBO, base_vertices, pos);
+    _VAO = _create(&_VBO, &_instanceVBO, base_vertices, pos);
   }
 
   ~InstancedArrayRectangle() {
