@@ -119,7 +119,7 @@ class InstancedCircle {
 public:
   static constexpr GLuint batch_size = 5000;
 
-  InstancedCircle(uint size_count, const std::vector<glm::vec2>& pos): _position_count(pos.size()), _size_count(size_count) {
+  InstancedCircle(const std::vector<glm::vec2>& pos, uint size_count = 30): _position_count(pos.size()), _size_count(size_count) {
     std::vector<glm::vec2> base_vertices;
 
     base_vertices.emplace_back(0, 0);
