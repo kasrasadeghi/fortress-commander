@@ -18,7 +18,7 @@ Game::Game()
       _window("Fortress Commander") {
   _window.setKeyCallback([this](auto&&... args) { keyCallback(args...); });
   _window.setMouseCallback([this](auto&&... args) { mouseCallback(args...); });
-  glfwSwapInterval(1);
+  // glfwSwapInterval(1);
   _view
     .center(view_size/2.f * _window.widthScalingFactor(), view_size/2.f)
     .radius(view_size/2.f * _window.widthScalingFactor(), view_size/2.f);
