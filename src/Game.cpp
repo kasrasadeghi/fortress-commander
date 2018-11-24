@@ -42,7 +42,7 @@ void Game::loop() {
     // float s = glfwGetTime();
     _world.draw(_view);
     // float e = glfwGetTime();
-    // printf("%f\n", 1.f/ (dt));
+    printf("%f\n", 1.f/ (dt));
 
     // if (_mode == ControlMode::BUILD || _mode == ControlMode::TERRAIN) {
     //   _window.draw(World::tileHolo(getMouseTile()));

@@ -5,13 +5,13 @@
 #include <unordered_map>
 
 enum class SHADER_INDEX {
-  TRIANGLE = 0, INSTANCED = 1
+  TRIANGLE = 0, INSTANCED = 1, INSTANCED_ARRAY = 2
 };
 
 #include "Shader.h"
 class ResourceManager {
 
-  static std::array<Shader, 2> _shaders;
+  static std::array<Shader, 3> _shaders;
 
 public:
   /// fast readfile compared with other methods
