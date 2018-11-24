@@ -68,9 +68,9 @@
 - instanced arrays #graphics
 - draw circle #graphics
 - unit placement
+- units moving
 
 - holos
-- units moving
 - terrain paint
 - cursor callback #view
 - vertex array and vertex buffer #refactoring

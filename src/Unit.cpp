@@ -1,5 +1,4 @@
 #include "Unit.h"
-#include "VecMath.h"
 #include "World.h"
 
 void Unit::pathTo(glm::vec2 coords) { _target = coords; }

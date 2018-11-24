@@ -79,7 +79,7 @@ void Game::mouseCallback(int button, int action, int mods) {
   if (action == GLFW_PRESS) {
     switch(_mode) {
       case ControlMode::NONE:
-        // if (_world._units.size()) _world._units[0].pathTo(getMouseCoords());
+        if (_world._units.size()) _world._units[0].pathTo(getMouseCoords());
         break;
       case ControlMode::BUILD:
         //_world.addStructure(getMouseTile());
