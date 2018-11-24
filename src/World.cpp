@@ -46,16 +46,6 @@ void World::_drawRegion(View& view) const {
     r.color(.1, .3, .8);
     r.draw(view);
   }
-
-  // InstancedRectangle r;
-  // r.size(tile_size, tile_size);
-  // r.color(.3, .6, .2);
-  // r.positions(grass);
-  // r.draw(view);
-
-  // r.color(.1, .3, .8);
-  // r.positions(water);
-  // r.draw(view);
 }
 
 // void World::_drawUnits(sf::RenderTarget& window) const {
