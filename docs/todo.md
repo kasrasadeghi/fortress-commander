@@ -57,27 +57,24 @@
 - rectangle shape
 - render tiles
 - fixed rectangleshape memory leak
-- view
-  - correct screen size
-  - keyboard movement
-  - mouse callback
-  - mouse movement
-  - lock view to world
+- correct screen size #view
+- keyboard movement #view
+- mouse callback #view
+- mouse movement #view
+- lock view to world #view
 - set modes
-- graphics optimization
-  - cpu culling
-  - instanced rectangle optimization
-  - instanced arrays
+- cpu culling #graphics
+- instanced rectangle optimization #graphics
+- instanced arrays #graphics
 
-- draw circle
-- view
-  - cursor callback
-- graphics optimization
-  - instanced colors too ?
-  - instanced colors by sectioning ?
-  - sending more instances at once ?
-  - precomputation of noninstanced vertex rectangles ?
-  - geometry shaders
+- vertex array and vertex buffer #refactoring
+- draw circle #graphics
+- cursor callback #view
+- instanced colors too ? #graphics
+- instanced colors by sectioning ? #graphics
+- sending more instances at once ? #graphics
+- precomputation of noninstanced vertex rectangles ? #graphics
+- geometry shaders #graphics
 - unit placement
 - terrain paint
 - holos
