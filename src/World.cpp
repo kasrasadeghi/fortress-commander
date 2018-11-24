@@ -48,6 +48,16 @@ void World::_drawRegion(View& view) const {
   }
 }
 
-// void World::_drawUnits(sf::RenderTarget& window) const {
-//   for (const Unit& u : _units) { window.draw(u); }
-// }
+void World::_drawUnits(View& view) const {
+  std::vector<glm::vec2> positions;
+  positions.reserve(_units.size());
+
+  for (auto& u : _units) {
+    positions.emplace_back(u.pos());
+  }
+  
+  InstancedCircle r(positions);
+  r.size(tile_size, tile_size);
+  r.color(1, 0, 0);
+  r.draw(view);
+}

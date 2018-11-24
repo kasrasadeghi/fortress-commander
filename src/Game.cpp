@@ -35,14 +35,14 @@ void Game::loop() {
     float dt = glfwGetTime() - last_time;
     last_time = glfwGetTime();
 
-    // for (Unit& u : _world._units) { u.update(dt); }
+    for (Unit& u : _world._units) { u.update(dt); }
 
     handleTick(dt);
     
     // float s = glfwGetTime();
     _world.draw(_view);
     // float e = glfwGetTime();
-    printf("%f\n", 1.f/ (dt));
+    // printf("%f\n", 1.f/ (dt));
 
     // if (_mode == ControlMode::BUILD || _mode == ControlMode::TERRAIN) {
     //   _window.draw(World::tileHolo(getMouseTile()));
@@ -72,27 +72,27 @@ void Game::keyCallback(int key, int scancode, int action, int mods) {
 }
 
 void Game::mouseCallback(int button, int action, int mods) {
-  if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS) {
-    auto p = getMouseTile();
-    std::cout << p.x << ", " << p.y << std::endl;
+  // if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS) {
+  //   auto p = getMouseTile();
+  //   std::cout << p.x << ", " << p.y << std::endl;
+  // }
+  if (action == GLFW_PRESS) {
+    switch(_mode) {
+      case ControlMode::NONE:
+        // if (_world._units.size()) _world._units[0].pathTo(getMouseCoords());
+        break;
+      case ControlMode::BUILD:
+        //_world.addStructure(getMouseTile());
+        break;
+      case ControlMode::TERRAIN:
+        // _paint = _world.flipCell(getMouseTile());
+        break;
+      case ControlMode::UNIT:
+        // check if the add unit is in bounds
+        _world._units.push_back(Unit(getMouseCoords()));
+        break;
+    }
   }
-//   if (event.type == sf::Event::MouseButtonPressed) {
-//     switch(_mode) {
-//       case ControlMode::NONE:
-//         if (_world._units.size()) _world._units[0].pathTo(getMouseCoords());
-//         break;
-//       case ControlMode::BUILD:
-//         //_world.addStructure(getMouseTile());
-//         break;
-//       case ControlMode::TERRAIN:
-//         _paint = _world.flipCell(getMouseTile());
-//         break;
-//       case ControlMode::UNIT:
-//         // check if the add unit is in bounds
-//         _world._units.push_back(Unit(getMouseCoords()));
-//         break;
-//     }
-//   }
 
 //   if (_mode == ControlMode::TERRAIN && event.type == sf::Event::MouseMoved &&
 //       sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {

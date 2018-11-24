@@ -10,11 +10,11 @@ enum class Tile { NONE, GRASS, WATER };
 class World /* : public sf::Drawable */ {
   std::vector<std::vector<Tile>> _region; // this should be a square
 
-  // std::vector<Unit> _units;
+  std::vector<Unit> _units;
   // std::vector<Structure> _structures;
 
   void _drawRegion(View& view) const;
-  // void _drawUnits() const;
+  void _drawUnits(View& view) const;
 
   /// stuff to make out of bounds clicks snap back to bounds
   // bool _snapToRegion(sf::Vector2i& v) {
@@ -74,6 +74,6 @@ public:
 
   virtual void draw(View view) const {
     _drawRegion(view);
-    // _drawUnits(rw);
+    _drawUnits(view);
   }
 };

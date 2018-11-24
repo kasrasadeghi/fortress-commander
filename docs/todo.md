@@ -67,15 +67,15 @@
 - instanced rectangle optimization #graphics
 - instanced arrays #graphics
 - draw circle #graphics
-
-- vertex array and vertex buffer #refactoring
-- cursor callback #view
-- geometry shaders #graphics
 - unit placement
-- terrain paint
+
 - holos
 - units moving
+- terrain paint
+- cursor callback #view
+- vertex array and vertex buffer #refactoring
 
+- geometry shaders #graphics
 - instanced colors too ? #graphics
 - instanced colors by sectioning ? #graphics
 - sending more instances at once ? #graphics
