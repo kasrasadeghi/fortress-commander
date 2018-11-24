@@ -15,10 +15,11 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 # list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 # include(cmake/clang-format.cmake)
-include(cmake/sfml.cmake)
+# include(cmake/sfml.cmake)
 include(cmake/glad_glfw.cmake)
 include(cmake/utils.cmake)
 include(cmake/gtest.cmake)
+include(cmake/freetype.cmake)
 
 set(PROJECT_NAME fortress-commander)
 project(${PROJECT_NAME})
@@ -33,15 +34,16 @@ set(SRC_FILES
 )
 
 if(TEST)
-  add_executable(${PROJECT_NAME}_TEST src/Test.cpp ${SRC_FILES})
-  setup_sfml(${PROJECT_NAME}_TEST)
-  setup_glad_glfw(${PROJECT_NAME}_TEST)
-  setup_gtest(${PROJECT_NAME}_TEST)
+  set(PROJECT_NAME "${PROJECT_NAME}_TEST")
+  add_executable(${PROJECT_NAME} src/Test.cpp ${SRC_FILES})
+  setup_gtest(${PROJECT_NAME})
 else(TEST)
   add_executable(${PROJECT_NAME} src/main.cpp ${SRC_FILES})
-  setup_sfml(${PROJECT_NAME})
-  setup_glad_glfw(${PROJECT_NAME})
 endif(TEST)
 
-# copy over ttf file
-copy_to_bin_dir(arial.ttf shaders)
+setup_glad_glfw(${PROJECT_NAME})
+setup_freetype(${PROJECT_NAME})
+
+
+# copy over resources
+copy_to_bin_dir(fonts shaders)
