@@ -69,12 +69,20 @@
 - draw circle #graphics
 - unit placement
 - units moving
+- unit holo
+- terrain holo
+>- feature parity!
 
-- holos
+## ergonomics and refactoring
+- single position constructor
+- shape renaming
+- alpha value color
+- base shape instance??
 - terrain paint
 - cursor callback #view
 - vertex array and vertex buffer #refactoring
 
+## further optimization
 - geometry shaders #graphics
 - instanced colors too ? #graphics
 - instanced colors by sectioning ? #graphics

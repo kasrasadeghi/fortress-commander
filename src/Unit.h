@@ -17,12 +17,12 @@ public:
 
   glm::vec2 pos() const { return _pos; }
 
-  // static sf::CircleShape holo(glm::vec curr) {
-  //   sf::CircleShape r(Unit::unit_size);
-  //   r.setPosition(curr.x - Unit::unit_size, curr.y - Unit::unit_size);
-  //   r.setFillColor(sf::Color(255, 200, 200, 150));
-  //   return r;
-  // }
+  static void holo(View& view, glm::vec2 curr) {
+    InstancedCircle c({curr});
+    c.size(tile_size, tile_size);
+    c.color(1, 0.5, 0.5/*TODO , 0.5 */);
+    c.draw(view);
+  }
 
   void pathTo(glm::vec2 coords);
   void update(float dt);

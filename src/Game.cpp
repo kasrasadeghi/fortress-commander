@@ -1,7 +1,6 @@
 #include "Game.h"
 #include "Graphics.h"
 #include "Config.h"
-// #include "Unit.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -39,22 +38,19 @@ void Game::loop() {
 
     handleTick(dt);
     
-    // float s = glfwGetTime();
     _world.draw(_view);
-    // float e = glfwGetTime();
     // printf("%f\n", 1.f/ (dt));
 
-    // if (_mode == ControlMode::BUILD || _mode == ControlMode::TERRAIN) {
-    //   _window.draw(World::tileHolo(getMouseTile()));
-    // }
-    // if (_mode == ControlMode::UNIT) {
-    //   _window.draw(Unit::holo(getMouseCoords()));
-    // }
+    if (_mode == ControlMode::BUILD || _mode == ControlMode::TERRAIN) {
+      World::tileHolo(_view, getMouseTile());
+    }
+    if (_mode == ControlMode::UNIT) {
+      Unit::holo(_view, getMouseCoords());
+    }
 
     // _window.setView(_window.getDefaultView());
     // _window.draw(makeText(framerate));
 
-    // _window.display();
     _window.swapBuffers();
     glfwPollEvents();
   }
@@ -82,13 +78,13 @@ void Game::mouseCallback(int button, int action, int mods) {
         if (_world._units.size()) _world._units[0].pathTo(getMouseCoords());
         break;
       case ControlMode::BUILD:
-        //_world.addStructure(getMouseTile());
+        //TODO:_world.addStructure(getMouseTile());
         break;
       case ControlMode::TERRAIN:
-        // _paint = _world.flipCell(getMouseTile());
+        //TODO: _paint = _world.flipCell(getMouseTile());
         break;
       case ControlMode::UNIT:
-        // check if the add unit is in bounds
+        //TODO: check if the add unit is in bounds
         _world._units.push_back(Unit(getMouseCoords()));
         break;
     }

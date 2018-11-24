@@ -55,12 +55,12 @@ public:
     }
   }
 
-  // static sf::RectangleShape tileHolo(sf::Vector2i tile_index) {
-  //   sf::RectangleShape r(sf::Vector2f(tile_size, tile_size));
-  //   r.setPosition(tile_index.x * tile_size, tile_index.y * tile_size);
-  //   r.setFillColor(sf::Color(255, 200, 200, 200));
-  //   return r;
-  // }
+  static void tileHolo(View& view, glm::vec<2, int> tile_index) {
+    InstancedArrayRectangle r({glm::vec2(tile_index.x * tile_size, tile_index.y * tile_size)});
+    r.color(.7, .7, .7 /*TODO:, .5 */);
+    r.size(tile_size, tile_size);
+    r.draw(view);
+  }
 
   // Tile flipCell(sf::Vector2i v) {
   //   _snapToRegion(v);
