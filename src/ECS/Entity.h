@@ -7,4 +7,4 @@ namespace ECS {
 using Entity = std::size_t;
 
 static const Entity InvalidEntity = 0;
-}
+} // namespace ECS

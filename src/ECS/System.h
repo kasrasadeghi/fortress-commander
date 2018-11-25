@@ -1,14 +1,14 @@
 #pragma once
 
+#include <algorithm>
 #include <cstdint>
+#include <functional>
+#include <iostream>
 #include <memory>
 #include <set>
-#include <iostream>
-#include <algorithm>
-#include <functional>
 
-#include "Entity.h"
 #include "Component.h"
+#include "Entity.h"
 
 namespace ECS {
 class Manager;
@@ -24,7 +24,7 @@ public:
   using Ptr = std::shared_ptr<System>;
 
   explicit System(Manager& manager) : _manager(manager) {}
-  virtual ~System() {};
+  virtual ~System(){};
 
   const ComponentTypeSet& getRequiredComponents() const {
     return _requiredComponents;
@@ -52,8 +52,10 @@ public:
   std::size_t updateEntities(float dt) {
     std::size_t updatedEntities = 0;
 
-    for (auto entity = _matchingEntities.begin(); entity != _matchingEntities.end(); ++entity) {
-      updateEntity(dt, *entity); // each user class should specialize this virtual pure function
+    for (auto entity = _matchingEntities.begin();
+         entity != _matchingEntities.end(); ++entity) {
+      updateEntity(dt, *entity); // each user class should specialize this
+                                 // virtual pure function
       ++updatedEntities;
     }
 
@@ -73,4 +75,4 @@ protected:
     _requiredComponents = std::move(requiredComponents);
   }
 };
-}
+} // namespace ECS

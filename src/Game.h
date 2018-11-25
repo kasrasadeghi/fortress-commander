@@ -4,12 +4,12 @@
 
 #include <iostream>
 
-#include "ECS/Manager.h"
 #include "ECS/Event.h"
+#include "ECS/Manager.h"
 
-#include "World.h"
 #include "Components.h"
 #include "Systems.h"
+#include "World.h"
 
 enum class ControlMode { NONE, BUILD, UNIT, TERRAIN };
 

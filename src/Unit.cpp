@@ -1,10 +1,11 @@
 #include "Unit.h"
 
-#include "VecMath.h"
 #include "Game.h"
+#include "VecMath.h"
 
 Unit::Unit(sf::Vector2f pos, ECS::Manager* manager /*, UnitType type*/)
-  : _target(pos), _manager(manager), _id(_manager->createEntity()) /*, _type(type)*/ {
+    : _target(pos), _manager(manager),
+      _id(_manager->createEntity()) /*, _type(type)*/ {
 
   _manager->addComponent<TransformComponent>(_id, TransformComponent(pos, 0.f));
   _manager->addComponent<MotionComponent>(_id, MotionComponent());
@@ -30,7 +31,7 @@ void Unit::pathTo(sf::Vector2f coords) { _target = coords; }
 void Unit::update(const sf::Time& dt) {
   // TODO: move unit updates to a system
   sf::Vector2f& pos = _manager->getComponent<TransformComponent>(_id).pos;
-  sf::Vector2f& vel = _manager->getComponent<MotionComponent>(_id).velocity; 
+  sf::Vector2f& vel = _manager->getComponent<MotionComponent>(_id).velocity;
   const float speed = magn(vel);
 
   sf::Vector2f target_dx(_target.x - pos.x, _target.y - pos.y);

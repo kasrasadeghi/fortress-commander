@@ -1,7 +1,7 @@
 #pragma once
 
-#include <unordered_set>
 #include <cmath>
+#include <unordered_set>
 
 #include "Components.h"
 
@@ -27,7 +27,7 @@ public:
 
 class UnitSelectSystem : public ECS::System {
   constexpr static float _dragStartThreshold = 0.2;
-  
+
   bool _mouseDown = false;
   sf::Vector2f _mouseDragStart, _mousePos;
 
@@ -49,13 +49,13 @@ public:
   }
 
   void updateEntity(float dt, ECS::Entity entity) override {
-    if (!_selectionChanged)
-      return;
-    
-    const sf::Vector2f pos = _manager.getComponent<TransformComponent>(entity).pos;
+    if (!_selectionChanged) return;
+
+    const sf::Vector2f pos =
+        _manager.getComponent<TransformComponent>(entity).pos;
     bool inBox = pos.x >= _boxTopLeft.x && pos.x <= _boxBottomRight.x &&
                  pos.y >= _boxTopLeft.y && pos.y <= _boxBottomRight.y;
-    
+
     _manager.getComponent<SelectableComponent>(entity).selected = inBox;
   }
 
@@ -82,7 +82,7 @@ public:
   void handleMouseMove(float x, float y) {
     _mousePos = sf::Vector2f(x, y);
     if (_mouseDown) {
-      selectBox(_mouseDragStart, _mousePos);      
+      selectBox(_mouseDragStart, _mousePos);
       _selectionChanged = true;
     }
   }

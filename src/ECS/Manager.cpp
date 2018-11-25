@@ -4,7 +4,8 @@
 #include <iostream>
 
 namespace ECS {
-Manager::Manager() : _lastEntity(InvalidEntity), _entities(), _componentStores(), _systems() {}
+Manager::Manager()
+    : _lastEntity(InvalidEntity), _entities(), _componentStores(), _systems() {}
 
 Manager::~Manager() {}
 
@@ -30,7 +31,9 @@ std::size_t Manager::registerEntity(const Entity entity) {
   for (auto system = _systems.begin(); system != _systems.end(); ++system) {
     const auto& systemRequiredComponents = (*system)->getRequiredComponents();
 
-    if (std::includes(entityComponents.begin(), entityComponents.end(), systemRequiredComponents.begin(), systemRequiredComponents.end())) {
+    if (std::includes(entityComponents.begin(), entityComponents.end(),
+                      systemRequiredComponents.begin(),
+                      systemRequiredComponents.end())) {
       (*system)->registerEntity(entity);
       ++associatedSystems;
     }
@@ -65,4 +68,4 @@ std::size_t Manager::updateEntities(float dt) {
 
   return updatedEntities;
 }
-}
+} // namespace ECS
