@@ -127,8 +127,8 @@ public:
     for (uint i = 0; i < size_count; ++i) {
 
       float angle = i * 2 * glm::pi<float>() / size_count - glm::half_pi<float>();
-      float x = std::cos(angle) * 0.49;
-      float y = std::sin(angle) * 0.49;
+      float x = std::sin(angle) * 0.49;
+      float y = std::cos(angle) * 0.49;
       base_vertices.emplace_back(x, y);
     }
 
