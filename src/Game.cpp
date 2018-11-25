@@ -48,7 +48,6 @@ void Game::loop() {
     _world.draw(_view);
     
     t.renderText(str(1.f / dt), 100, 50, 1, glm::vec3(0, 0, 0));
-    // printf("%f\n", 1.f/ (dt));
 
     if (_mode == ControlMode::BUILD || _mode == ControlMode::TERRAIN) {
       World::tileHolo(_view, getMouseTile());
@@ -56,9 +55,6 @@ void Game::loop() {
     if (_mode == ControlMode::UNIT) {
       Unit::holo(_view, getMouseCoords());
     }
-
-    // _window.setView(_window.getDefaultView());
-    // _window.draw(makeText(framerate));
 
     _window.swapBuffers();
     glfwPollEvents();
