@@ -12,4 +12,4 @@ function(setup_freetype executable)
   )
 
   enable_testing()
-endfunction(setup_gtest)
+endfunction(setup_freetype)
