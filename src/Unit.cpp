@@ -1,7 +1,9 @@
 #include "Unit.h"
 #include "World.h"
 
-void Unit::pathTo(glm::vec2 coords) { _target = coords; }
+void Unit::pathTo(glm::vec2 coords) {
+  _target = coords;
+}
 
 void Unit::update(float dt) {
   if (_target == _pos) return;

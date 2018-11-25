@@ -13,12 +13,14 @@ public:
 
   Unit(glm::vec2 pos) : _pos(pos), _target(pos) {}
 
-  glm::vec2 pos() const { return _pos; }
+  glm::vec2 pos() const {
+    return _pos;
+  }
 
   static void holo(View& view, glm::vec2 curr) {
     InstancedCircle c(curr.x, curr.y);
     c.size(tile_size, tile_size);
-    c.color(1, 0.5, 0.5/*TODO , 0.5 */);
+    c.color(1, 0.5, 0.5 /*TODO , 0.5 */);
     c.draw(view);
   }
 

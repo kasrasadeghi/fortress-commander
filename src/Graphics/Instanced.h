@@ -20,7 +20,7 @@ inline GLuint createVertexBuffer(const std::vector<glm::vec2>& vertices) {
 class VertexArray {
 public:
   static GLuint create(GLuint* vertVBO, GLuint* posVBO, const std::vector<glm::vec2>& vertices,
-                      const std::vector<glm::vec2>& pos) {
+                       const std::vector<glm::vec2>& pos) {
 
     *posVBO = createVertexBuffer(pos);
     *vertVBO = createVertexBuffer(vertices);

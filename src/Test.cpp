@@ -2,7 +2,6 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/string_cast.hpp>
 
@@ -15,8 +14,8 @@ TEST(Construction, Shader) {
   const Shader _shader{"triangle"};
 }
 
-TEST(Construction, RectangleShape) { 
-  // RectangleShape r; 
+TEST(Construction, RectangleShape) {
+  // RectangleShape r;
 }
 
 TEST(Shape, RectBuilder_NonCrashing) {
@@ -33,7 +32,6 @@ TEST(Shape, RectBuilder_Value) {
 
   // EXPECT_EQ(r.position(), position);
   // EXPECT_EQ(r.size(), size);
-
 }
 
 TEST(Shape, model) {
@@ -89,13 +87,13 @@ TEST(InstancedRectangle, EvensComputation) {
 
   //   model[3][0] = currpos[0];
   //   model[3][1] = currpos[1];
-    
+
   //   using namespace std;
   //   using namespace glm;
   //   cout << currpos[0] << ", " << currpos[1] << " -> ";
   //   cout << to_string(v.proj() * model * vec4(vertex, 0.0, 1.0)) << "  ";
   //   cout << to_string(v.proj() * model * vec4(vertex2, 0.0, 1.0)) << endl;
-  // }  
+  // }
 }
 
 TEST(Shape, pi) {
