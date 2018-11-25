@@ -24,7 +24,12 @@ Game::Game()
   if (!_font.loadFromFile("arial.ttf")) { exit(1); }
 
   _manager.createComponentStore<TransformComponent>();
+  _manager.createComponentStore<SelectableComponent>();
+
   _manager.addSystem(ECS::System::Ptr(new MoveSystem(_manager)));
+
+  _unitSelectSystem = new UnitSelectSystem(_manager);
+  _manager.addSystem(ECS::System::Ptr(_unitSelectSystem));
 }
 
 void Game::loop() {
@@ -89,8 +94,17 @@ void Game::handleEvent(const sf::Event& event) {
   }
 
   if (_mode == ControlMode::NONE) {
+    // if (event.type == sf::Event::MouseButtonPressed) {
+      // if (_world._units.size()) _world._units[0].pathTo(getMouseCoords());
+    // }
     if (event.type == sf::Event::MouseButtonPressed) {
-      if (_world._units.size()) _world._units[0].pathTo(getMouseCoords());
+      float scale_factor = 1.f / ((float)_window.getSize().y / view_size);
+      _unitSelectSystem->handleMouseDown(event.mouseButton.x * scale_factor, event.mouseButton.y * scale_factor);
+    } else if (event.type == sf::Event::MouseMoved) {
+      float scale_factor = 1.f / ((float)_window.getSize().y / view_size);
+      _unitSelectSystem->handleMouseMove(event.mouseMove.x * scale_factor, event.mouseMove.y * scale_factor);
+    } else if (event.type == sf::Event::MouseButtonReleased) {
+      _unitSelectSystem->handleMouseUp();
     }
   }
   if (_mode == ControlMode::BUILD) {

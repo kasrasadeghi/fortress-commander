@@ -8,6 +8,7 @@ Unit::Unit(sf::Vector2f pos, ECS::Manager* manager /*, UnitType type*/)
   _id = _manager->createEntity();
 
   _manager->addComponent<TransformComponent>(_id, TransformComponent(sf::Vector2f(1.f, 1.f), 0.f));
+  _manager->addComponent<SelectableComponent>(_id, SelectableComponent());
   _manager->registerEntity(_id);
 }
 
@@ -15,6 +16,9 @@ void Unit::draw(sf::RenderTarget& rw, sf::RenderStates states) const {
   constexpr auto radius = unit_size * World::tile_size;
   sf::CircleShape c(unit_size * World::tile_size);
   c.setFillColor(sf::Color::Red);
+  if (_manager->getComponent<SelectableComponent>(this->_id).selected) {
+    c.setFillColor(sf::Color::Magenta);
+  }
   c.setPosition(_pos - sf::Vector2f(radius, radius));
 
   rw.draw(c);

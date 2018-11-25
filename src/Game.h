@@ -8,6 +8,7 @@
 
 #include "World.h"
 #include "Components.h"
+#include "Systems.h"
 
 enum class ControlMode { NONE, BUILD, UNIT, TERRAIN };
 
@@ -22,6 +23,7 @@ class Game {
   ECS::Manager _manager;
 
   ControlMode _mode = ControlMode::NONE;
+  UnitSelectSystem* _unitSelectSystem;
 
 public:
   constexpr static int view_size = 20; // how many tiles the view should see

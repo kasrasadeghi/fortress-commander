@@ -13,3 +13,12 @@ struct TransformComponent : public ECS::Component {
   TransformComponent() : pos(0.f, 0.f), rot(0.f) {}
   TransformComponent(sf::Vector2f pos, float rot) : pos(pos), rot(rot) {}
 };
+
+struct SelectableComponent : public ECS::Component {
+  bool selected;
+
+  static constexpr ECS::ComponentType _type = 2;
+
+  SelectableComponent() : selected(false) {}
+  SelectableComponent(bool selected) : selected(selected) {}
+};
