@@ -55,7 +55,7 @@ public:
     }
   }
 
-  static void tileHolo(View& view, glm::vec<2, int> tile_index) {
+  static void tileHolo(View& view, glm::ivec2 tile_index) {
     InstancedArrayRectangle r({glm::vec2(tile_index.x * tile_size, tile_index.y * tile_size)});
     r.color(.7, .7, .7 /*TODO:, .5 */);
     r.size(tile_size, tile_size);

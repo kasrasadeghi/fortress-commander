@@ -92,9 +92,9 @@ public:
       return  _view.inv() * _window.defaultView().proj() * glm::vec4(p.x, p.y, 0, 1);
     }
 
-    static glm::vec<2, int> mapCoordsToTile(glm::vec2 coords) {
-      return glm::vec<2, int>(static_cast<int>(coords.x / tile_size),
-                              static_cast<int>(coords.y / tile_size));
+    static glm::ivec2 mapCoordsToTile(glm::vec2 coords) {
+      return glm::ivec2(static_cast<int>(coords.x / tile_size),
+                        static_cast<int>(coords.y / tile_size));
     }
 
     glm::vec<2, int> getMouseTile() {
