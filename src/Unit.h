@@ -7,14 +7,13 @@
 // enum class UnitType { FRIENDLY, HOSTILE };
 
 class Unit : public sf::Drawable {
-  sf::Vector2f _pos;
   // UnitType _type; // friendly or hostile
   sf::Vector2f _target;
   ECS::Manager* _manager;
 
-  ECS::Entity _id;
-
 public:
+  const ECS::Entity _id;
+
   constexpr static float unit_size = 0.5f;
   constexpr static float unit_speed = 2.f;
 

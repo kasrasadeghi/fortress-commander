@@ -95,15 +95,21 @@ void Game::handleEvent(const sf::Event& event) {
   }
 
   if (_mode == ControlMode::NONE) {
-    // if (event.type == sf::Event::MouseButtonPressed) {
-      // if (_world._units.size()) _world._units[0].pathTo(getMouseCoords());
-    // }
     if (event.type == sf::Event::MouseButtonPressed) {
-      float scale_factor = 1.f / ((float)_window.getSize().y / view_size);
-      _unitSelectSystem->handleMouseDown(event.mouseButton.x * scale_factor, event.mouseButton.y * scale_factor);
+      if (event.mouseButton.button == sf::Mouse::Left) {
+        _unitSelectSystem->handleMouseDown(getMouseCoords().x, getMouseCoords().y);
+      } else if (event.mouseButton.button == sf::Mouse::Right) {
+        // prototype unit movement command
+        // TODO: move this somewhere else
+        for (auto it = _world._units.begin(); it != _world._units.end(); ++it) {
+          auto selectableStore = _manager.getComponentStore<SelectableComponent>();
+          if (selectableStore.has(it->_id) && selectableStore.get(it->_id).selected) {
+            it->pathTo(getMouseCoords());
+          }
+        }
+      }
     } else if (event.type == sf::Event::MouseMoved) {
-      float scale_factor = 1.f / ((float)_window.getSize().y / view_size);
-      _unitSelectSystem->handleMouseMove(event.mouseMove.x * scale_factor, event.mouseMove.y * scale_factor);
+      _unitSelectSystem->handleMouseMove(getMouseCoords().x, getMouseCoords().y);
     } else if (event.type == sf::Event::MouseButtonReleased) {
       _unitSelectSystem->handleMouseUp();
     }
