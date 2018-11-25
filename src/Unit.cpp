@@ -7,7 +7,8 @@ Unit::Unit(sf::Vector2f pos, ECS::Manager* manager /*, UnitType type*/)
   : _pos(pos), _target(pos), _manager(manager)/*, _type(type)*/ {
   _id = _manager->createEntity();
 
-  _manager->addComponent<TransformComponent>(_id, TransformComponent(sf::Vector2f(1.f, 1.f), 0.f));
+  _manager->addComponent<TransformComponent>(_id, TransformComponent(pos, 0.f));
+  _manager->addComponent<MotionComponent>(_id, MotionComponent(sf::Vector2f(0.1f, 0.0f)));
   _manager->addComponent<SelectableComponent>(_id, SelectableComponent());
   _manager->registerEntity(_id);
 }

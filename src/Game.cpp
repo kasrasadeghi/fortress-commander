@@ -24,6 +24,7 @@ Game::Game()
   if (!_font.loadFromFile("arial.ttf")) { exit(1); }
 
   _manager.createComponentStore<TransformComponent>();
+  _manager.createComponentStore<MotionComponent>();
   _manager.createComponentStore<SelectableComponent>();
 
   _manager.addSystem(ECS::System::Ptr(new MoveSystem(_manager)));

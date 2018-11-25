@@ -8,18 +8,20 @@
 #include "ECS/System.h"
 
 class MoveSystem : public ECS::System {
-  constexpr static float _moveAmount = 0.05f;
 
 public:
   MoveSystem(ECS::Manager& manager) : ECS::System(manager) {
     ECS::ComponentTypeSet requiredComponents;
     requiredComponents.insert(TransformComponent::_type);
+    requiredComponents.insert(MotionComponent::_type);
 
     setRequiredComponents(std::move(requiredComponents));
   }
 
   virtual void updateEntity(float dt, ECS::Entity entity) override {
-    _manager.getComponentStore<TransformComponent>().get(entity).pos += sf::Vector2f(_moveAmount, _moveAmount);
+    sf::Vector2f& pos = _manager.getComponent<TransformComponent>(entity).pos;
+    sf::Vector2f& vel = _manager.getComponent<MotionComponent>(entity).velocity;
+    pos += vel * dt;
   }
 };
 

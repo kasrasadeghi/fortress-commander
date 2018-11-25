@@ -22,3 +22,12 @@ struct SelectableComponent : public ECS::Component {
   SelectableComponent() : selected(false) {}
   SelectableComponent(bool selected) : selected(selected) {}
 };
+
+struct MotionComponent : public ECS::Component {
+  sf::Vector2f velocity;
+  
+  static constexpr ECS::ComponentType _type = 3;
+
+  MotionComponent() : velocity(0, 0) {}
+  MotionComponent(sf::Vector2f velocity) : velocity(velocity) {}
+};
