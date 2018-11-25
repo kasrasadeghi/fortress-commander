@@ -12,8 +12,7 @@ class Game {
   World _world;
   RenderWindow _window;
   View _view;
-  // sf::Clock _clock;
-  // Tile _paint = Tile::GRASS;
+  Tile _paint = Tile::GRASS;
 
   ControlMode _mode = ControlMode::NONE;
 
@@ -32,11 +31,11 @@ class Game {
       if (_window.getKey(GLFW_KEY_S) == GLFW_PRESS) { _view.move(0, d); }
       if (_window.getKey(GLFW_KEY_A) == GLFW_PRESS) { _view.move(-d, 0); }
       if (_window.getKey(GLFW_KEY_D) == GLFW_PRESS) { _view.move(d, 0); }
-      // if (_mode == ControlMode::TERRAIN) {
-      //   if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
-      //     _world.setCell(getMouseTile(), _paint);
-      //   }
-      // }
+      if (_mode == ControlMode::TERRAIN) {
+        if (glfwGetMouseButton(_window.window(), GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
+          _world.setCell(getMouseTile(), _paint);
+        }
+      }
     }
 
     void _reboundViewToWorld() {

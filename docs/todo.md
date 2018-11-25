@@ -80,12 +80,12 @@
 - text renderer takes in a view and draws to the view ?
 
 ## ergonomics and refactoring
+- terrain paint
 >- todo
 - single position constructor
 - shape renaming
 - alpha value color
 - base shape instance??
-- terrain paint
 - cursor callback #view
 - vertex array and vertex buffer #refactoring
 

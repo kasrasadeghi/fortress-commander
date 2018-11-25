@@ -86,7 +86,7 @@ void Game::mouseCallback(int button, int action, int mods) {
         //TODO:_world.addStructure(getMouseTile());
         break;
       case ControlMode::TERRAIN:
-        //TODO: _paint = _world.flipCell(getMouseTile());
+        _paint = _world.flipCell(getMouseTile());
         break;
       case ControlMode::UNIT:
         //TODO: check if the add unit is in bounds
