@@ -82,10 +82,10 @@
 ## ergonomics and refactoring
 - terrain paint
 - shape renaming
->- todo
 - single position constructor
+>- todo
 - alpha value color
-- base shape instance??
+- base shape instance ?
 - cursor callback #view
 - vertex array and vertex buffer #refactoring
 

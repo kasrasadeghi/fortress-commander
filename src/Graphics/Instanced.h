@@ -57,6 +57,8 @@ class InstancedRectangle {
 public:
   static constexpr GLuint batch_size = 5000;
 
+  InstancedRectangle(float x, float y): InstancedRectangle(std::vector{glm::vec2(x, y)}) {}
+
   InstancedRectangle(const std::vector<glm::vec2>& pos): _position_count(pos.size()) {
     std::vector<glm::vec2> base_vertices;
     
@@ -118,6 +120,8 @@ class InstancedCircle {
 
 public:
   static constexpr GLuint batch_size = 5000;
+
+  InstancedCircle(float x, float y): InstancedCircle(std::vector{glm::vec2(x, y)}) {}
 
   InstancedCircle(const std::vector<glm::vec2>& pos, uint size_count = 30): _position_count(pos.size()), _size_count(size_count) {
     std::vector<glm::vec2> base_vertices;
