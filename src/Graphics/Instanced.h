@@ -44,7 +44,7 @@ public:
   }
 };
 
-class InstancedArrayRectangle {
+class InstancedRectangle {
   GLuint _VAO = 0;
   GLuint _VBO = 0;
   GLuint _instanceVBO = 0;
@@ -57,7 +57,7 @@ class InstancedArrayRectangle {
 public:
   static constexpr GLuint batch_size = 5000;
 
-  InstancedArrayRectangle(const std::vector<glm::vec2>& pos): _position_count(pos.size()) {
+  InstancedRectangle(const std::vector<glm::vec2>& pos): _position_count(pos.size()) {
     std::vector<glm::vec2> base_vertices;
     
     base_vertices.emplace_back(1.f, 1.f);
@@ -68,23 +68,23 @@ public:
     _VAO = VertexArray::create(&_VBO, &_instanceVBO, base_vertices, pos);
   }
 
-  ~InstancedArrayRectangle() {
+  ~InstancedRectangle() {
     glDeleteVertexArrays(1, &_VAO);
     glDeleteBuffers(1, &_VBO);
     glDeleteBuffers(1, &_instanceVBO);
   }
 
-  InstancedArrayRectangle& size(GLfloat w, GLfloat h) {
+  InstancedRectangle& size(GLfloat w, GLfloat h) {
     _size = glm::vec2(w, h);
     return *this;
   }
 
-  InstancedArrayRectangle& color(GLfloat r, GLfloat g, GLfloat b) {
+  InstancedRectangle& color(GLfloat r, GLfloat g, GLfloat b) {
     _color = glm::vec3(r, g, b);
     return *this;
   }
 
-  InstancedArrayRectangle& color(glm::vec3 c) {
+  InstancedRectangle& color(glm::vec3 c) {
     _color = c;
     return *this;
   }
