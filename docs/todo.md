@@ -81,9 +81,9 @@
 
 ## ergonomics and refactoring
 - terrain paint
+- shape renaming
 >- todo
 - single position constructor
-- shape renaming
 - alpha value color
 - base shape instance??
 - cursor callback #view
