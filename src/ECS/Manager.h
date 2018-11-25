@@ -38,6 +38,11 @@ public:
     return reinterpret_cast<ComponentStore<C>&>(*componentStoreIt->second);
   }
 
+  template <typename C>
+  C& getComponent(ECS::Entity entity) {
+    return getComponentStore<C>().get(entity);
+  }
+
   void addSystem(const System::Ptr& systemPtr);
 
   Entity createEntity() {
