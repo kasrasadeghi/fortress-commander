@@ -25,7 +25,9 @@ class Game {
   ECS::EventManager _eventManager;
 
   ControlMode _mode = ControlMode::NONE;
+
   UnitSelectSystem* _unitSelectSystem;
+  MoveSystem* _moveSystem;
 
 public:
   constexpr static int view_size = 20; // how many tiles the view should see

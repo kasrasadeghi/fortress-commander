@@ -3,6 +3,7 @@
 #include <sstream>
 #include <stdio.h>
 
+#include "Events.h"
 #include "Systems.h"
 
 #include <SFML/Graphics.hpp>
@@ -27,7 +28,8 @@ Game::Game()
   _manager.createComponentStore<MotionComponent>();
   _manager.createComponentStore<SelectableComponent>();
 
-  _manager.addSystem(ECS::System::Ptr(new MoveSystem(_manager)));
+  _moveSystem = new MoveSystem(_manager);
+  _manager.addSystem(ECS::System::Ptr(_moveSystem));
 
   _unitSelectSystem = new UnitSelectSystem(_manager);
   _manager.addSystem(ECS::System::Ptr(_unitSelectSystem));
@@ -99,6 +101,9 @@ void Game::handleEvent(const sf::Event& event) {
       if (event.mouseButton.button == sf::Mouse::Left) {
         _unitSelectSystem->handleMouseDown(getMouseCoords().x,
                                            getMouseCoords().y);
+
+        _eventManager.event<MouseDownEvent>(
+            new MouseDownEvent(getMouseCoords().x, getMouseCoords().y));
       } else if (event.mouseButton.button == sf::Mouse::Right) {
         // prototype unit movement command
         // TODO: move this somewhere else
@@ -114,8 +119,13 @@ void Game::handleEvent(const sf::Event& event) {
     } else if (event.type == sf::Event::MouseMoved) {
       _unitSelectSystem->handleMouseMove(getMouseCoords().x,
                                          getMouseCoords().y);
+
+      _eventManager.event<MouseMoveEvent>(
+          new MouseMoveEvent(getMouseCoords().x, getMouseCoords().y));
     } else if (event.type == sf::Event::MouseButtonReleased) {
       _unitSelectSystem->handleMouseUp();
+
+      _eventManager.event<MouseUpEvent>(new MouseUpEvent());
     }
   }
   if (_mode == ControlMode::BUILD) {
