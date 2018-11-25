@@ -4,6 +4,8 @@
 #include <memory>
 #include <set>
 #include <iostream>
+#include <algorithm>
+#include <functional>
 
 #include "Entity.h"
 #include "Component.h"
@@ -61,6 +63,10 @@ public:
   // Each user class should specialize this pure virtual method to change
   // how the system updates
   virtual void updateEntity(float dt, Entity entity) = 0;
+
+  void forEachEntity(std::function<void(ECS::Entity)> f) {
+    std::for_each(_matchingEntities.begin(), _matchingEntities.end(), f);
+  }
 
 protected:
   void setRequiredComponents(ComponentTypeSet&& requiredComponents) {

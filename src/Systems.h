@@ -1,6 +1,8 @@
 #pragma once
 
 #include <unordered_set>
+#include <cmath>
+
 #include "Components.h"
 
 #include "ECS/System.h"
@@ -60,6 +62,21 @@ public:
   void handleMouseDown(float x, float y) {
     _mouseDragStart = sf::Vector2f(x, y);
     _mouseDown = true;
+
+    /*
+    forEachEntity([this, x, y](ECS::Entity entity) {
+      sf::Vector2f pos = _manager.getComponent<TransformComponent>(entity).pos;
+
+      float dx = x - pos.x;
+      float dy = y - pos.y;
+
+      float dist = sqrt(dx*dx + dy*dy);
+
+      bool clicked = dist < Unit::unit_size;
+
+      _manager.getComponent<SelectableComponent>(entity).selected = clicked;
+    });
+    */
   }
 
   void handleMouseMove(float x, float y) {
