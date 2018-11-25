@@ -13,8 +13,8 @@ class Game {
   RenderWindow _window;
   View _view;
   Tile _paint = Tile::GRASS;
-
   ControlMode _mode = ControlMode::NONE;
+  std::vector<uint> _selected_units;
 
   void _mouseViewMove(float d) {
     constexpr int margin = 20;

@@ -4,12 +4,15 @@
 #include "Graphics.h"
 
 class Unit {
+  static uint ID_counter;
   glm::vec2 _pos;
   glm::vec2 _target;
 
 public:
   constexpr static float unit_size = 0.5f * tile_size;
   constexpr static float unit_speed = 2.f;
+  
+  uint ID = ID_counter++; // TODO: unit layout system that when units die you can reuse their ID
 
   Unit(glm::vec2 pos) : _pos(pos), _target(pos) {}
 

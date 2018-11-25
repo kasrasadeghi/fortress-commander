@@ -1,6 +1,8 @@
 #include "Unit.h"
 #include "World.h"
 
+uint Unit::ID_counter = 0;
+
 void Unit::pathTo(glm::vec2 coords) {
   _target = coords;
 }

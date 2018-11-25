@@ -71,8 +71,54 @@ public:
     _region[v.x][v.y] = t;
   }
 
-  virtual void draw(View view) const {
+  virtual void draw(View view, const std::vector<uint>& selected_units) const {
     _drawRegion(view);
     _drawUnits(view);
+
+     for (uint id : selected_units) {
+      std::vector<glm::vec2> selected_positions;
+      selected_positions.push_back(_units[id].pos());
+
+      InstancedCircle c(selected_positions);
+      c.size(tile_size, tile_size);
+      c.color(1, 1, 0);
+      c.draw(view);
+    }
+
+  }
+
+  std::optional<uint> unitAt(glm::vec2 coords) {
+    for (auto&& u: _units) {
+      if (glm::distance(u.pos(), coords) < Unit::unit_size) {
+        return std::optional(u.ID);
+      }
+    }
+    return std::optional<uint>();
+  }
+
+  std::vector<uint> unitsIn(glm::vec2 start, glm::vec2 end) {
+    if (start.x < end.x) std::swap(start, end);
+    glm::vec2 midpoint = (start + end) / glm::vec2(2, 2);
+    glm::vec2 axes = (start - midpoint);
+
+    auto left = midpoint.x - axes.x;
+    auto right = midpoint.x + axes.x;
+    auto top = midpoint.y - axes.y;
+    auto bottom = midpoint.y + axes.y;
+
+    // *s         ^axes.y
+    // <-axes.x   *m
+    //                       *e
+
+    std::vector<uint> ids;
+    for (auto&& u : _units) {
+      auto pos = u.pos();
+      auto us = Unit::unit_size;
+      auto contains = pos.x + us >= left && pos.x - us <= right && pos.y - us <= top && pos.y + us >= bottom;
+      if (contains) {
+        ids.push_back(u.ID);
+      }
+    }
+    return ids;
   }
 };

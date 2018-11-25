@@ -44,7 +44,7 @@ void Game::loop() {
 
     handleTick(dt);
 
-    _world.draw(_view);
+    _world.draw(_view, _selected_units);
 
     t.renderText(str(1.f / dt), 100, 50, 1, glm::vec3(0, 0, 0));
 
@@ -86,10 +86,23 @@ void Game::mouseCallback(int button, int action, int mods) {
   //   auto p = getMouseTile();
   //   std::cout << p.x << ", " << p.y << std::endl;
   // }
+  constexpr float select_threshhold = tile_size;
+  static glm::vec2 select_start {-1, -1};
+  
+  
   if (action == GLFW_PRESS) {
     switch (_mode) {
     case ControlMode::NONE:
-      if (_world._units.size()) _world._units[0].pathTo(getMouseCoords());
+      if (button == GLFW_MOUSE_BUTTON_2) {
+        // right click paths units
+        for (uint id : _selected_units) {
+          _world._units[id].pathTo(getMouseCoords());
+        }
+
+      } else if (button == GLFW_MOUSE_BUTTON_1) {
+        // left click selects units
+        select_start = getMouseCoords();
+      }
       break;
     case ControlMode::BUILD:
       // TODO:_world.addStructure(getMouseTile());
@@ -101,6 +114,23 @@ void Game::mouseCallback(int button, int action, int mods) {
       // TODO: check if the add unit is in bounds
       _world._units.push_back(Unit(getMouseCoords()));
       break;
+    }
+  }
+
+  if (action == GLFW_RELEASE && _mode == ControlMode::NONE && button == GLFW_MOUSE_BUTTON_1) {
+    _selected_units.clear();
+    glm::vec2 select_end = getMouseCoords();
+    if (glm::distance(select_start, select_end) < select_threshhold) {
+      // handle clicking on a unit
+      auto optionalUnitID = _world.unitAt(select_end);
+      if (optionalUnitID) {
+        _selected_units.push_back(*optionalUnitID);
+      }
+    } else {
+      // handle dragging a box
+      for (uint id : _world.unitsIn(select_start, select_end)) {
+        _selected_units.push_back(id);
+      }
     }
   }
 

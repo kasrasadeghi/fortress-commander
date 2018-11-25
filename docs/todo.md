@@ -1,5 +1,4 @@
 # misc
-## done
 - render grid
 - view grid
 - keyboard move view
@@ -36,9 +35,18 @@
   - so we don't have cyclic dependencies and post-scaling
   - check radius of unit
 - extract holos
+- init #selection
+- box #selection
+- click #selection
+- draw selected #selection
+- move only selected #selection
 
-## todo
-- unit selection
+>- TODO
+- don't draw selected twice #selection #graphics
+- draw box #selection
+- keep drawing box if less than threshold until release #selection
+- shift select, control select #selection
+
 - extract tile
   - put static holo in there
 - build structures instead of flipping cells
