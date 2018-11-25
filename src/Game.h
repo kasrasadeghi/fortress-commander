@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "ECS/Manager.h"
+#include "ECS/Event.h"
 
 #include "World.h"
 #include "Components.h"
@@ -21,6 +22,7 @@ class Game {
   Tile _paint = Tile::GRASS;
 
   ECS::Manager _manager;
+  ECS::EventManager _eventManager;
 
   ControlMode _mode = ControlMode::NONE;
   UnitSelectSystem* _unitSelectSystem;
