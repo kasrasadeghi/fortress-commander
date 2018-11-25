@@ -3,8 +3,6 @@
 #include "Config.h"
 #include "Graphics.h"
 
-// #include <SFML/Graphics.hpp>
-
 class Unit {
   glm::vec2 _pos;
   glm::vec2 _target;

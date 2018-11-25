@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Graphics.h"
-// #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <sstream>
 
@@ -10,7 +9,6 @@
 enum class ControlMode { NONE, BUILD, UNIT, TERRAIN };
 
 class Game {
-  // sf::Font _font;
   World _world;
   RenderWindow _window;
   View _view;
@@ -18,19 +16,6 @@ class Game {
   // Tile _paint = Tile::GRASS;
 
   ControlMode _mode = ControlMode::NONE;
-
-  //   template <typename T>
-  //   sf::Text makeText(T obj) {
-  //     std::stringstream ss;
-  //     ss << obj;
-  //     sf::Text t;
-  //     t.setFont(_font);
-  //     t.setString(ss.str());
-  //     t.setCharacterSize(24);
-  //     t.setFillColor(sf::Color::Black);
-
-  //     return t;
-  //   }
 
     void _mouseViewMove(float d) {
       constexpr int margin = 20;
