@@ -51,8 +51,6 @@ public:
   void updateEntity(float dt, ECS::Entity entity) override {
     if (!_selectionChanged)
       return;
-    std::cout << "CHAINGING SAOFJAOSFJAOSF" << std::endl;
-    std::cout << " (" << _mousePos.x << ", " << _mousePos.y << ")" << std::endl;
     
     const sf::Vector2f pos = _manager.getComponent<TransformComponent>(entity).pos;
     bool inBox = pos.x >= _boxTopLeft.x && pos.x <= _boxBottomRight.x &&
