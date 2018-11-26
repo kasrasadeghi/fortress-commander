@@ -42,9 +42,9 @@
 - move only selected #selection
 - cursor callback
 - draw box #selection
+- selection box alpha value 0.5-ish
 
 >- TODO
-- selection box alpha value 0.5-ish
 - don't draw selected twice #selection #graphics
 - keep drawing box if less than threshold but has passed threshold until release #selection ?
 - shift select, control select #selection
@@ -92,8 +92,8 @@
 - terrain paint
 - shape renaming
 - single position constructor
->- todo
 - alpha value color
+>- todo
 - base shape instance ?
 - vertex array and vertex buffer #refactoring
 
