@@ -144,7 +144,7 @@ void Game::mouseCallback(int button, int action, int mods) {
 
 void Game::cursorCallback(double x, double y) {
   if (_mode == ControlMode::TERRAIN && glfwGetMouseButton(_window.window(), GLFW_MOUSE_BUTTON_1)) {
-    _world.setCell(getMouseTile(), _paint);
+    _world.setCell(mapCoordsToTile(glm::vec2(x, y)), _paint);
   }
 }
 
