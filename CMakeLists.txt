@@ -13,9 +13,6 @@ set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -fmax-errors=1 -Wno-unused-parameter"
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
-# list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-# include(cmake/clang-format.cmake)
-# include(cmake/sfml.cmake)
 include(cmake/glad_glfw.cmake)
 include(cmake/utils.cmake)
 include(cmake/gtest.cmake)
