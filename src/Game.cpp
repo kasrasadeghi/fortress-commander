@@ -148,6 +148,13 @@ void Game::handleTick(float dt) {
 
   _keyboardViewMove(d);
 
+  // TODO: move to cursor move
+  if (_mode == ControlMode::TERRAIN) {
+    if (glfwGetMouseButton(_window.window(), GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
+      _world.setCell(getMouseTile(), _paint);
+    }
+  }
+
   // lock view to world by rebounding
   _reboundViewToWorld();
 }

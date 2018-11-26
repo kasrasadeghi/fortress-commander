@@ -35,11 +35,6 @@ class Game {
     if (_window.getKey(GLFW_KEY_A) == GLFW_PRESS) { _view.move(-d, 0); }
     if (_window.getKey(GLFW_KEY_D) == GLFW_PRESS) { _view.move(d, 0); }
     // clang-format on
-    if (_mode == ControlMode::TERRAIN) {
-      if (glfwGetMouseButton(_window.window(), GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
-        _world.setCell(getMouseTile(), _paint);
-      }
-    }
   }
 
   void _reboundViewToWorld() {
