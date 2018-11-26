@@ -60,11 +60,11 @@
 - draw box #selection
 - selection box alpha value 0.5-ish
 - don't draw selected twice #selection #graphics
+- pathfinding collision == init #pathfinding
 
 >- TODO
 - pathfind to farthest cell along path that is visible
 - selection box doesn't work if it is backwards
-- pathfinding collision == init #pathfinding
 - units are collideable when they're standing still
 - keep drawing box if less than threshold but has passed threshold until release #selection ?
 - shift select, control select #selection
