@@ -40,7 +40,7 @@ void Game::loop() {
     last_time = glfwGetTime();
 
     for (Unit& u : _world._units) {
-      u.update(dt);
+      u.update(dt, _world);
     }
 
     handleTick(dt);

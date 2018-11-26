@@ -3,6 +3,8 @@
 #include "Config.h"
 #include "Graphics.h"
 
+class World;
+
 class Unit {
   static uint ID_counter;
   glm::vec2 _pos;
@@ -28,5 +30,5 @@ public:
   }
 
   void pathTo(glm::vec2 coords);
-  void update(float dt);
+  void update(float dt, World& world);
 };

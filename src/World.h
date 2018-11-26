@@ -5,7 +5,7 @@
 
 enum class Tile { NONE, GRASS, WATER };
 
-class World /* : public sf::Drawable */ {
+class World {
   std::vector<std::vector<Tile>> _region; // this should be a square
 
   std::vector<Unit> _units;
@@ -40,6 +40,7 @@ class World /* : public sf::Drawable */ {
 
 public:
   constexpr static int world_size = 100;
+  using Region = std::vector<std::vector<Tile>>;
 
   World(size_t size) : _region(size, std::vector<Tile>(size, Tile::NONE)) {
     for (int i = 0; i < world_size; ++i) {
@@ -52,6 +53,8 @@ public:
       }
     }
   }
+  
+  Region& region() { return _region; }
 
   static void tileHolo(View& view, glm::ivec2 tile_index) {
     InstancedRectangle r(tile_index.x * tile_size, tile_index.y * tile_size);
