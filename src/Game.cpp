@@ -75,9 +75,9 @@ void Game::loop() {
     // }
 
     handleTick(dt);
-
     _world.draw(_gameState._view);
-    t.renderText(str(1.f / dt), 100, 50, 1, glm::vec3(0, 0, 0));
+    
+    t.renderText(str(1.f / dt), 100, 50, 1, glm::vec4(0, 0, 0, 1));
 
     _eventManager.update();
     _manager.update(dt);
