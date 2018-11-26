@@ -9,6 +9,7 @@
 
 #include "Component.h"
 #include "Entity.h"
+#include "Event.h"
 
 namespace ECS {
 class Manager;
@@ -19,11 +20,12 @@ class System {
 
 protected:
   Manager& _manager;
+  EventManager& _eventManager;
 
 public:
   using Ptr = std::shared_ptr<System>;
 
-  explicit System(Manager& manager) : _manager(manager) {}
+  explicit System(Manager& manager, EventManager& eventManager) : _manager(manager), _eventManager(eventManager) {}
   virtual ~System(){};
 
   const ComponentTypeSet& getRequiredComponents() const {

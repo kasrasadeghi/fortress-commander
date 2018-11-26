@@ -6,11 +6,12 @@
 #include "Components.h"
 
 #include "ECS/System.h"
+#include "Events.h"
 
 class MoveSystem : public ECS::System {
 
 public:
-  MoveSystem(ECS::Manager& manager) : ECS::System(manager) {
+  MoveSystem(ECS::Manager& manager, ECS::EventManager& eventManager) : ECS::System(manager, eventManager) {
     ECS::ComponentTypeSet requiredComponents;
     requiredComponents.insert(TransformComponent::_type);
     requiredComponents.insert(MotionComponent::_type);
@@ -25,7 +26,10 @@ public:
   }
 };
 
-class UnitSelectSystem : public ECS::System {
+class UnitSelectSystem : public ECS::System, 
+                                ECS::EventSubscriber<MouseDownEvent>, 
+                                ECS::EventSubscriber<MouseMoveEvent>, 
+                                ECS::EventSubscriber<MouseUpEvent> {
   constexpr static float _dragStartThreshold = 0.2;
 
   bool _mouseDown = false;
@@ -40,12 +44,16 @@ class UnitSelectSystem : public ECS::System {
   }
 
 public:
-  UnitSelectSystem(ECS::Manager& manager) : ECS::System(manager) {
+  UnitSelectSystem(ECS::Manager& manager, ECS::EventManager& eventManager) : ECS::System(manager, eventManager){
     ECS::ComponentTypeSet requiredComponents;
     requiredComponents.insert(TransformComponent::_type);
     requiredComponents.insert(SelectableComponent::_type);
 
     setRequiredComponents(std::move(requiredComponents));
+    
+    eventManager.connect<MouseDownEvent>(this);
+    eventManager.connect<MouseMoveEvent>(this);
+    eventManager.connect<MouseUpEvent>(this);
   }
 
   void updateEntity(float dt, ECS::Entity entity) override {
@@ -59,8 +67,8 @@ public:
     _manager.getComponent<SelectableComponent>(entity).selected = inBox;
   }
 
-  void handleMouseDown(float x, float y) {
-    _mouseDragStart = sf::Vector2f(x, y);
+  void receive(ECS::EventManager* mgr, const MouseDownEvent& e) {
+    _mouseDragStart = sf::Vector2f(e.x, e.y);
     _mouseDown = true;
 
     /*
@@ -79,15 +87,15 @@ public:
     */
   }
 
-  void handleMouseMove(float x, float y) {
-    _mousePos = sf::Vector2f(x, y);
+  void receive(ECS::EventManager* mgr, const MouseMoveEvent& e) {
+    _mousePos = sf::Vector2f(e.x, e.y);
     if (_mouseDown) {
       selectBox(_mouseDragStart, _mousePos);
       _selectionChanged = true;
     }
   }
 
-  void handleMouseUp() {
+  void receive(ECS::EventManager* mgr, const MouseUpEvent& e) {
     _mouseDown = false;
     _selectionChanged = false;
   }

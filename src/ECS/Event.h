@@ -2,7 +2,6 @@
 
 #include "Component.h"
 #include "Entity.h"
-#include "System.h"
 
 #include <functional>
 #include <iostream>

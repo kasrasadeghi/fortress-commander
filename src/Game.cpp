@@ -28,10 +28,10 @@ Game::Game()
   _manager.createComponentStore<MotionComponent>();
   _manager.createComponentStore<SelectableComponent>();
 
-  _moveSystem = new MoveSystem(_manager);
+  _moveSystem = new MoveSystem(_manager, _eventManager);
   _manager.addSystem(ECS::System::Ptr(_moveSystem));
 
-  _unitSelectSystem = new UnitSelectSystem(_manager);
+  _unitSelectSystem = new UnitSelectSystem(_manager, _eventManager);
   _manager.addSystem(ECS::System::Ptr(_unitSelectSystem));
 }
 
@@ -82,6 +82,7 @@ void Game::loop() {
 
     _window.display();
 
+    _eventManager.update();
     _manager.updateEntities(dt.asSeconds());
   }
 }
@@ -99,11 +100,7 @@ void Game::handleEvent(const sf::Event& event) {
   if (_mode == ControlMode::NONE) {
     if (event.type == sf::Event::MouseButtonPressed) {
       if (event.mouseButton.button == sf::Mouse::Left) {
-        _unitSelectSystem->handleMouseDown(getMouseCoords().x,
-                                           getMouseCoords().y);
-
-        _eventManager.event<MouseDownEvent>(
-            new MouseDownEvent(getMouseCoords().x, getMouseCoords().y));
+        _eventManager.event(new MouseDownEvent(getMouseCoords().x, getMouseCoords().y));
       } else if (event.mouseButton.button == sf::Mouse::Right) {
         // prototype unit movement command
         // TODO: move this somewhere else
@@ -117,15 +114,9 @@ void Game::handleEvent(const sf::Event& event) {
         }
       }
     } else if (event.type == sf::Event::MouseMoved) {
-      _unitSelectSystem->handleMouseMove(getMouseCoords().x,
-                                         getMouseCoords().y);
-
-      _eventManager.event<MouseMoveEvent>(
-          new MouseMoveEvent(getMouseCoords().x, getMouseCoords().y));
+      _eventManager.event(new MouseMoveEvent(getMouseCoords().x, getMouseCoords().y));
     } else if (event.type == sf::Event::MouseButtonReleased) {
-      _unitSelectSystem->handleMouseUp();
-
-      _eventManager.event<MouseUpEvent>(new MouseUpEvent());
+      _eventManager.event(new MouseUpEvent());
     }
   }
   if (_mode == ControlMode::BUILD) {
