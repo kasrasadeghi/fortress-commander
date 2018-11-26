@@ -3,20 +3,31 @@
 #include "ECS/Event.h"
 
 struct MouseMoveEvent : public ECS::BaseEvent {
-  MouseMoveEvent(float ax, float ay) : x(ax), y(ay) {}
-  ~MouseMoveEvent() = default;
-
+  MouseMoveEvent(float x, float y) : x(x), y(y) {}
   float x, y;
 };
 
 struct MouseDownEvent : public ECS::BaseEvent {
-  MouseDownEvent(float ax, float ay) : x(ax), y(ay) {}
-  ~MouseDownEvent() = default;
-
+  MouseDownEvent(int button, float x, float y) : button(button), x(x), y(y) {}
+  int button;
   float x, y;
 };
 
 struct MouseUpEvent : public ECS::BaseEvent {
-  MouseUpEvent() {}
-  ~MouseUpEvent() = default;
+  MouseUpEvent(int button, float x, float y) : button(button), x(x), y(y) {}
+  int button;
+  float x, y;
+};
+
+struct KeyEvent : public ECS::BaseEvent {
+  KeyEvent(int keycode) : keycode(keycode) {}
+  int keycode;
+};
+
+struct KeyDownEvent : public KeyEvent {
+  KeyDownEvent(int keycode) : KeyEvent(keycode) {}
+};
+
+struct KeyUpEvent : public KeyEvent {
+  KeyUpEvent(int keycode) : KeyEvent(keycode) {}
 };

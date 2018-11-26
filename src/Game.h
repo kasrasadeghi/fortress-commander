@@ -11,9 +11,9 @@
 #include "Systems.h"
 #include "World.h"
 
-enum class ControlMode { NONE, BUILD, UNIT, TERRAIN };
 
-class Game {
+class Game : public ECS::EventSubscriber<KeyDownEvent> {
+  GameState _gameState;
   sf::Font _font;
   World _world;
   sf::View _view;
@@ -23,8 +23,6 @@ class Game {
 
   ECS::Manager _manager;
   ECS::EventManager _eventManager;
-
-  ControlMode _mode = ControlMode::NONE;
 
   UnitSelectSystem* _unitSelectSystem;
   MoveSystem* _moveSystem;
@@ -52,6 +50,8 @@ public:
   }
 
   void loop();
+
+  void receive(ECS::EventManager* mgr, const KeyDownEvent& e) override;
   void handleEvent(const sf::Event& event);
 
   void handleViewInput(const sf::Time& dt);

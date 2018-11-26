@@ -15,12 +15,8 @@ public:
   const ECS::Entity _id;
 
   constexpr static float unit_size = 0.5f;
-  constexpr static float unit_speed = 2.f;
 
   Unit(sf::Vector2f pos, ECS::Manager* manager /*, UnitType type*/);
 
   virtual void draw(sf::RenderTarget& rw, sf::RenderStates states) const;
-
-  void pathTo(sf::Vector2f coords);
-  void update(const sf::Time& dt);
 };

@@ -25,23 +25,3 @@ void Unit::draw(sf::RenderTarget& rw, sf::RenderStates states) const {
 
   rw.draw(c);
 }
-
-void Unit::pathTo(sf::Vector2f coords) { _target = coords; }
-
-void Unit::update(const sf::Time& dt) {
-  // TODO: move unit updates to a system
-  sf::Vector2f& pos = _manager->getComponent<TransformComponent>(_id).pos;
-  sf::Vector2f& vel = _manager->getComponent<MotionComponent>(_id).velocity;
-  const float speed = magn(vel);
-
-  sf::Vector2f target_dx(_target.x - pos.x, _target.y - pos.y);
-  float len = magn(target_dx);
-  if (len < speed * dt.asSeconds()) {
-    pos = _target;
-    vel = sf::Vector2f(0, 0);
-  } else if (len > 0) {
-    float vx = target_dx.x / len * unit_speed;
-    float vy = target_dx.y / len * unit_speed;
-    vel = sf::Vector2f(vx, vy);
-  }
-}

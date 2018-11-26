@@ -24,10 +24,15 @@ struct SelectableComponent : public ECS::Component {
 };
 
 struct MotionComponent : public ECS::Component {
+  float movementSpeed = 2.f; // TODO: not hardcoded
   sf::Vector2f velocity;
+  sf::Vector2f target;
+  bool hasTarget = false;
 
   static constexpr ECS::ComponentType _type = 3;
 
   MotionComponent() : velocity(0, 0) {}
   MotionComponent(sf::Vector2f velocity) : velocity(velocity) {}
+
+  void pathTo(sf::Vector2f pos);
 };

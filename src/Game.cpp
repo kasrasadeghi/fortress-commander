@@ -28,11 +28,13 @@ Game::Game()
   _manager.createComponentStore<MotionComponent>();
   _manager.createComponentStore<SelectableComponent>();
 
-  _moveSystem = new MoveSystem(_manager, _eventManager);
+  _moveSystem = new MoveSystem(_manager, _eventManager, _gameState);
   _manager.addSystem(ECS::System::Ptr(_moveSystem));
 
-  _unitSelectSystem = new UnitSelectSystem(_manager, _eventManager);
+  _unitSelectSystem = new UnitSelectSystem(_manager, _eventManager, _gameState);
   _manager.addSystem(ECS::System::Ptr(_unitSelectSystem));
+
+  _eventManager.connect<KeyDownEvent>(this);
 }
 
 void Game::loop() {
@@ -53,13 +55,12 @@ void Game::loop() {
     while (_window.pollEvent(event)) { handleEvent(event); }
 
     handleViewInput(dt);
-    for (Unit& u : _world._units) { u.update(dt); }
 
     _window.setView(_view);
     _window.clear();
 
     _window.draw(_world);
-    if (_mode == ControlMode::BUILD || _mode == ControlMode::TERRAIN) {
+    if (_gameState._mode == ControlMode::BUILD || _gameState._mode == ControlMode::TERRAIN) {
       const auto currTile = getMouseTile();
       sf::RectangleShape r(sf::Vector2f(World::tile_size, World::tile_size));
       r.setPosition(currTile.x * World::tile_size,
@@ -68,7 +69,7 @@ void Game::loop() {
       _window.draw(r);
     }
 
-    if (_mode == ControlMode::UNIT) {
+    if (_gameState._mode == ControlMode::UNIT) {
       constexpr auto radius = Unit::unit_size * World::tile_size;
       const auto curr = getMouseCoords();
       sf::CircleShape r(Unit::unit_size * World::tile_size);
@@ -87,42 +88,36 @@ void Game::loop() {
   }
 }
 
+void Game::receive(ECS::EventManager* mgr, const KeyDownEvent& e) {
+  if (e.keycode == sf::Keyboard::Q) _window.close();
+  if (e.keycode == sf::Keyboard::B) _gameState._mode = ControlMode::BUILD;
+  if (e.keycode == sf::Keyboard::U) _gameState._mode = ControlMode::UNIT;
+  if (e.keycode == sf::Keyboard::T) _gameState._mode = ControlMode::TERRAIN;
+  if (e.keycode == sf::Keyboard::Escape) _gameState._mode = ControlMode::NONE;
+}
+
 void Game::handleEvent(const sf::Event& event) {
   if (event.type == sf::Event::Closed) { _window.close(); }
-  if (event.type == sf::Event::KeyPressed) {
-    if (event.key.code == sf::Keyboard::Q) { _window.close(); }
-    if (event.key.code == sf::Keyboard::B) { _mode = ControlMode::BUILD; }
-    if (event.key.code == sf::Keyboard::U) { _mode = ControlMode::UNIT; }
-    if (event.key.code == sf::Keyboard::T) { _mode = ControlMode::TERRAIN; }
-    if (event.key.code == sf::Keyboard::Escape) { _mode = ControlMode::NONE; }
+  else if (event.type == sf::Event::KeyPressed) {
+    _eventManager.event(new KeyDownEvent(event.key.code));
+  }
+  else if (event.type == sf::Event::KeyReleased) {
+    _eventManager.event(new KeyUpEvent(event.key.code));
+  }
+  else if (event.type == sf::Event::MouseButtonPressed) {
+    _eventManager.event(new MouseDownEvent(event.mouseButton.button, getMouseCoords().x, getMouseCoords().y));
+  }
+  else if (event.type == sf::Event::MouseButtonReleased) {
+    _eventManager.event(new MouseUpEvent(event.mouseButton.button, getMouseCoords().x, getMouseCoords().y));
+  }
+  else if (event.type == sf::Event::MouseMoved) {
+    _eventManager.event(new MouseMoveEvent(getMouseCoords().x, getMouseCoords().y));
   }
 
-  if (_mode == ControlMode::NONE) {
-    if (event.type == sf::Event::MouseButtonPressed) {
-      if (event.mouseButton.button == sf::Mouse::Left) {
-        _eventManager.event(new MouseDownEvent(getMouseCoords().x, getMouseCoords().y));
-      } else if (event.mouseButton.button == sf::Mouse::Right) {
-        // prototype unit movement command
-        // TODO: move this somewhere else
-        for (auto it = _world._units.begin(); it != _world._units.end(); ++it) {
-          auto selectableStore =
-              _manager.getComponentStore<SelectableComponent>();
-          if (selectableStore.has(it->_id) &&
-              selectableStore.get(it->_id).selected) {
-            it->pathTo(getMouseCoords());
-          }
-        }
-      }
-    } else if (event.type == sf::Event::MouseMoved) {
-      _eventManager.event(new MouseMoveEvent(getMouseCoords().x, getMouseCoords().y));
-    } else if (event.type == sf::Event::MouseButtonReleased) {
-      _eventManager.event(new MouseUpEvent());
-    }
-  }
-  if (_mode == ControlMode::BUILD) {
+  if (_gameState._mode == ControlMode::BUILD) {
     //_world.addStructure(getMouseTile());
   }
-  if (_mode == ControlMode::TERRAIN) {
+  if (_gameState._mode == ControlMode::TERRAIN) {
     if (event.type == sf::Event::MouseButtonPressed) {
       _paint = _world.flipCell(getMouseTile());
     }
@@ -131,7 +126,7 @@ void Game::handleEvent(const sf::Event& event) {
       _world.setCell(getMouseTile(), _paint);
     }
   }
-  if (_mode == ControlMode::UNIT) {
+  if (_gameState._mode == ControlMode::UNIT) {
     if (event.type == sf::Event::MouseButtonPressed) {
       // check if the add unit is in bounds
       _world._units.push_back(Unit(getMouseCoords(), &_manager));
@@ -157,7 +152,7 @@ void Game::handleViewInput(const sf::Time& dt) {
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) { _view.move(0, d); }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) { _view.move(-d, 0); }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) { _view.move(d, 0); }
-  if (_mode == ControlMode::TERRAIN) {
+  if (_gameState._mode == ControlMode::TERRAIN) {
     if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
       _world.setCell(getMouseTile(), _paint);
     }

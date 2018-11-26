@@ -7,11 +7,33 @@
 
 #include "ECS/System.h"
 #include "Events.h"
+#include "VecMath.h"
+#include "GameState.h"
 
 class MoveSystem : public ECS::System {
 
+  /**
+   * @brief Update motion to move toward target
+   */
+  void updatePath(float dt, ECS::Entity entity) {
+    TransformComponent& transform = _manager.getComponent<TransformComponent>(entity);
+    MotionComponent& motion = _manager.getComponent<MotionComponent>(entity);
+    const float speed = magn(motion.velocity);
+
+    sf::Vector2f target_dx(motion.target.x - transform.pos.x, motion.target.y - transform.pos.y);
+    float len = magn(target_dx);
+    if (len < speed * dt) {
+      transform.pos = motion.target;
+      motion.velocity = {0, 0};
+      motion.hasTarget = false;
+    } else if (len > 0) {
+      motion.velocity.x = target_dx.x / len * motion.movementSpeed;
+      motion.velocity.y = target_dx.y / len * motion.movementSpeed;
+    }
+  }
+
 public:
-  MoveSystem(ECS::Manager& manager, ECS::EventManager& eventManager) : ECS::System(manager, eventManager) {
+  MoveSystem(ECS::Manager& manager, ECS::EventManager& eventManager, GameState& gameState) : ECS::System(manager, eventManager, gameState) {
     ECS::ComponentTypeSet requiredComponents;
     requiredComponents.insert(TransformComponent::_type);
     requiredComponents.insert(MotionComponent::_type);
@@ -20,9 +42,13 @@ public:
   }
 
   virtual void updateEntity(float dt, ECS::Entity entity) override {
-    sf::Vector2f& pos = _manager.getComponent<TransformComponent>(entity).pos;
-    sf::Vector2f& vel = _manager.getComponent<MotionComponent>(entity).velocity;
-    pos += vel * dt;
+    TransformComponent& transform = _manager.getComponent<TransformComponent>(entity);
+    MotionComponent& motion = _manager.getComponent<MotionComponent>(entity);
+    
+    if (motion.hasTarget) {
+      updatePath(dt, entity);
+    }
+    transform.pos += motion.velocity * dt;
   }
 };
 
@@ -44,7 +70,7 @@ class UnitSelectSystem : public ECS::System,
   }
 
 public:
-  UnitSelectSystem(ECS::Manager& manager, ECS::EventManager& eventManager) : ECS::System(manager, eventManager){
+  UnitSelectSystem(ECS::Manager& manager, ECS::EventManager& eventManager, GameState& gameState) : ECS::System(manager, eventManager, gameState){
     ECS::ComponentTypeSet requiredComponents;
     requiredComponents.insert(TransformComponent::_type);
     requiredComponents.insert(SelectableComponent::_type);
@@ -68,8 +94,21 @@ public:
   }
 
   void receive(ECS::EventManager* mgr, const MouseDownEvent& e) {
-    _mouseDragStart = sf::Vector2f(e.x, e.y);
-    _mouseDown = true;
+    if (_gameState._mode == ControlMode::NONE) {
+      if (e.button == sf::Mouse::Left) {
+        // record first corner of selection
+        _mouseDragStart = {e.x, e.y};
+        _mouseDown = true;
+      }
+      else if (e.button == sf::Mouse::Right) {
+        // command selected units to move
+        forEachEntity([this, &e](ECS::Entity entity){
+          bool selected = _manager.getComponent<SelectableComponent>(entity).selected;
+          if (selected)
+            _manager.getComponent<MotionComponent>(entity).pathTo(sf::Vector2f(e.x, e.y));
+        });
+      }
+    }
 
     /*
     forEachEntity([this, x, y](ECS::Entity entity) {
