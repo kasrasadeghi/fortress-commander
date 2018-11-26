@@ -60,6 +60,7 @@ void Game::loop() {
       glEnable(GL_CULL_FACE);
     }
     
+    // draw framerate
     t.renderText(str(1.f / dt), 100, 50, 1, glm::vec4(0, 0, 0, 1));
 
     if (_mode == ControlMode::BUILD || _mode == ControlMode::TERRAIN) {
