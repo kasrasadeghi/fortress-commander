@@ -84,7 +84,7 @@ void Game::loop() {
     _window.display();
 
     _eventManager.update();
-    _manager.updateEntities(dt.asSeconds());
+    _manager.update(dt.asSeconds());
   }
 }
 

@@ -69,6 +69,6 @@ public:
 
   std::size_t registerEntity(const Entity entity);
   std::size_t unregisterEntity(const Entity entity);
-  std::size_t updateEntities(float dt);
+  std::size_t update(float dt);
 };
 } // namespace ECS

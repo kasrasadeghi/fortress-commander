@@ -59,11 +59,11 @@ std::size_t Manager::unregisterEntity(const Entity entity) {
   return associatedSystems;
 }
 
-std::size_t Manager::updateEntities(float dt) {
+std::size_t Manager::update(float dt) {
   std::size_t updatedEntities = 0;
 
   for (auto system = _systems.begin(); system != _systems.end(); ++system) {
-    updatedEntities += (*system)->updateEntities(dt);
+    updatedEntities += (*system)->update(dt);
   }
 
   return updatedEntities;
