@@ -41,11 +41,12 @@
 - draw selected #selection
 - move only selected #selection
 - cursor callback
+- draw box #selection
 
 >- TODO
+- selection box alpha value 0.5-ish
 - don't draw selected twice #selection #graphics
-- draw box #selection
-- keep drawing box if less than threshold until release #selection
+- keep drawing box if less than threshold but has passed threshold until release #selection ?
 - shift select, control select #selection
 - extract tile
   - put static holo in there
