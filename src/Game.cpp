@@ -112,7 +112,8 @@ void Game::mouseCallback(int button, int action, int mods) {
       }
       break;
     case ControlMode::BUILD:
-      // TODO:_world.addStructure(getMouseTile());
+      // TODO: bounds check
+      // TODO: _world.addStructure(getMouseTile());
       break;
     case ControlMode::TERRAIN:
       _paint = _world.flipCell(getMouseTile());
@@ -145,7 +146,7 @@ void Game::mouseCallback(int button, int action, int mods) {
 
 void Game::cursorCallback(double x, double y) {
   if (_mode == ControlMode::TERRAIN && glfwGetMouseButton(_window.window(), GLFW_MOUSE_BUTTON_1)) {
-    _world.setCell(mapCoordsToTile(glm::vec2(x, y)), _paint);
+    _world.setCell(getMouseTile(), _paint);
   }
 }
 
