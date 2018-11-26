@@ -42,17 +42,7 @@ public:
   constexpr static int world_size = 100;
   using Region = std::vector<std::vector<Tile>>;
 
-  World(size_t size) : _region(size, std::vector<Tile>(size, Tile::NONE)) {
-    for (int i = 0; i < world_size; ++i) {
-      for (int j = 0; j < world_size; ++j) {
-        if ((i + j) % 2) {
-          _region[i][j] = Tile::GRASS;
-        } else {
-          _region[i][j] = Tile::WATER;
-        }
-      }
-    }
-  }
+  World(size_t size) : _region(size, std::vector<Tile>(size, Tile::GRASS)) {}
   
   Region& region() { return _region; }
 
