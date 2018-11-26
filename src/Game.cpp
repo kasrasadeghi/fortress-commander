@@ -86,8 +86,6 @@ void Game::mouseCallback(int button, int action, int mods) {
   //   auto p = getMouseTile();
   //   std::cout << p.x << ", " << p.y << std::endl;
   // }
-  constexpr float select_threshhold = tile_size;
-  static glm::vec2 select_start {-1, -1};
   
   
   if (action == GLFW_PRESS) {
@@ -101,7 +99,7 @@ void Game::mouseCallback(int button, int action, int mods) {
 
       } else if (button == GLFW_MOUSE_BUTTON_1) {
         // left click selects units
-        select_start = getMouseCoords();
+        _select_start = getMouseCoords();
       }
       break;
     case ControlMode::BUILD:
@@ -120,15 +118,15 @@ void Game::mouseCallback(int button, int action, int mods) {
   if (action == GLFW_RELEASE && _mode == ControlMode::NONE && button == GLFW_MOUSE_BUTTON_1) {
     _selected_units.clear();
     glm::vec2 select_end = getMouseCoords();
-    if (glm::distance(select_start, select_end) < select_threshhold) {
+    if (glm::distance(_select_start, select_end) < select_threshhold) {
       // handle clicking on a unit
-      auto optionalUnitID = _world.unitAt(select_end);
+      auto optionalUnitID = _world.unitAt(_select_start);
       if (optionalUnitID) {
         _selected_units.push_back(*optionalUnitID);
       }
     } else {
       // handle dragging a box
-      for (uint id : _world.unitsIn(select_start, select_end)) {
+      for (uint id : _world.unitsIn(_select_start, select_end)) {
         _selected_units.push_back(id);
       }
     }

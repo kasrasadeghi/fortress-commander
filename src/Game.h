@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Graphics.h"
+#include "Config.h"
 #include <iostream>
 #include <sstream>
 
@@ -14,7 +15,11 @@ class Game {
   View _view;
   Tile _paint = Tile::GRASS;
   ControlMode _mode = ControlMode::NONE;
+
+  // selection
+  static constexpr float select_threshhold = tile_size;
   std::vector<uint> _selected_units;
+  glm::vec2 _select_start {-1, -1};
 
   void _mouseViewMove(float d) {
     constexpr int margin = 20;
