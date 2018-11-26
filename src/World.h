@@ -12,7 +12,7 @@ class World /* : public sf::Drawable */ {
   // std::vector<Structure> _structures;
 
   void _drawRegion(View& view) const;
-  void _drawUnits(View& view) const;
+  void _drawUnits(View& view, const std::vector<uint>& selected_units) const;
 
   // stuff to make out of bounds clicks snap back to bounds
   bool _snapToRegion(glm::ivec2& v) {
@@ -72,18 +72,7 @@ public:
 
   virtual void draw(View view, const std::vector<uint>& selected_units) const {
     _drawRegion(view);
-    _drawUnits(view);
-
-     for (uint id : selected_units) {
-      std::vector<glm::vec2> selected_positions;
-      selected_positions.push_back(_units[id].pos());
-
-      InstancedCircle c(selected_positions);
-      c.size(tile_size, tile_size);
-      c.color(1, 1, 0);
-      c.draw(view);
-    }
-
+    _drawUnits(view, selected_units);
   }
 
   std::optional<uint> unitAt(glm::vec2 coords) {

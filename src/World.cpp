@@ -47,16 +47,27 @@ void World::_drawRegion(View& view) const {
     .draw(view);
 }
 
-void World::_drawUnits(View& view) const {
+void World::_drawUnits(View& view, const std::vector<uint>& selected_units) const {
   std::vector<glm::vec2> positions;
-  positions.reserve(_units.size());
+  std::vector<glm::vec2> selected_positions;
+  selected_positions.reserve(selected_units.size());
+  positions.reserve(_units.size() - selected_units.size());
 
   for (auto& u : _units) {
-    positions.emplace_back(u.pos());
+    if (std::find(selected_units.begin(), selected_units.end(), u.ID) != selected_units.end()) {
+      selected_positions.emplace_back(u.pos());
+    } else {
+      positions.emplace_back(u.pos());
+    }
   }
 
   InstancedCircle(positions)
     .size(tile_size, tile_size)
     .color(1, 0, 0)
+    .draw(view);
+
+  InstancedCircle(selected_positions)
+    .size(tile_size, tile_size)
+    .color(1, 1, 0)
     .draw(view);
 }

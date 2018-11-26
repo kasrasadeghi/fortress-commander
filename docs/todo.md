@@ -43,9 +43,9 @@
 - cursor callback
 - draw box #selection
 - selection box alpha value 0.5-ish
+- don't draw selected twice #selection #graphics
 
 >- TODO
-- don't draw selected twice #selection #graphics
 - keep drawing box if less than threshold but has passed threshold until release #selection ?
 - shift select, control select #selection
 - extract tile
