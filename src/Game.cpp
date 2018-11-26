@@ -17,7 +17,8 @@ Game::Game()
                          view_size * World::tile_size)),
       _window(sf::VideoMode::getFullscreenModes()[0], "Fortress Commander",
               sf::Style::Fullscreen),
-      _manager(), _eventManager(std::allocator<void>()) {
+      _manager(), _eventManager(std::allocator<void>()),
+      _gameState(_window) {
   _window.setView(_view);
   _clock.restart();
   _window.setFramerateLimit(60);
@@ -78,13 +79,13 @@ void Game::loop() {
       _window.draw(r);
     }
 
+    _eventManager.update();
+    _manager.update(dt.asSeconds());
+
     _window.setView(_window.getDefaultView());
     _window.draw(t);
 
     _window.display();
-
-    _eventManager.update();
-    _manager.update(dt.asSeconds());
   }
 }
 

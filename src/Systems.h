@@ -88,6 +88,19 @@ public:
     eventManager.connect<MouseUpEvent>(this);
   }
 
+  std::size_t update(float dt) override {
+    if (_selectionChanged) {
+      // draw box around selection
+      sf::RectangleShape box({_boxBottomRight.x - _boxTopLeft.x, _boxBottomRight.y - _boxTopLeft.y});
+      box.setPosition(_boxTopLeft);
+      box.setOutlineColor(sf::Color::Magenta);
+      box.setOutlineThickness(0.1f);
+      box.setFillColor(sf::Color(255, 0, 255, 25));
+      _gameState._window.draw(box);
+    }
+    return ECS::System::update(dt); 
+  }
+
   void updateEntity(float dt, ECS::Entity entity) override {
     if (!_selectionChanged) return;
 

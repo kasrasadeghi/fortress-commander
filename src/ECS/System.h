@@ -53,7 +53,7 @@ public:
 
   // Call every updateEntity(dt, entity) on this System's set of entities
   // Returns the amount of entities that were updated
-  std::size_t update(float dt) {
+  virtual std::size_t update(float dt) {
     std::size_t updatedEntities = 0;
 
     for (auto entity = _matchingEntities.begin();
