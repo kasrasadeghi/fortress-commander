@@ -51,7 +51,7 @@ class InstancedRectangle {
   Shader& _shader = ResourceManager::getShader(SHADER_INDEX::INSTANCED_ARRAY);
 
   glm::vec2 _size;
-  glm::vec3 _color{1, 1, 1};
+  glm::vec4 _color{1, 1, 1, 1};
   const uint _position_count;
 
 public:
@@ -81,12 +81,12 @@ public:
     return *this;
   }
 
-  InstancedRectangle& color(GLfloat r, GLfloat g, GLfloat b) {
-    _color = glm::vec3(r, g, b);
+  InstancedRectangle& color(GLfloat r, GLfloat g, GLfloat b, GLfloat a = 1.f) {
+    _color = glm::vec4(r, g, b, a);
     return *this;
   }
 
-  InstancedRectangle& color(glm::vec3 c) {
+  InstancedRectangle& color(glm::vec4 c) {
     _color = c;
     return *this;
   }
@@ -97,7 +97,7 @@ public:
     _shader.use();
     _shader.setMat4("projection", view.proj());
     _shader.setVec2("size", size());
-    _shader.setVec3("color", _color);
+    _shader.setVec4("color", _color);
 
     glBindVertexArray(_VAO);
     glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 8, _position_count);
@@ -113,7 +113,7 @@ class InstancedCircle {
   Shader& _shader = ResourceManager::getShader(SHADER_INDEX::INSTANCED_ARRAY);
 
   glm::vec2 _size;
-  glm::vec3 _color{1, 1, 1};
+  glm::vec4 _color{1, 1, 1, 1};
   const uint _position_count;
 
   uint _size_count;
@@ -152,12 +152,12 @@ public:
     return *this;
   }
 
-  InstancedCircle& color(GLfloat r, GLfloat g, GLfloat b) {
-    _color = glm::vec3(r, g, b);
+  InstancedCircle& color(GLfloat r, GLfloat g, GLfloat b, GLfloat a = 1.f) {
+    _color = glm::vec4(r, g, b, a);
     return *this;
   }
 
-  InstancedCircle& color(glm::vec3 c) {
+  InstancedCircle& color(glm::vec4 c) {
     _color = c;
     return *this;
   }
@@ -168,7 +168,7 @@ public:
     _shader.use();
     _shader.setMat4("projection", view.proj());
     _shader.setVec2("size", size());
-    _shader.setVec3("color", _color);
+    _shader.setVec4("color", _color);
 
     glBindVertexArray(_VAO);
     glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, _size_count + 2, _position_count);

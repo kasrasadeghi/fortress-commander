@@ -60,7 +60,7 @@ void Game::loop() {
       glEnable(GL_CULL_FACE);
     }
     
-    t.renderText(str(1.f / dt), 100, 50, 1, glm::vec3(0, 0, 0));
+    t.renderText(str(1.f / dt), 100, 50, 1, glm::vec4(0, 0, 0, 1));
 
     if (_mode == ControlMode::BUILD || _mode == ControlMode::TERRAIN) {
       World::tileHolo(_view, getMouseTile());

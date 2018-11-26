@@ -109,10 +109,10 @@ public:
     glBindVertexArray(0);
   }
 
-  void renderText(std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color) {
+  void renderText(std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec4 color) {
     // Activate corresponding render state
     _shader.use();
-    _shader.setVec3("textColor", color);
+    _shader.setVec4("textColor", color);
     // glUniform3f(glGetUniformLocation(_shader.ID, "textColor"), color.x, color.y, color.z);
     glActiveTexture(GL_TEXTURE0);
     glBindVertexArray(_VAO);
