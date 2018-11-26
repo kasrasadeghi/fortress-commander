@@ -84,12 +84,6 @@ void Game::keyCallback(int key, int scancode, int action, int mods) {
 }
 
 void Game::mouseCallback(int button, int action, int mods) {
-  // if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS) {
-  //   auto p = getMouseTile();
-  //   std::cout << p.x << ", " << p.y << std::endl;
-  // }
-  
-  
   if (action == GLFW_PRESS) {
     switch (_mode) {
     case ControlMode::NONE:
@@ -148,13 +142,6 @@ void Game::handleTick(float dt) {
   _mouseViewMove(d);
 
   _keyboardViewMove(d);
-
-  // TODO: move to cursor move
-  if (_mode == ControlMode::TERRAIN) {
-    if (glfwGetMouseButton(_window.window(), GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
-      _world.setCell(getMouseTile(), _paint);
-    }
-  }
 
   // lock view to world by rebounding
   _reboundViewToWorld();
