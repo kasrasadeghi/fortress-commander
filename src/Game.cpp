@@ -47,6 +47,19 @@ void Game::loop() {
 
     _world.draw(_view, _selected_units);
 
+    if (_select_start != glm::vec2(-1, -1)) {
+      glDisable(GL_CULL_FACE);
+
+      auto mouse_pos = getMouseCoords();
+      auto drag_vec = mouse_pos - _select_start;
+      InstancedRectangle r(_select_start.x, _select_start.y);
+      r.size(drag_vec.x, drag_vec.y);
+      r.color(0.1, 0.1, 0.6);
+      r.draw(_view);
+
+      glEnable(GL_CULL_FACE);
+    }
+    
     t.renderText(str(1.f / dt), 100, 50, 1, glm::vec3(0, 0, 0));
 
     if (_mode == ControlMode::BUILD || _mode == ControlMode::TERRAIN) {
@@ -125,7 +138,8 @@ void Game::mouseCallback(int button, int action, int mods) {
         _selected_units.push_back(id);
       }
     }
-  } 
+    _select_start = glm::vec2(-1, -1);
+  }
 }
 
 void Game::cursorCallback(double x, double y) {
