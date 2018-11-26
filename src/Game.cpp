@@ -19,7 +19,6 @@ Game::Game() : _world(World::world_size), _window("Fortress Commander") {
   // glfwSwapInterval(1);
   _view.center(view_size / 2.f * _window.widthScalingFactor(), view_size / 2.f)
       .radius(view_size / 2.f * _window.widthScalingFactor(), view_size / 2.f);
-  // if (!_font.loadFromFile("arial.ttf")) { exit(1); }
 }
 
 template <typename T>
