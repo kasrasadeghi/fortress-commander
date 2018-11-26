@@ -85,10 +85,10 @@ void Game::keyCallback(int key, int scancode, int action, int mods) {
     _mode = ControlMode::NONE;
   }
 
-  if (key == GLFW_KEY_B && action == GLFW_PRESS) {
+  if ((key == GLFW_KEY_B || key == GLFW_KEY_E) && action == GLFW_PRESS) {
     _mode = ControlMode::BUILD;
   }
-  if (key == GLFW_KEY_U && action == GLFW_PRESS) {
+  if ((key == GLFW_KEY_U || key == GLFW_KEY_R) && action == GLFW_PRESS) {
     _mode = ControlMode::UNIT;
   }
   if (key == GLFW_KEY_T && action == GLFW_PRESS) {
