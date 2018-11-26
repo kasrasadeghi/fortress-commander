@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #include <SFML/Graphics.hpp>
 
 #include "ECS/Component.h"
@@ -35,4 +36,16 @@ struct MotionComponent : public ECS::Component {
   MotionComponent(sf::Vector2f velocity) : velocity(velocity) {}
 
   void pathTo(sf::Vector2f pos);
+};
+
+struct CommandableComponent : public ECS::Component {
+  using positionHandlerType = std::function<void(sf::Vector2f)>;
+  positionHandlerType positionHandler;
+
+  static constexpr ECS::ComponentType _type = 4;
+  
+  // TODO: support handling a click on another entity (i.e. entityHandler)
+
+  CommandableComponent() : positionHandler([](sf::Vector2f){}) {}
+  CommandableComponent(positionHandlerType positionHandler) : positionHandler(positionHandler) {}
 };

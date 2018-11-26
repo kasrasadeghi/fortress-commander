@@ -11,6 +11,10 @@
 #include "GameState.h"
 #include "Unit.h"
 
+/**
+ * @brief Applies motion to entities.
+ * @detail Supports simple velocity and also path planning.
+ */
 class MoveSystem : public ECS::System {
 
   /**
@@ -53,6 +57,10 @@ public:
   }
 };
 
+/**
+ * @brief Allows user to select entities that have a position and are selectable.
+ * @detail The user can left-click to select an entity or left-click and drag to select several.
+ */
 class UnitSelectSystem : public ECS::System, 
                                 ECS::EventSubscriber<MouseDownEvent>, 
                                 ECS::EventSubscriber<MouseMoveEvent>, 
@@ -120,14 +128,6 @@ public:
         _mouseDown = true;
         selectClicked(_mouseDragStart);
       }
-      else if (e.button == sf::Mouse::Right) {
-        // command selected units to move
-        forEachEntity([this, &e](ECS::Entity entity){
-          bool selected = _manager.getComponent<SelectableComponent>(entity).selected;
-          if (selected)
-            _manager.getComponent<MotionComponent>(entity).pathTo(sf::Vector2f(e.x, e.y));
-        });
-      }
     }
   }
 
@@ -149,5 +149,39 @@ public:
   void receive(ECS::EventManager* mgr, const MouseUpEvent& e) {
     _mouseDown = false;
     _selectionChanged = false;
+  }
+};
+
+/**
+ * @brief Allows the user to send commands to selected commandable entities.
+ * 
+ */
+class UnitCommandSystem : public ECS::System,
+                                 ECS::EventSubscriber<MouseDownEvent> {
+public:
+  UnitCommandSystem(ECS::Manager& manager, ECS::EventManager& eventManager, GameState& gameState) : ECS::System(manager, eventManager, gameState) {
+    ECS::ComponentTypeSet requiredComponents;
+    requiredComponents.insert(SelectableComponent::_type);
+    requiredComponents.insert(CommandableComponent::_type);
+    setRequiredComponents(std::move(requiredComponents));
+
+    eventManager.connect<MouseDownEvent>(this);
+  }
+
+  void updateEntity(float dt, ECS::Entity entity) override {
+    // not yet used 
+  }
+
+  void receive(ECS::EventManager* mgr, const MouseDownEvent& e) override {
+    if (_gameState._mode == ControlMode::NONE) {
+      if (e.button == sf::Mouse::Right) {
+        // command selected units to move
+        forEachEntity([this, &e](ECS::Entity entity){
+          bool selected = _manager.getComponent<SelectableComponent>(entity).selected;
+          if (selected)
+            _manager.getComponent<CommandableComponent>(entity).positionHandler({e.x, e.y});
+        });
+      }
+    }
   }
 };

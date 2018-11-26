@@ -25,6 +25,7 @@ class Game : public ECS::EventSubscriber<KeyDownEvent> {
   ECS::EventManager _eventManager;
 
   UnitSelectSystem* _unitSelectSystem;
+  UnitCommandSystem* _unitCommandSystem;
   MoveSystem* _moveSystem;
 
 public:

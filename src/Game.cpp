@@ -28,12 +28,16 @@ Game::Game()
   _manager.createComponentStore<TransformComponent>();
   _manager.createComponentStore<MotionComponent>();
   _manager.createComponentStore<SelectableComponent>();
+  _manager.createComponentStore<CommandableComponent>();
 
   _moveSystem = new MoveSystem(_manager, _eventManager, _gameState);
   _manager.addSystem(ECS::System::Ptr(_moveSystem));
 
   _unitSelectSystem = new UnitSelectSystem(_manager, _eventManager, _gameState);
   _manager.addSystem(ECS::System::Ptr(_unitSelectSystem));
+
+  _unitCommandSystem = new UnitCommandSystem(_manager, _eventManager, _gameState);
+  _manager.addSystem(ECS::System::Ptr(_unitCommandSystem));
 
   _eventManager.connect<KeyDownEvent>(this);
 }
