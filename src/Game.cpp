@@ -52,10 +52,10 @@ void Game::loop() {
 
       auto mouse_pos = getMouseCoords();
       auto drag_vec = mouse_pos - _select_start;
-      InstancedRectangle r(_select_start.x, _select_start.y);
-      r.size(drag_vec.x, drag_vec.y);
-      r.color(0.1, 0.1, 0.6);
-      r.draw(_view);
+      InstancedRectangle(_select_start.x, _select_start.y)
+        .size(drag_vec.x, drag_vec.y)
+        .color(0.8, 0.8, 1, 0.4)
+        .draw(_view);
 
       glEnable(GL_CULL_FACE);
     }
