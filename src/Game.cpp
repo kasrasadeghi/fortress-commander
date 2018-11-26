@@ -14,6 +14,8 @@
 Game::Game() : _world(World::world_size), _window("Fortress Commander") {
   _window.setKeyCallback([this](auto&&... args) { keyCallback(args...); });
   _window.setMouseCallback([this](auto&&... args) { mouseCallback(args...); });
+  _window.setCursorCallback([this](auto&&... args) { cursorCallback(args...); });
+
   // glfwSwapInterval(1);
   _view.center(view_size / 2.f * _window.widthScalingFactor(), view_size / 2.f)
       .radius(view_size / 2.f * _window.widthScalingFactor(), view_size / 2.f);
@@ -130,12 +132,13 @@ void Game::mouseCallback(int button, int action, int mods) {
         _selected_units.push_back(id);
       }
     }
-  }
+  } 
+}
 
-  //   if (_mode == ControlMode::TERRAIN && event.type == sf::Event::MouseMoved &&
-  //       sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
-  //     _world.setCell(getMouseTile(), _paint);
-  //   }
+void Game::cursorCallback(double x, double y) {
+  if (_mode == ControlMode::TERRAIN && glfwGetMouseButton(_window.window(), GLFW_MOUSE_BUTTON_1)) {
+    _world.setCell(getMouseTile(), _paint);
+  }
 }
 
 void Game::handleTick(float dt) {
