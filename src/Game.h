@@ -12,7 +12,9 @@
 #include "World.h"
 
 
-class Game : public ECS::EventSubscriber<KeyDownEvent> {
+class Game : public ECS::EventSubscriber<KeyDownEvent>,
+                    ECS::EventSubscriber<MouseDownEvent>,
+                    ECS::EventSubscriber<MouseMoveEvent> {
   GameState _gameState;
   sf::Font _font;
   World _world;
@@ -53,6 +55,8 @@ public:
   void loop();
 
   void receive(ECS::EventManager* mgr, const KeyDownEvent& e) override;
+  void receive(ECS::EventManager* mgr, const MouseDownEvent& e) override;
+  void receive(ECS::EventManager* mgr, const MouseMoveEvent& e) override;
   void handleEvent(const sf::Event& event);
 
   void handleViewInput(const sf::Time& dt);

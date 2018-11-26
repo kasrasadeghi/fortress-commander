@@ -40,6 +40,8 @@ Game::Game()
   _manager.addSystem(ECS::System::Ptr(_unitCommandSystem));
 
   _eventManager.connect<KeyDownEvent>(this);
+  _eventManager.connect<MouseDownEvent>(this);
+  _eventManager.connect<MouseMoveEvent>(this);
 }
 
 void Game::loop() {
@@ -101,6 +103,26 @@ void Game::receive(ECS::EventManager* mgr, const KeyDownEvent& e) {
   if (e.keycode == sf::Keyboard::Escape) _gameState._mode = ControlMode::NONE;
 }
 
+void Game::receive(ECS::EventManager* mgr, const MouseDownEvent& e) {
+  if (_gameState._mode == ControlMode::BUILD) {
+    //_world.addStructure(getMouseTile());
+  }
+  if (_gameState._mode == ControlMode::TERRAIN) {
+    _paint = _world.flipCell(getMouseTile());
+  }
+  if (_gameState._mode == ControlMode::UNIT) {
+    // check if the add unit is in bounds
+    _world._units.push_back(Unit(getMouseCoords(), &_manager));
+  }
+}
+
+void Game::receive(ECS::EventManager* mgr, const MouseMoveEvent& e) {
+  if (_gameState._mode == ControlMode::TERRAIN && 
+      sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+    _world.setCell(getMouseTile(), _paint);
+  }
+}
+
 void Game::handleEvent(const sf::Event& event) {
   if (event.type == sf::Event::Closed) { _window.close(); }
   else if (event.type == sf::Event::KeyPressed) {
@@ -117,25 +139,6 @@ void Game::handleEvent(const sf::Event& event) {
   }
   else if (event.type == sf::Event::MouseMoved) {
     _eventManager.event(new MouseMoveEvent(getMouseCoords().x, getMouseCoords().y));
-  }
-
-  if (_gameState._mode == ControlMode::BUILD) {
-    //_world.addStructure(getMouseTile());
-  }
-  if (_gameState._mode == ControlMode::TERRAIN) {
-    if (event.type == sf::Event::MouseButtonPressed) {
-      _paint = _world.flipCell(getMouseTile());
-    }
-    if (event.type == sf::Event::MouseMoved &&
-        sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
-      _world.setCell(getMouseTile(), _paint);
-    }
-  }
-  if (_gameState._mode == ControlMode::UNIT) {
-    if (event.type == sf::Event::MouseButtonPressed) {
-      // check if the add unit is in bounds
-      _world._units.push_back(Unit(getMouseCoords(), &_manager));
-    }
   }
 }
 
