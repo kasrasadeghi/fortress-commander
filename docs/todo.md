@@ -36,9 +36,24 @@
   - so we don't have cyclic dependencies and post-scaling
   - check radius of unit
 - extract holos
+<<<<<<< HEAD
 
 ## todo
 - unit selection
+=======
+- init #selection
+- box #selection
+- click #selection
+- draw selected #selection
+- move only selected #selection
+- cursor callback
+
+>- TODO
+- don't draw selected twice #selection #graphics
+- draw box #selection
+- keep drawing box if less than threshold until release #selection
+- shift select, control select #selection
+>>>>>>> c1ae2bf... add cursor callback
 - extract tile
   - put static holo in there
 - build structures instead of flipping cells
@@ -87,7 +102,6 @@
 >- todo
 - alpha value color
 - base shape instance ?
-- cursor callback #view
 - vertex array and vertex buffer #refactoring
 
 ## further optimization

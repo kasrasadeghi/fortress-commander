@@ -172,7 +172,7 @@ public:
 
   void receive(ECS::EventManager* mgr, const MouseDownEvent& e) override {
     if (_gameState._mode == ControlMode::NONE) {
-      if (e.button == GLFW_MOUSE_BUTTON_1) {
+      if (e.button == GLFW_MOUSE_BUTTON_2) {
         // command selected units to move
         forEachEntity([this, &e](ECS::Entity entity){
           bool selected = _manager.getComponent<SelectableComponent>(entity).selected;

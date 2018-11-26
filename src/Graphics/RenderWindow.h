@@ -27,6 +27,12 @@ static void __mouseCallbackWrapper(GLFWwindow* window, int b, int a, int m) {
   __mouseCallback(b, a, m);
 }
 
+using CursorCallback = std::function<void(double, double)>;
+static CursorCallback __cursorCallback;
+static void __cursorCallbackWrapper(GLFWwindow* window, double x, double y) {
+  __cursorCallback(x, y);
+}
+
 class RenderWindow {
   GLFWwindow* _window;
 
@@ -105,5 +111,9 @@ public:
   void setMouseCallback(MouseCallback mouseCallback) {
     __mouseCallback = mouseCallback;
     glfwSetMouseButtonCallback(_window, __mouseCallbackWrapper);
+  }
+  void setCursorCallback(CursorCallback cursorCallback) {
+    __cursorCallback = cursorCallback;
+    glfwSetCursorPosCallback(_window, __cursorCallbackWrapper);
   }
 };
