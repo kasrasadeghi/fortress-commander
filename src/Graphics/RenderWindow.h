@@ -112,7 +112,7 @@ public:
     __mouseCallback = mouseCallback;
     glfwSetMouseButtonCallback(_window, __mouseCallbackWrapper);
   }
-  void setMouseCallback(CursorCallback cursorCallback) {
+  void setCursorCallback(CursorCallback cursorCallback) {
     __cursorCallback = cursorCallback;
     glfwSetCursorPosCallback(_window, __cursorCallbackWrapper);
   }

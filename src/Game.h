@@ -93,6 +93,7 @@ public:
 
   void keyCallback(int key, int scancode, int action, int mods);
   void mouseCallback(int button, int action, int mods);
+  void cursorCallback(double x, double y);
 
   void handleTick(float dt);
 };
