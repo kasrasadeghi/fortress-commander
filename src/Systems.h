@@ -9,6 +9,7 @@
 #include "Events.h"
 #include "VecMath.h"
 #include "GameState.h"
+#include "Unit.h"
 
 class MoveSystem : public ECS::System {
 
@@ -64,9 +65,14 @@ class UnitSelectSystem : public ECS::System,
   sf::Vector2f _boxTopLeft, _boxBottomRight;
   bool _selectionChanged = false;
 
-  void selectBox(sf::Vector2f a, sf::Vector2f b) {
-    _boxTopLeft = sf::Vector2f(std::min(a.x, b.x), std::min(a.y, b.y));
-    _boxBottomRight = sf::Vector2f(std::max(a.x, b.x), std::max(a.y, b.y));
+  void selectClicked(sf::Vector2f clickedPos) {
+    forEachEntity([this, clickedPos](ECS::Entity entity) {
+      sf::Vector2f pos = _manager.getComponent<TransformComponent>(entity).pos;
+      float dist = magn({clickedPos.x - pos.x, clickedPos.y - pos.y});
+
+      bool clicked = dist < Unit::unit_size;
+      _manager.getComponent<SelectableComponent>(entity).selected = clicked;
+    });
   }
 
 public:
@@ -99,6 +105,7 @@ public:
         // record first corner of selection
         _mouseDragStart = {e.x, e.y};
         _mouseDown = true;
+        selectClicked(_mouseDragStart);
       }
       else if (e.button == sf::Mouse::Right) {
         // command selected units to move
@@ -109,28 +116,20 @@ public:
         });
       }
     }
-
-    /*
-    forEachEntity([this, x, y](ECS::Entity entity) {
-      sf::Vector2f pos = _manager.getComponent<TransformComponent>(entity).pos;
-
-      float dx = x - pos.x;
-      float dy = y - pos.y;
-
-      float dist = sqrt(dx*dx + dy*dy);
-
-      bool clicked = dist < Unit::unit_size;
-
-      _manager.getComponent<SelectableComponent>(entity).selected = clicked;
-    });
-    */
   }
 
   void receive(ECS::EventManager* mgr, const MouseMoveEvent& e) {
-    _mousePos = sf::Vector2f(e.x, e.y);
+    _mousePos = {e.x, e.y};
+
     if (_mouseDown) {
-      selectBox(_mouseDragStart, _mousePos);
-      _selectionChanged = true;
+      float box_diagonal = magn({_mousePos.x - _mouseDragStart.x, _mousePos.y - _mouseDragStart.y});
+
+      if (box_diagonal > _dragStartThreshold) {
+        const sf::Vector2f& a = _mouseDragStart, b = _mousePos;
+        _boxTopLeft = sf::Vector2f(std::min(a.x, b.x), std::min(a.y, b.y));
+        _boxBottomRight = sf::Vector2f(std::max(a.x, b.x), std::max(a.y, b.y));
+        _selectionChanged = true;
+      }
     }
   }
 
