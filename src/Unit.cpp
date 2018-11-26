@@ -4,6 +4,7 @@
 
 #include <deque>
 #include <vector>
+#include "stdio.h"
 
 uint Unit::ID_counter = 0;
 
@@ -24,36 +25,47 @@ std::vector<glm::ivec2> findPath(World::Region& region, glm::ivec2 start, glm::i
   };
 
   auto seen = [&alive, &dead](P p) -> bool {
-    return std::find(alive.begin(), alive.end(), p) == alive.end() &&
-           std::find(dead.begin(), dead.end(), p) == dead.end();
+    return std::find(alive.begin(), alive.end(), p) != alive.end() ||
+           std::find(dead.begin(), dead.end(), p) != dead.end();
   };
 
   constexpr auto ws = World::world_size;
 
-  //TODO make backtrace matrix
   std::vector<std::vector<P>> backtrace(ws, std::vector(ws, P(-1, -1)));
 
   while (not alive.empty()) {
     auto curr = alive.front();
     alive.pop_front();
-    
 
     if (curr == end) {
       break;
     }
     
     std::vector<P> neighbors = {curr + P(0, 1), curr + P(0, -1), curr + P(1, 0), curr + P(-1, 0)};
-    
     // get valid neighbors
     for (auto& n : neighbors) {
       if (valid(n) && not seen(n)) {
-        //TODO when you add a new alive node, store its parent in the backtrace matrix
+        backtrace[n.x][n.y] = curr;
         alive.push_back(n);
       }
     }
+    dead.push_back(curr);
   }
 
-  return std::vector<P>();
+  std::vector<P> trace;
+  auto curr = end;
+  while (curr != start) {
+    trace.push_back(curr);
+    if (not valid(curr)) {
+      std::puts("");
+      break;
+    }
+    curr = backtrace[curr.x][curr.y];
+  }
+
+  std::reverse(trace.begin(), trace.end());
+
+  return trace;
 }
 
 void Unit::update(float dt, World& world) {
@@ -66,11 +78,23 @@ void Unit::update(float dt, World& world) {
 
   auto path = findPath(region, curr_cell, target_cell);
 
-  // const auto dir = glm::normalize(_target - _pos);
+  if (path.size() >= 2) {
+    auto next = path[1];
+    auto target = glm::vec2(next.x + 0.5f, next.y + 0.5f);
+    const auto dir = glm::normalize(target - _pos);
 
-  // if (glm::distance(_target, _pos) > dt * unit_speed) {
-  //   _pos += dir * dt * unit_speed;
-  // } else {
-  //   _pos = _target;
-  // }
+    if (glm::distance(target, _pos) > dt * unit_speed) {
+      _pos += dir * dt * unit_speed;
+    } else {
+      _pos = target;
+    }
+  } else {
+    const auto dir = glm::normalize(_target - _pos);
+
+    if (glm::distance(_target, _pos) > dt * unit_speed) {
+      _pos += dir * dt * unit_speed;
+    } else {
+      _pos = _target;
+    }
+  }
 }
