@@ -35,19 +35,8 @@
   - so we don't have cyclic dependencies and post-scaling
   - check radius of unit
 - extract holos
-- init #selection
-- box #selection
-- click #selection
-- draw selected #selection
-- move only selected #selection
-- cursor callback
-- draw box #selection
-- selection box alpha value 0.5-ish
-- don't draw selected twice #selection #graphics
 
 >- TODO
-- keep drawing box if less than threshold but has passed threshold until release #selection ?
-- shift select, control select #selection
 - extract tile
   - put static holo in there
 - build structures instead of flipping cells
@@ -60,6 +49,25 @@
   - https://www.youtube.com/watch?v=FSoFJAmh96g
 - load a map from a file
 - make a map
+
+# pathfinding and selection
+- init #selection
+- box #selection
+- click #selection
+- draw selected #selection
+- move only selected #selection
+- cursor callback
+- draw box #selection
+- selection box alpha value 0.5-ish
+- don't draw selected twice #selection #graphics
+
+>- TODO
+- pathfind to farthest cell along path that is visible
+- selection box doesn't work if it is backwards
+- pathfinding collision == init #pathfinding
+- units are collideable when they're standing still
+- keep drawing box if less than threshold but has passed threshold until release #selection ?
+- shift select, control select #selection
 
 # glfw-opengl
 >- done
