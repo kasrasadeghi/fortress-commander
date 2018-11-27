@@ -145,32 +145,6 @@ void Game::keyCallback(int key, int scancode, int action, int mods) {
 }
 
 void Game::mouseCallback(int button, int action, int mods) {
-
-  auto& _mode = _gameState._mode;
-  
-  // if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS) {
-  //   auto p = getMouseTile();
-  //   std::cout << p.x << ", " << p.y << std::endl;
-  // }
-  if (action == GLFW_PRESS) {
-    switch (_mode) {
-    case ControlMode::NONE:
-      // if (_world._units.size()) _world._units[0].pathTo(getMouseCoords());
-      break;
-    case ControlMode::BUILD:
-      // TODO:_world.addStructure(getMouseTile());
-      break;
-    case ControlMode::TERRAIN:
-      _paint = _world.flipCell(getMouseTile());
-      break;
-    case ControlMode::UNIT:
-      // TODO: check if the add unit is in bounds
-      _world._units.push_back(Unit(getMouseCoords(), _manager));
-      break;
-    }
-  }
-
-  
   if (action == GLFW_PRESS) {
     _eventManager.event(new MouseDownEvent(button, getMouseCoords().x, getMouseCoords().y));
   }
