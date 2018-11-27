@@ -5,7 +5,6 @@
 
 #include <functional>
 
-
 struct TransformComponent : public ECS::Component {
   glm::vec2 pos;
   float rot;
@@ -44,9 +43,9 @@ struct CommandableComponent : public ECS::Component {
   positionHandlerType positionHandler;
 
   static constexpr ECS::ComponentType _type = 4;
-  
+
   // TODO: support handling a click on another entity (i.e. entityHandler)
 
-  CommandableComponent() : positionHandler([](glm::vec2){}) {}
+  CommandableComponent() : positionHandler([](glm::vec2) {}) {}
   CommandableComponent(positionHandlerType positionHandler) : positionHandler(positionHandler) {}
 };

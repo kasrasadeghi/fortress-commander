@@ -1,7 +1,7 @@
 #pragma once
 
-#include "ECS/Manager.h"
 #include "Components.h"
+#include "ECS/Manager.h"
 
 #include "Config.h"
 #include "Graphics.h"
@@ -11,7 +11,6 @@ class Unit {
 
   ECS::Manager& _manager;
   const ECS::Entity _id;
-
 
 public:
   constexpr static float unit_size = 0.5f * tile_size;

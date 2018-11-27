@@ -11,10 +11,9 @@
 #include "Systems.h"
 #include "World.h"
 
-
 class Game : public ECS::EventSubscriber<KeyDownEvent>,
-                    ECS::EventSubscriber<MouseDownEvent>,
-                    ECS::EventSubscriber<MouseMoveEvent> {
+             ECS::EventSubscriber<MouseDownEvent>,
+             ECS::EventSubscriber<MouseMoveEvent> {
   RenderWindow _window;
   GameState _gameState;
   World _world;

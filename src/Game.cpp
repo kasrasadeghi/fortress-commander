@@ -2,9 +2,9 @@
 #include "Config.h"
 #include "Graphics.h"
 
+#include "ECS/Manager.h"
 #include "Events.h"
 #include "Systems.h"
-#include "ECS/Manager.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -13,14 +13,10 @@
 
 #include <iostream>
 #include <sstream>
-#include <vector>
 #include <stdio.h>
+#include <vector>
 
-Game::Game() :
-      _window("Fortress Commander"),
-      _gameState(_window),
-      _world(World::world_size)
-      {
+Game::Game() : _window("Fortress Commander"), _gameState(_window), _world(World::world_size) {
   _window.setKeyCallback([this](auto&&... args) { keyCallback(args...); });
   _window.setMouseCallback([this](auto&&... args) { mouseCallback(args...); });
   _window.setCursorCallback([this](auto&&... args) { cursorCallback(args...); });
@@ -74,12 +70,12 @@ void Game::loop() {
     if (_mode == ControlMode::UNIT) {
       Unit::holo(_gameState._view, getMouseCoords());
     }
-    
+
     t.renderText(str(1.f / dt), 100, 50, 1, glm::vec4(0, 0, 0, 1));
 
     _eventManager.update();
     _manager.update(dt);
-    
+
     _window.swapBuffers();
     glfwPollEvents();
   }
@@ -125,12 +121,11 @@ void Game::receive(ECS::EventManager* mgr, const MouseDownEvent& e) {
 }
 
 void Game::receive(ECS::EventManager* mgr, const MouseMoveEvent& e) {
-  if (_gameState._mode == ControlMode::TERRAIN && 
+  if (_gameState._mode == ControlMode::TERRAIN &&
       glfwGetMouseButton(_window.window(), GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
     _world.setCell(getMouseTile(), _paint);
   }
 }
-
 
 void Game::keyCallback(int key, int scancode, int action, int mods) {
   if (action == GLFW_PRESS) {
@@ -152,7 +147,8 @@ void Game::mouseCallback(int button, int action, int mods) {
 
 void Game::cursorCallback(double x, double y) {
   // TODO: move to receive
-  if (_gameState._mode == ControlMode::TERRAIN && glfwGetMouseButton(_window.window(), GLFW_MOUSE_BUTTON_1)) {
+  if (_gameState._mode == ControlMode::TERRAIN &&
+      glfwGetMouseButton(_window.window(), GLFW_MOUSE_BUTTON_1)) {
     _world.setCell(getMouseTile(), _paint);
   }
   _eventManager.event(new MouseMoveEvent(getMouseCoords().x, getMouseCoords().y));

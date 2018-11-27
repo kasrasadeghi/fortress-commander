@@ -37,7 +37,8 @@ class MoveSystem : public ECS::System {
   }
 
 public:
-  MoveSystem(ECS::Manager& manager, ECS::EventManager& eventManager, GameState& gameState) : ECS::System(manager, eventManager, gameState) {
+  MoveSystem(ECS::Manager& manager, ECS::EventManager& eventManager, GameState& gameState)
+      : ECS::System(manager, eventManager, gameState) {
     ECS::ComponentTypeSet requiredComponents;
     requiredComponents.insert(TransformComponent::_type);
     requiredComponents.insert(MotionComponent::_type);
@@ -48,7 +49,7 @@ public:
   virtual void updateEntity(float dt, ECS::Entity entity) override {
     TransformComponent& transform = _manager.getComponent<TransformComponent>(entity);
     MotionComponent& motion = _manager.getComponent<MotionComponent>(entity);
-    
+
     if (motion.hasTarget) {
       updatePath(dt, entity);
     }
@@ -60,10 +61,10 @@ public:
  * @brief Allows user to select entities that have a position and are selectable.
  * @detail The user can left-click to select an entity or left-click and drag to select several.
  */
-class UnitSelectSystem : public ECS::System, 
-                                ECS::EventSubscriber<MouseDownEvent>, 
-                                ECS::EventSubscriber<MouseMoveEvent>, 
-                                ECS::EventSubscriber<MouseUpEvent> {
+class UnitSelectSystem : public ECS::System,
+                         ECS::EventSubscriber<MouseDownEvent>,
+                         ECS::EventSubscriber<MouseMoveEvent>,
+                         ECS::EventSubscriber<MouseUpEvent> {
   constexpr static float _dragStartThreshold = 0.5 * tile_size;
 
   bool _mouseDown = false;
@@ -91,13 +92,14 @@ class UnitSelectSystem : public ECS::System,
   }
 
 public:
-  UnitSelectSystem(ECS::Manager& manager, ECS::EventManager& eventManager, GameState& gameState) : ECS::System(manager, eventManager, gameState){
+  UnitSelectSystem(ECS::Manager& manager, ECS::EventManager& eventManager, GameState& gameState)
+      : ECS::System(manager, eventManager, gameState) {
     ECS::ComponentTypeSet requiredComponents;
     requiredComponents.insert(TransformComponent::_type);
     requiredComponents.insert(SelectableComponent::_type);
 
     setRequiredComponents(std::move(requiredComponents));
-    
+
     eventManager.connect<MouseDownEvent>(this);
     eventManager.connect<MouseMoveEvent>(this);
     eventManager.connect<MouseUpEvent>(this);
@@ -108,20 +110,19 @@ public:
       // draw box around selection
       auto size_axes = _boxBottomRight - _boxTopLeft;
       InstancedRectangle(_boxTopLeft.x, _boxTopLeft.y)
-        .size(size_axes.x, size_axes.y)
-        .color(0.8, 0.8, 1, 0.4)
-        .draw(_gameState._view);
+          .size(size_axes.x, size_axes.y)
+          .color(0.8, 0.8, 1, 0.4)
+          .draw(_gameState._view);
     }
-    return ECS::System::update(dt); 
+    return ECS::System::update(dt);
   }
 
   void updateEntity(float dt, ECS::Entity entity) override {
     if (!_selectionChanged) return;
 
-    const glm::vec2 pos =
-        _manager.getComponent<TransformComponent>(entity).pos;
-    bool inBox = pos.x >= _boxTopLeft.x && pos.x <= _boxBottomRight.x &&
-                 pos.y >= _boxTopLeft.y && pos.y <= _boxBottomRight.y;
+    const glm::vec2 pos = _manager.getComponent<TransformComponent>(entity).pos;
+    bool inBox = pos.x >= _boxTopLeft.x && pos.x <= _boxBottomRight.x && pos.y >= _boxTopLeft.y &&
+                 pos.y <= _boxBottomRight.y;
 
     _manager.getComponent<SelectableComponent>(entity).selected = inBox;
   }
@@ -144,7 +145,7 @@ public:
       float box_diagonal = glm::distance(_mousePos, _mouseDragStart);
 
       if (box_diagonal > _dragStartThreshold) {
-        const glm::vec2& a = _mouseDragStart, b = _mousePos;
+        const glm::vec2 &a = _mouseDragStart, b = _mousePos;
         _boxTopLeft = glm::vec2(std::min(a.x, b.x), std::min(a.y, b.y));
         _boxBottomRight = glm::vec2(std::max(a.x, b.x), std::max(a.y, b.y));
         _selectionChanged = true;
@@ -160,12 +161,12 @@ public:
 
 /**
  * @brief Allows the user to send commands to selected commandable entities.
- * 
+ *
  */
-class UnitCommandSystem : public ECS::System,
-                                 ECS::EventSubscriber<MouseDownEvent> {
+class UnitCommandSystem : public ECS::System, ECS::EventSubscriber<MouseDownEvent> {
 public:
-  UnitCommandSystem(ECS::Manager& manager, ECS::EventManager& eventManager, GameState& gameState) : ECS::System(manager, eventManager, gameState) {
+  UnitCommandSystem(ECS::Manager& manager, ECS::EventManager& eventManager, GameState& gameState)
+      : ECS::System(manager, eventManager, gameState) {
     ECS::ComponentTypeSet requiredComponents;
     requiredComponents.insert(SelectableComponent::_type);
     requiredComponents.insert(CommandableComponent::_type);
@@ -175,7 +176,7 @@ public:
   }
 
   void updateEntity(float dt, ECS::Entity entity) override {
-    // not yet used 
+    // not yet used
   }
 
   void receive(ECS::EventManager* mgr, const MouseDownEvent& e) override {
