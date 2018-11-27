@@ -64,7 +64,7 @@ class UnitSelectSystem : public ECS::System,
                                 ECS::EventSubscriber<MouseDownEvent>, 
                                 ECS::EventSubscriber<MouseMoveEvent>, 
                                 ECS::EventSubscriber<MouseUpEvent> {
-  constexpr static float _dragStartThreshold = 0.5;
+  constexpr static float _dragStartThreshold = 0.5 * tile_size;
 
   bool _mouseDown = false;
   glm::vec2 _mouseDragStart, _mousePos;
@@ -72,7 +72,7 @@ class UnitSelectSystem : public ECS::System,
   glm::vec2 _boxTopLeft, _boxBottomRight;
   bool _selectionChanged = false;
 
-  void selectClicked(glm::vec2 clickedPos) {
+  void _selectClicked(glm::vec2 clickedPos) {
     for (ECS::Entity entity : entities()) {
       _manager.getComponent<SelectableComponent>(entity).selected = false;
     }
@@ -129,7 +129,7 @@ public:
         // record first corner of selection
         _mouseDragStart = {e.x, e.y};
         _mouseDown = true;
-        selectClicked(_mouseDragStart);
+        _selectClicked(_mouseDragStart);
       }
     }
   }
