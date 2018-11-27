@@ -20,8 +20,8 @@ class MoveSystem : public ECS::System {
    * @brief Update motion to move toward target
    */
   void updatePath(float dt, ECS::Entity entity) {
-    TransformComponent& transform = _manager.getComponent<TransformComponent>(entity);
-    MotionComponent& motion = _manager.getComponent<MotionComponent>(entity);
+    TransformComponent& transform = ECS::Manager::getInstance().getComponent<TransformComponent>(entity);
+    MotionComponent& motion = ECS::Manager::getInstance().getComponent<MotionComponent>(entity);
     const float speed = glm::length(motion.velocity);
 
     glm::vec2 target_dx(motion.target.x - transform.pos.x, motion.target.y - transform.pos.y);
@@ -37,8 +37,8 @@ class MoveSystem : public ECS::System {
   }
 
 public:
-  MoveSystem(ECS::Manager& manager, ECS::EventManager& eventManager, GameState& gameState)
-      : ECS::System(manager, eventManager, gameState) {
+  MoveSystem(ECS::EventManager& eventManager, GameState& gameState)
+      : ECS::System(eventManager, gameState) {
     ECS::ComponentTypeSet requiredComponents;
     requiredComponents.insert(TransformComponent::type);
     requiredComponents.insert(MotionComponent::type);
@@ -47,8 +47,8 @@ public:
   }
 
   virtual void updateEntity(float dt, ECS::Entity entity) override {
-    TransformComponent& transform = _manager.getComponent<TransformComponent>(entity);
-    MotionComponent& motion = _manager.getComponent<MotionComponent>(entity);
+    TransformComponent& transform = ECS::Manager::getInstance().getComponent<TransformComponent>(entity);
+    MotionComponent& motion = ECS::Manager::getInstance().getComponent<MotionComponent>(entity);
 
     if (motion.hasTarget) {
       updatePath(dt, entity);
@@ -76,10 +76,10 @@ class UnitSelectSystem : public ECS::System,
   void _selectClicked(glm::vec2 clickedPos) {
     ECS::Entity found = ECS::InvalidEntity;
     for (ECS::Entity entity : entities()) {
-      glm::vec2 pos = _manager.getComponent<TransformComponent>(entity).pos;
+      glm::vec2 pos = ECS::Manager::getInstance().getComponent<TransformComponent>(entity).pos;
       float dist = glm::distance(clickedPos, pos);
 
-      _manager.getComponent<SelectableComponent>(entity).selected = false;
+      ECS::Manager::getInstance().getComponent<SelectableComponent>(entity).selected = false;
 
       if (dist < Unit::unit_size && found == ECS::InvalidEntity) {
         found = entity;
@@ -87,13 +87,13 @@ class UnitSelectSystem : public ECS::System,
     }
 
     if (found != ECS::InvalidEntity) {
-      _manager.getComponent<SelectableComponent>(found).selected = true;
+      ECS::Manager::getInstance().getComponent<SelectableComponent>(found).selected = true;
     }
   }
 
 public:
-  UnitSelectSystem(ECS::Manager& manager, ECS::EventManager& eventManager, GameState& gameState)
-      : ECS::System(manager, eventManager, gameState) {
+  UnitSelectSystem(ECS::EventManager& eventManager, GameState& gameState)
+      : ECS::System(eventManager, gameState) {
     ECS::ComponentTypeSet requiredComponents;
     requiredComponents.insert(TransformComponent::type);
     requiredComponents.insert(SelectableComponent::type);
@@ -120,11 +120,11 @@ public:
   void updateEntity(float dt, ECS::Entity entity) override {
     if (!_selectionChanged) return;
 
-    const glm::vec2 pos = _manager.getComponent<TransformComponent>(entity).pos;
+    const glm::vec2 pos = ECS::Manager::getInstance().getComponent<TransformComponent>(entity).pos;
     bool inBox = pos.x >= _boxTopLeft.x && pos.x <= _boxBottomRight.x && pos.y >= _boxTopLeft.y &&
                  pos.y <= _boxBottomRight.y;
 
-    _manager.getComponent<SelectableComponent>(entity).selected = inBox;
+    ECS::Manager::getInstance().getComponent<SelectableComponent>(entity).selected = inBox;
   }
 
   void receive(ECS::EventManager* mgr, const MouseDownEvent& e) {
@@ -165,8 +165,8 @@ public:
  */
 class UnitCommandSystem : public ECS::System, ECS::EventSubscriber<MouseDownEvent> {
 public:
-  UnitCommandSystem(ECS::Manager& manager, ECS::EventManager& eventManager, GameState& gameState)
-      : ECS::System(manager, eventManager, gameState) {
+  UnitCommandSystem(ECS::EventManager& eventManager, GameState& gameState)
+      : ECS::System(eventManager, gameState) {
     ECS::ComponentTypeSet requiredComponents;
     requiredComponents.insert(SelectableComponent::type);
     requiredComponents.insert(CommandableComponent::type);
@@ -184,9 +184,9 @@ public:
       if (e.button == GLFW_MOUSE_BUTTON_2) {
         // command selected units to move
         for (ECS::Entity entity : entities()) {
-          bool selected = _manager.getComponent<SelectableComponent>(entity).selected;
+          bool selected = ECS::Manager::getInstance().getComponent<SelectableComponent>(entity).selected;
           if (selected)
-            _manager.getComponent<CommandableComponent>(entity).positionHandler({e.x, e.y});
+            ECS::Manager::getInstance().getComponent<CommandableComponent>(entity).positionHandler({e.x, e.y});
         }
       }
     }

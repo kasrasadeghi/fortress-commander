@@ -19,7 +19,6 @@ class Game : public ECS::EventSubscriber<KeyDownEvent>,
   World _world;
   Tile _paint = Tile::GRASS;
 
-  ECS::Manager _manager;
   ECS::EventManager _eventManager;
 
   UnitSelectSystem* _unitSelectSystem;

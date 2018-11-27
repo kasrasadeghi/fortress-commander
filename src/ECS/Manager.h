@@ -16,8 +16,17 @@ class Manager {
   std::map<ComponentType, AbstractComponentStore::Ptr> _componentStores;
   std::vector<System::Ptr> _systems;
 
-public:
   Manager();
+  Manager(const Manager&) = delete;
+  void operator=(const Manager&) = delete;
+
+public:
+  static Manager& getInstance() {
+      static Manager instance;
+
+      return instance;
+  }
+
   ~Manager();
 
   template <typename C> bool createComponentStore() {

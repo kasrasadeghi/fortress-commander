@@ -20,14 +20,13 @@ class System {
   std::set<Entity> _matchingEntities;
 
 protected:
-  Manager& _manager;
   EventManager& _eventManager;
   GameState& _gameState;
 
 public:
   using Ptr = std::shared_ptr<System>;
 
-  explicit System(Manager& manager, EventManager& eventManager, GameState& gameState) : _manager(manager), _eventManager(eventManager), _gameState(gameState) {}
+  explicit System(EventManager& eventManager, GameState& gameState) : _eventManager(eventManager), _gameState(gameState) {}
   virtual ~System(){};
 
   const ComponentTypeSet& getRequiredComponents() const {

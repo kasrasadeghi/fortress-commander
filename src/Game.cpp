@@ -23,19 +23,19 @@ Game::Game() : _window("Fortress Commander"), _gameState(_window), _world(World:
 
   // glfwSwapInterval(1);
 
-  _manager.createComponentStore<TransformComponent>();
-  _manager.createComponentStore<MotionComponent>();
-  _manager.createComponentStore<SelectableComponent>();
-  _manager.createComponentStore<CommandableComponent>();
+  ECS::Manager::getInstance().createComponentStore<TransformComponent>(); 
+  ECS::Manager::getInstance().createComponentStore<MotionComponent>();
+  ECS::Manager::getInstance().createComponentStore<SelectableComponent>();
+  ECS::Manager::getInstance().createComponentStore<CommandableComponent>();
 
-  _moveSystem = new MoveSystem(_manager, _eventManager, _gameState);
-  _manager.addSystem(ECS::System::Ptr(_moveSystem));
+  _moveSystem = new MoveSystem(_eventManager, _gameState);
+  ECS::Manager::getInstance().addSystem(ECS::System::Ptr(_moveSystem));
 
-  _unitSelectSystem = new UnitSelectSystem(_manager, _eventManager, _gameState);
-  _manager.addSystem(ECS::System::Ptr(_unitSelectSystem));
+  _unitSelectSystem = new UnitSelectSystem(_eventManager, _gameState);
+  ECS::Manager::getInstance().addSystem(ECS::System::Ptr(_unitSelectSystem));
 
-  _unitCommandSystem = new UnitCommandSystem(_manager, _eventManager, _gameState);
-  _manager.addSystem(ECS::System::Ptr(_unitCommandSystem));
+  _unitCommandSystem = new UnitCommandSystem(_eventManager, _gameState);
+  ECS::Manager::getInstance().addSystem(ECS::System::Ptr(_unitCommandSystem));
 
   _eventManager.connect<KeyDownEvent>(this);
   _eventManager.connect<MouseDownEvent>(this);
@@ -74,7 +74,7 @@ void Game::loop() {
     t.renderText(str(1.f / dt), 100, 50, 1, glm::vec4(0, 0, 0, 1));
 
     _eventManager.update();
-    _manager.update(dt);
+    ECS::Manager::getInstance().update(dt);
 
     _window.swapBuffers();
     glfwPollEvents();
@@ -116,7 +116,7 @@ void Game::receive(ECS::EventManager* mgr, const MouseDownEvent& e) {
   }
   if (_gameState._mode == ControlMode::UNIT) {
     // TODO: check if the add unit is in bounds
-    _world._units.push_back(Unit(getMouseCoords(), _manager));
+    _world._units.push_back(Unit(getMouseCoords()));
   }
 }
 
