@@ -36,19 +36,15 @@ void World::_drawRegion(View& view) const {
     }
   }
 
-  {
-    InstancedRectangle r(grass);
-    r.size(tile_size, tile_size);
-    r.color(.3, .6, .2);
-    r.draw(view);
-  }
+  InstancedRectangle(grass)
+    .size(tile_size, tile_size)
+    .color(.3, .6, .2)
+    .draw(view);
 
-  {
-    InstancedRectangle r(water);
-    r.size(tile_size, tile_size);
-    r.color(.1, .3, .8);
-    r.draw(view);
-  }
+  InstancedRectangle(water)
+    .size(tile_size, tile_size)
+    .color(.1, .3, .8)
+    .draw(view);
 }
 
 void World::_drawUnits(View& view) const {

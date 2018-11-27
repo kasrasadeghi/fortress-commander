@@ -55,7 +55,7 @@ public:
 
   static void tileHolo(View& view, glm::ivec2 tile_index) {
     InstancedRectangle r(tile_index.x * tile_size, tile_index.y * tile_size);
-    r.color(.7, .7, .7 /*TODO:, .5 */);
+    r.color(.7, .7, .7, .5);
     r.size(tile_size, tile_size);
     r.draw(view);
   }
