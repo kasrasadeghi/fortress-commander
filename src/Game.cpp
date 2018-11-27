@@ -26,8 +26,6 @@ Game::Game() :
   _window.setCursorCallback([this](auto&&... args) { cursorCallback(args...); });
 
   // glfwSwapInterval(1);
-  
-
 
   _manager.createComponentStore<TransformComponent>();
   _manager.createComponentStore<MotionComponent>();
@@ -66,16 +64,16 @@ void Game::loop() {
     float dt = glfwGetTime() - last_time;
     last_time = glfwGetTime();
 
-
-    // if (_mode == ControlMode::BUILD || _mode == ControlMode::TERRAIN) {
-    //   World::tileHolo(_view, getMouseTile());
-    // }
-    // if (_mode == ControlMode::UNIT) {
-    //   Unit::holo(_view, getMouseCoords());
-    // }
-
     handleTick(dt);
     _world.draw(_gameState._view);
+
+    auto& _mode = _gameState._mode;
+    if (_mode == ControlMode::BUILD || _mode == ControlMode::TERRAIN) {
+      World::tileHolo(_gameState._view, getMouseTile());
+    }
+    if (_mode == ControlMode::UNIT) {
+      Unit::holo(_gameState._view, getMouseCoords());
+    }
     
     t.renderText(str(1.f / dt), 100, 50, 1, glm::vec4(0, 0, 0, 1));
 
@@ -88,9 +86,6 @@ void Game::loop() {
 }
 
 void Game::receive(ECS::EventManager* mgr, const KeyDownEvent& e) {
-
-  std::printf("%d, %d\n", e.key, e.action);
-
   auto key = e.key;
   auto action = e.action;
 
@@ -124,7 +119,7 @@ void Game::receive(ECS::EventManager* mgr, const MouseDownEvent& e) {
     _paint = _world.flipCell(getMouseTile());
   }
   if (_gameState._mode == ControlMode::UNIT) {
-    // check if the add unit is in bounds
+    // TODO: check if the add unit is in bounds
     _world._units.push_back(Unit(getMouseCoords(), _manager));
   }
 }
@@ -156,6 +151,7 @@ void Game::mouseCallback(int button, int action, int mods) {
 }
 
 void Game::cursorCallback(double x, double y) {
+  // TODO: move to receive
   if (_gameState._mode == ControlMode::TERRAIN && glfwGetMouseButton(_window.window(), GLFW_MOUSE_BUTTON_1)) {
     _world.setCell(getMouseTile(), _paint);
   }
