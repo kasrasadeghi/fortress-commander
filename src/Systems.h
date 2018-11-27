@@ -73,17 +73,20 @@ class UnitSelectSystem : public ECS::System,
   bool _selectionChanged = false;
 
   void _selectClicked(glm::vec2 clickedPos) {
-    for (ECS::Entity entity : entities()) {
-      _manager.getComponent<SelectableComponent>(entity).selected = false;
-    }
+    ECS::Entity found = ECS::InvalidEntity;
     for (ECS::Entity entity : entities()) {
       glm::vec2 pos = _manager.getComponent<TransformComponent>(entity).pos;
       float dist = glm::distance(clickedPos, pos);
 
-      if (dist < Unit::unit_size) {
-        _manager.getComponent<SelectableComponent>(entity).selected = true;
-        break;
+      _manager.getComponent<SelectableComponent>(entity).selected = false;
+
+      if (dist < Unit::unit_size && found == ECS::InvalidEntity) {
+        found = entity;
       }
+    }
+
+    if (found != ECS::InvalidEntity) {
+      _manager.getComponent<SelectableComponent>(found).selected = true;
     }
   }
 
