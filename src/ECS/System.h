@@ -70,8 +70,8 @@ public:
   // how the system updates
   virtual void updateEntity(float dt, Entity entity) = 0;
 
-  void forEachEntity(std::function<void(ECS::Entity)> f) {
-    std::for_each(_matchingEntities.begin(), _matchingEntities.end(), f);
+  const std::set<ECS::Entity>& entities() {
+    return _matchingEntities;
   }
 
 protected:

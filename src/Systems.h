@@ -64,7 +64,7 @@ class UnitSelectSystem : public ECS::System,
                                 ECS::EventSubscriber<MouseDownEvent>, 
                                 ECS::EventSubscriber<MouseMoveEvent>, 
                                 ECS::EventSubscriber<MouseUpEvent> {
-  constexpr static float _dragStartThreshold = 0.2;
+  constexpr static float _dragStartThreshold = 0.5;
 
   bool _mouseDown = false;
   glm::vec2 _mouseDragStart, _mousePos;
@@ -73,13 +73,18 @@ class UnitSelectSystem : public ECS::System,
   bool _selectionChanged = false;
 
   void selectClicked(glm::vec2 clickedPos) {
-    forEachEntity([this, clickedPos](ECS::Entity entity) {
+    for (ECS::Entity entity : entities()) {
+      _manager.getComponent<SelectableComponent>(entity).selected = false;
+    }
+    for (ECS::Entity entity : entities()) {
       glm::vec2 pos = _manager.getComponent<TransformComponent>(entity).pos;
       float dist = glm::distance(clickedPos, pos);
 
-      bool clicked = dist < Unit::unit_size;
-      _manager.getComponent<SelectableComponent>(entity).selected = clicked;
-    });
+      if (dist < Unit::unit_size) {
+        _manager.getComponent<SelectableComponent>(entity).selected = true;
+        break;
+      }
+    }
   }
 
 public:
@@ -101,7 +106,7 @@ public:
       auto size_axes = _boxBottomRight - _boxTopLeft;
       InstancedRectangle(_boxTopLeft.x, _boxTopLeft.y)
         .size(size_axes.x, size_axes.y)
-        .color(0.8, 0.8, 1/*, 0.4*/)
+        .color(0.8, 0.8, 1, 0.4)
         .draw(_gameState._view);
     }
     return ECS::System::update(dt); 
@@ -174,11 +179,11 @@ public:
     if (_gameState._mode == ControlMode::NONE) {
       if (e.button == GLFW_MOUSE_BUTTON_2) {
         // command selected units to move
-        forEachEntity([this, &e](ECS::Entity entity){
+        for (ECS::Entity entity : entities()) {
           bool selected = _manager.getComponent<SelectableComponent>(entity).selected;
           if (selected)
             _manager.getComponent<CommandableComponent>(entity).positionHandler({e.x, e.y});
-        });
+        }
       }
     }
   }
