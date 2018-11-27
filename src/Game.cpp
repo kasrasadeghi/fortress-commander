@@ -28,18 +28,18 @@ Game::Game() : _window("Fortress Commander"), _gameState(_window), _world(World:
   ECS::Manager::getInstance().createComponentStore<SelectableComponent>();
   ECS::Manager::getInstance().createComponentStore<CommandableComponent>();
 
-  _moveSystem = new MoveSystem(_eventManager, _gameState);
+  _moveSystem = new MoveSystem(_gameState);
   ECS::Manager::getInstance().addSystem(ECS::System::Ptr(_moveSystem));
 
-  _unitSelectSystem = new UnitSelectSystem(_eventManager, _gameState);
+  _unitSelectSystem = new UnitSelectSystem(_gameState);
   ECS::Manager::getInstance().addSystem(ECS::System::Ptr(_unitSelectSystem));
 
-  _unitCommandSystem = new UnitCommandSystem(_eventManager, _gameState);
+  _unitCommandSystem = new UnitCommandSystem(_gameState);
   ECS::Manager::getInstance().addSystem(ECS::System::Ptr(_unitCommandSystem));
 
-  _eventManager.connect<KeyDownEvent>(this);
-  _eventManager.connect<MouseDownEvent>(this);
-  _eventManager.connect<MouseMoveEvent>(this);
+  ECS::EventManager::getInstance().connect<KeyDownEvent>(this);
+  ECS::EventManager::getInstance().connect<MouseDownEvent>(this);
+  ECS::EventManager::getInstance().connect<MouseMoveEvent>(this);
 }
 
 template <typename T>
@@ -73,7 +73,7 @@ void Game::loop() {
 
     t.renderText(str(1.f / dt), 100, 50, 1, glm::vec4(0, 0, 0, 1));
 
-    _eventManager.update();
+    ECS::EventManager::getInstance().update();
     ECS::Manager::getInstance().update(dt);
 
     _window.swapBuffers();
@@ -81,7 +81,7 @@ void Game::loop() {
   }
 }
 
-void Game::receive(ECS::EventManager* mgr, const KeyDownEvent& e) {
+void Game::receive( const KeyDownEvent& e) {
   auto key = e.key;
   auto action = e.action;
 
@@ -107,7 +107,7 @@ void Game::receive(ECS::EventManager* mgr, const KeyDownEvent& e) {
   }
 }
 
-void Game::receive(ECS::EventManager* mgr, const MouseDownEvent& e) {
+void Game::receive( const MouseDownEvent& e) {
   if (_gameState._mode == ControlMode::BUILD) {
     //_world.addStructure(getMouseTile());
   }
@@ -120,7 +120,7 @@ void Game::receive(ECS::EventManager* mgr, const MouseDownEvent& e) {
   }
 }
 
-void Game::receive(ECS::EventManager* mgr, const MouseMoveEvent& e) {
+void Game::receive( const MouseMoveEvent& e) {
   if (_gameState._mode == ControlMode::TERRAIN &&
       glfwGetMouseButton(_window.window(), GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
     _world.setCell(getMouseTile(), _paint);
@@ -129,19 +129,19 @@ void Game::receive(ECS::EventManager* mgr, const MouseMoveEvent& e) {
 
 void Game::keyCallback(int key, int scancode, int action, int mods) {
   if (action == GLFW_PRESS) {
-    _eventManager.event(new KeyDownEvent(key));
+    ECS::EventManager::getInstance().event(new KeyDownEvent(key));
   }
   if (action == GLFW_RELEASE) {
-    _eventManager.event(new KeyUpEvent(key));
+    ECS::EventManager::getInstance().event(new KeyUpEvent(key));
   }
 }
 
 void Game::mouseCallback(int button, int action, int mods) {
   if (action == GLFW_PRESS) {
-    _eventManager.event(new MouseDownEvent(button, getMouseCoords().x, getMouseCoords().y));
+    ECS::EventManager::getInstance().event(new MouseDownEvent(button, getMouseCoords().x, getMouseCoords().y));
   }
   if (action == GLFW_RELEASE) {
-    _eventManager.event(new MouseUpEvent(button, getMouseCoords().x, getMouseCoords().y));
+    ECS::EventManager::getInstance().event(new MouseUpEvent(button, getMouseCoords().x, getMouseCoords().y));
   }
 }
 
@@ -151,7 +151,7 @@ void Game::cursorCallback(double x, double y) {
       glfwGetMouseButton(_window.window(), GLFW_MOUSE_BUTTON_1)) {
     _world.setCell(getMouseTile(), _paint);
   }
-  _eventManager.event(new MouseMoveEvent(getMouseCoords().x, getMouseCoords().y));
+  ECS::EventManager::getInstance().event(new MouseMoveEvent(getMouseCoords().x, getMouseCoords().y));
 }
 
 void Game::handleTick(float dt) {

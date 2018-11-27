@@ -59,15 +59,24 @@ template <typename Event> class EventSubscriber : public BaseEventSubscriber {
 public:
   virtual ~EventSubscriber() {}
 
-  virtual void receive(EventManager* manager, const Event& event) = 0;
+  virtual void receive(const Event& event) = 0;
 };
 
 /////////////////////////////////////////////////////////////////
 class EventManager {
-public:
   EventManager()
       : mEntities({}),
         mSubscribers({}, 0, std::hash<TypeIndex>(), std::equal_to<TypeIndex>()) {}
+
+  EventManager(const EventManager&) = delete;
+  void operator=(const EventManager&) = delete;
+
+public:
+  static EventManager& getInstance() {
+      static EventManager instance;
+
+      return instance;
+  }
 
   ~EventManager() {}
 
@@ -122,7 +131,7 @@ public:
         auto sub = reinterpret_cast<EventSubscriber<Event>*>(base.get());
 
         const auto boundFunc =
-            std::bind(&EventSubscriber<Event>::receive, sub, this, *event);
+            std::bind(&EventSubscriber<Event>::receive, sub, *event);
         mEvents.push_back(std::function<void()>(boundFunc));
       }
     }
@@ -142,7 +151,7 @@ public:
                  BaseEventSubscriber* base) {
     // auto* sub = reinterpret_cast<EventSubscriber<Event>*>(base);
 
-    // sub->receive(eventManager, event);
+    // sub->receive(event);
   }
 
 private:

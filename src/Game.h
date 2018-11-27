@@ -19,8 +19,6 @@ class Game : public ECS::EventSubscriber<KeyDownEvent>,
   World _world;
   Tile _paint = Tile::GRASS;
 
-  ECS::EventManager _eventManager;
-
   UnitSelectSystem* _unitSelectSystem;
   UnitCommandSystem* _unitCommandSystem;
   MoveSystem* _moveSystem;
@@ -102,9 +100,9 @@ public:
 
   void loop();
 
-  void receive(ECS::EventManager* mgr, const KeyDownEvent& e) override;
-  void receive(ECS::EventManager* mgr, const MouseDownEvent& e) override;
-  void receive(ECS::EventManager* mgr, const MouseMoveEvent& e) override;
+  void receive( const KeyDownEvent& e) override;
+  void receive( const MouseDownEvent& e) override;
+  void receive( const MouseMoveEvent& e) override;
 
   void keyCallback(int key, int scancode, int action, int mods);
   void mouseCallback(int button, int action, int mods);

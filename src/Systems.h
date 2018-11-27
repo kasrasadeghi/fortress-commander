@@ -37,8 +37,8 @@ class MoveSystem : public ECS::System {
   }
 
 public:
-  MoveSystem(ECS::EventManager& eventManager, GameState& gameState)
-      : ECS::System(eventManager, gameState) {
+  MoveSystem(GameState& gameState)
+      : ECS::System(gameState) {
     ECS::ComponentTypeSet requiredComponents;
     requiredComponents.insert(TransformComponent::type);
     requiredComponents.insert(MotionComponent::type);
@@ -92,17 +92,17 @@ class UnitSelectSystem : public ECS::System,
   }
 
 public:
-  UnitSelectSystem(ECS::EventManager& eventManager, GameState& gameState)
-      : ECS::System(eventManager, gameState) {
+  UnitSelectSystem(GameState& gameState)
+      : ECS::System(gameState) {
     ECS::ComponentTypeSet requiredComponents;
     requiredComponents.insert(TransformComponent::type);
     requiredComponents.insert(SelectableComponent::type);
 
     setRequiredComponents(std::move(requiredComponents));
 
-    eventManager.connect<MouseDownEvent>(this);
-    eventManager.connect<MouseMoveEvent>(this);
-    eventManager.connect<MouseUpEvent>(this);
+    ECS::EventManager::getInstance().connect<MouseDownEvent>(this);
+    ECS::EventManager::getInstance().connect<MouseMoveEvent>(this);
+    ECS::EventManager::getInstance().connect<MouseUpEvent>(this);
   }
 
   std::size_t update(float dt) override {
@@ -127,7 +127,7 @@ public:
     ECS::Manager::getInstance().getComponent<SelectableComponent>(entity).selected = inBox;
   }
 
-  void receive(ECS::EventManager* mgr, const MouseDownEvent& e) {
+  void receive( const MouseDownEvent& e) {
     if (_gameState._mode == ControlMode::NONE) {
       if (e.button == GLFW_MOUSE_BUTTON_1) {
         // record first corner of selection
@@ -138,7 +138,7 @@ public:
     }
   }
 
-  void receive(ECS::EventManager* mgr, const MouseMoveEvent& e) {
+  void receive( const MouseMoveEvent& e) {
     _mousePos = {e.x, e.y};
 
     if (_mouseDown) {
@@ -153,7 +153,7 @@ public:
     }
   }
 
-  void receive(ECS::EventManager* mgr, const MouseUpEvent& e) {
+  void receive( const MouseUpEvent& e) {
     _mouseDown = false;
     _selectionChanged = false;
   }
@@ -165,21 +165,21 @@ public:
  */
 class UnitCommandSystem : public ECS::System, ECS::EventSubscriber<MouseDownEvent> {
 public:
-  UnitCommandSystem(ECS::EventManager& eventManager, GameState& gameState)
-      : ECS::System(eventManager, gameState) {
+  UnitCommandSystem(GameState& gameState)
+      : ECS::System(gameState) {
     ECS::ComponentTypeSet requiredComponents;
     requiredComponents.insert(SelectableComponent::type);
     requiredComponents.insert(CommandableComponent::type);
     setRequiredComponents(std::move(requiredComponents));
 
-    eventManager.connect<MouseDownEvent>(this);
+    ECS::EventManager::getInstance().connect<MouseDownEvent>(this);
   }
 
   void updateEntity(float dt, ECS::Entity entity) override {
     // not yet used
   }
 
-  void receive(ECS::EventManager* mgr, const MouseDownEvent& e) override {
+  void receive( const MouseDownEvent& e) override {
     if (_gameState._mode == ControlMode::NONE) {
       if (e.button == GLFW_MOUSE_BUTTON_2) {
         // command selected units to move
