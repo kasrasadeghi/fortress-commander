@@ -1,6 +1,6 @@
 #include "Components.h"
 
-void MotionComponent::pathTo(sf::Vector2f pos) {
+void MotionComponent::pathTo(glm::vec2 pos) {
   // TODO: pathfinding
   target = pos;
   hasTarget = true;

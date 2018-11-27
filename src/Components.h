@@ -1,18 +1,19 @@
 #pragma once
 
-#include <functional>
-#include <SFML/Graphics.hpp>
-
 #include "ECS/Component.h"
+#include "Graphics.h"
+
+#include <functional>
+
 
 struct TransformComponent : public ECS::Component {
-  sf::Vector2f pos;
+  glm::vec2 pos;
   float rot;
 
   static constexpr ECS::ComponentType _type = 1;
 
   TransformComponent() : pos(0.f, 0.f), rot(0.f) {}
-  TransformComponent(sf::Vector2f pos, float rot) : pos(pos), rot(rot) {}
+  TransformComponent(glm::vec2 pos, float rot) : pos(pos), rot(rot) {}
 };
 
 struct SelectableComponent : public ECS::Component {
@@ -26,26 +27,26 @@ struct SelectableComponent : public ECS::Component {
 
 struct MotionComponent : public ECS::Component {
   float movementSpeed = 2.f; // TODO: not hardcoded
-  sf::Vector2f velocity;
-  sf::Vector2f target;
+  glm::vec2 velocity;
+  glm::vec2 target;
   bool hasTarget = false;
 
   static constexpr ECS::ComponentType _type = 3;
 
   MotionComponent() : velocity(0, 0) {}
-  MotionComponent(sf::Vector2f velocity) : velocity(velocity) {}
+  MotionComponent(glm::vec2 velocity) : velocity(velocity) {}
 
-  void pathTo(sf::Vector2f pos);
+  void pathTo(glm::vec2 pos);
 };
 
 struct CommandableComponent : public ECS::Component {
-  using positionHandlerType = std::function<void(sf::Vector2f)>;
+  using positionHandlerType = std::function<void(glm::vec2)>;
   positionHandlerType positionHandler;
 
   static constexpr ECS::ComponentType _type = 4;
   
   // TODO: support handling a click on another entity (i.e. entityHandler)
 
-  CommandableComponent() : positionHandler([](sf::Vector2f){}) {}
+  CommandableComponent() : positionHandler([](glm::vec2){}) {}
   CommandableComponent(positionHandlerType positionHandler) : positionHandler(positionHandler) {}
 };

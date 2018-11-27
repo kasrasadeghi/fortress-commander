@@ -1,3 +1,5 @@
+# misc
+## done
 - render grid
 - view grid
 - keyboard move view
@@ -30,11 +32,15 @@
 - move units
 - center unit creation holo
 - render unit centered at pos
-
 - extract tile_size from world
   - so we don't have cyclic dependencies and post-scaling
   - check radius of unit
+- extract holos
+
+## todo
 - unit selection
+- extract tile
+  - put static holo in there
 - build structures instead of flipping cells
   - maybe a region edit mode?
 - check if unit construction is in bounds
@@ -45,3 +51,49 @@
   - https://www.youtube.com/watch?v=FSoFJAmh96g
 - load a map from a file
 - make a map
+
+# glfw-opengl
+>- done
+- cache shaders
+- rectangle shape
+- render tiles
+- fixed rectangleshape memory leak
+- correct screen size #view
+- keyboard movement #view
+- mouse callback #view
+- mouse movement #view
+- lock view to world #view
+- set modes
+- cpu culling #graphics
+- instanced rectangle optimization #graphics
+- instanced arrays #graphics
+- draw circle #graphics
+- unit placement
+- units moving
+- unit holo
+- terrain holo
+>- feature parity!
+- rotation
+
+## advanced graphics
+- text rendering
+>- todo
+- text renderer takes in a view and draws to the view ?
+
+## ergonomics and refactoring
+- terrain paint
+- shape renaming
+- single position constructor
+>- todo
+- alpha value color
+- base shape instance ?
+- cursor callback #view
+- vertex array and vertex buffer #refactoring
+
+## further optimization
+>- todo
+- geometry shaders #graphics
+- instanced colors too ? #graphics
+- instanced colors by sectioning ? #graphics
+- sending more instances at once ? #graphics
+- precomputation of noninstanced vertex rectangles ? #graphics

@@ -20,14 +20,15 @@ struct MouseUpEvent : public ECS::BaseEvent {
 };
 
 struct KeyEvent : public ECS::BaseEvent {
-  KeyEvent(int keycode) : keycode(keycode) {}
-  int keycode;
+  KeyEvent(int key, int action) : key(key), action(action) {}
+  int key;
+  int action;
 };
 
 struct KeyDownEvent : public KeyEvent {
-  KeyDownEvent(int keycode) : KeyEvent(keycode) {}
+  KeyDownEvent(int keycode) : KeyEvent(keycode, GLFW_PRESS) {}
 };
 
 struct KeyUpEvent : public KeyEvent {
-  KeyUpEvent(int keycode) : KeyEvent(keycode) {}
+  KeyUpEvent(int keycode) : KeyEvent(keycode, GLFW_RELEASE) {}
 };

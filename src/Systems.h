@@ -7,7 +7,6 @@
 
 #include "ECS/System.h"
 #include "Events.h"
-#include "VecMath.h"
 #include "GameState.h"
 #include "Unit.h"
 
@@ -23,10 +22,10 @@ class MoveSystem : public ECS::System {
   void updatePath(float dt, ECS::Entity entity) {
     TransformComponent& transform = _manager.getComponent<TransformComponent>(entity);
     MotionComponent& motion = _manager.getComponent<MotionComponent>(entity);
-    const float speed = magn(motion.velocity);
+    const float speed = glm::length(motion.velocity);
 
-    sf::Vector2f target_dx(motion.target.x - transform.pos.x, motion.target.y - transform.pos.y);
-    float len = magn(target_dx);
+    glm::vec2 target_dx(motion.target.x - transform.pos.x, motion.target.y - transform.pos.y);
+    float len = glm::length(target_dx);
     if (len < speed * dt) {
       transform.pos = motion.target;
       motion.velocity = {0, 0};
@@ -68,15 +67,15 @@ class UnitSelectSystem : public ECS::System,
   constexpr static float _dragStartThreshold = 0.2;
 
   bool _mouseDown = false;
-  sf::Vector2f _mouseDragStart, _mousePos;
+  glm::vec2 _mouseDragStart, _mousePos;
 
-  sf::Vector2f _boxTopLeft, _boxBottomRight;
+  glm::vec2 _boxTopLeft, _boxBottomRight;
   bool _selectionChanged = false;
 
-  void selectClicked(sf::Vector2f clickedPos) {
+  void selectClicked(glm::vec2 clickedPos) {
     forEachEntity([this, clickedPos](ECS::Entity entity) {
-      sf::Vector2f pos = _manager.getComponent<TransformComponent>(entity).pos;
-      float dist = magn({clickedPos.x - pos.x, clickedPos.y - pos.y});
+      glm::vec2 pos = _manager.getComponent<TransformComponent>(entity).pos;
+      float dist = glm::distance(clickedPos, pos);
 
       bool clicked = dist < Unit::unit_size;
       _manager.getComponent<SelectableComponent>(entity).selected = clicked;
@@ -99,12 +98,11 @@ public:
   std::size_t update(float dt) override {
     if (_selectionChanged) {
       // draw box around selection
-      sf::RectangleShape box({_boxBottomRight.x - _boxTopLeft.x, _boxBottomRight.y - _boxTopLeft.y});
-      box.setPosition(_boxTopLeft);
-      box.setOutlineColor(sf::Color::Magenta);
-      box.setOutlineThickness(0.1f);
-      box.setFillColor(sf::Color(255, 0, 255, 25));
-      _gameState._window.draw(box);
+      auto size_axes = _boxBottomRight - _boxTopLeft;
+      InstancedRectangle(_boxTopLeft.x, _boxTopLeft.y)
+        .size(size_axes.x, size_axes.y)
+        .color(0.8, 0.8, 1/*, 0.4*/)
+        .draw(_gameState._view);
     }
     return ECS::System::update(dt); 
   }
@@ -112,7 +110,7 @@ public:
   void updateEntity(float dt, ECS::Entity entity) override {
     if (!_selectionChanged) return;
 
-    const sf::Vector2f pos =
+    const glm::vec2 pos =
         _manager.getComponent<TransformComponent>(entity).pos;
     bool inBox = pos.x >= _boxTopLeft.x && pos.x <= _boxBottomRight.x &&
                  pos.y >= _boxTopLeft.y && pos.y <= _boxBottomRight.y;
@@ -122,7 +120,7 @@ public:
 
   void receive(ECS::EventManager* mgr, const MouseDownEvent& e) {
     if (_gameState._mode == ControlMode::NONE) {
-      if (e.button == sf::Mouse::Left) {
+      if (e.button == GLFW_MOUSE_BUTTON_1) {
         // record first corner of selection
         _mouseDragStart = {e.x, e.y};
         _mouseDown = true;
@@ -135,12 +133,12 @@ public:
     _mousePos = {e.x, e.y};
 
     if (_mouseDown) {
-      float box_diagonal = magn({_mousePos.x - _mouseDragStart.x, _mousePos.y - _mouseDragStart.y});
+      float box_diagonal = glm::distance(_mousePos, _mouseDragStart);
 
       if (box_diagonal > _dragStartThreshold) {
-        const sf::Vector2f& a = _mouseDragStart, b = _mousePos;
-        _boxTopLeft = sf::Vector2f(std::min(a.x, b.x), std::min(a.y, b.y));
-        _boxBottomRight = sf::Vector2f(std::max(a.x, b.x), std::max(a.y, b.y));
+        const glm::vec2& a = _mouseDragStart, b = _mousePos;
+        _boxTopLeft = glm::vec2(std::min(a.x, b.x), std::min(a.y, b.y));
+        _boxBottomRight = glm::vec2(std::max(a.x, b.x), std::max(a.y, b.y));
         _selectionChanged = true;
       }
     }
@@ -174,7 +172,7 @@ public:
 
   void receive(ECS::EventManager* mgr, const MouseDownEvent& e) override {
     if (_gameState._mode == ControlMode::NONE) {
-      if (e.button == sf::Mouse::Right) {
+      if (e.button == GLFW_MOUSE_BUTTON_1) {
         // command selected units to move
         forEachEntity([this, &e](ECS::Entity entity){
           bool selected = _manager.getComponent<SelectableComponent>(entity).selected;

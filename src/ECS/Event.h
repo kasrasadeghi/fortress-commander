@@ -10,30 +10,19 @@
 #include <typeinfo>
 #include <unordered_map>
 #include <unordered_set>
+#include <vector>
 
 namespace ECS {
 class EventManager;
 class BaseEventSubscriber;
 class BaseEvent;
 
-typedef std::allocator<Entity> Allocator;
 using TypeIndex = std::type_index;
 
-using SubscriberPtrAllocator = std::allocator_traits<
-    Allocator>::template rebind_alloc<std::shared_ptr<BaseEventSubscriber>>;
-using EntityPtrAllocator =
-    std::allocator_traits<Allocator>::template rebind_alloc<Entity*>;
-
-using SubscriberPairAllocator =
-    std::allocator_traits<Allocator>::template rebind_alloc<std::pair<
-        const TypeIndex, std::vector<std::shared_ptr<BaseEventSubscriber>,
-                                     SubscriberPtrAllocator>>>;
-using EntityAllocator =
-    std::allocator_traits<Allocator>::template rebind_alloc<Entity>;
 using SubscribersMap = std::unordered_map<
     TypeIndex,
-    std::vector<std::shared_ptr<BaseEventSubscriber>, SubscriberPtrAllocator>,
-    std::hash<TypeIndex>, std::equal_to<TypeIndex>, SubscriberPairAllocator>;
+    std::vector<std::shared_ptr<BaseEventSubscriber>>,
+    std::hash<TypeIndex>, std::equal_to<TypeIndex>>;
 using EventQueue = std::unordered_map<BaseEventSubscriber*, unsigned>;
 
 template <typename T> TypeIndex getTypeIndex() {
@@ -76,10 +65,9 @@ public:
 /////////////////////////////////////////////////////////////////
 class EventManager {
 public:
-  EventManager(Allocator alloc)
-      : mEntAlloc(alloc), mEntities({}, EntityPtrAllocator(alloc)),
-        mSubscribers({}, 0, std::hash<TypeIndex>(), std::equal_to<TypeIndex>(),
-                     SubscriberPtrAllocator(alloc)) {}
+  EventManager()
+      : mEntities({}),
+        mSubscribers({}, 0, std::hash<TypeIndex>(), std::equal_to<TypeIndex>()) {}
 
   ~EventManager() {}
 
@@ -88,8 +76,7 @@ public:
     auto it = mSubscribers.find(index);
 
     if (it == mSubscribers.end()) {
-      std::vector<std::shared_ptr<BaseEventSubscriber>, SubscriberPtrAllocator>
-          subList(mEntAlloc);
+      std::vector<std::shared_ptr<BaseEventSubscriber>> subList;
       subList.push_back(std::shared_ptr<BaseEventSubscriber>(subscriber));
 
       mSubscribers.insert({index, subList});
@@ -159,9 +146,7 @@ public:
   }
 
 private:
-  std::vector<Entity*, EntityPtrAllocator> mEntities;
-
-  EntityAllocator mEntAlloc;
+  std::vector<Entity*> mEntities;
 
   SubscribersMap mSubscribers;
 

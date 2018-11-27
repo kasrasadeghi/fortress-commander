@@ -27,7 +27,6 @@ std::size_t Manager::registerEntity(const Entity entity) {
 
   auto entityComponents = entityIt->second;
 
-  int systemNum = 0;
   for (auto system = _systems.begin(); system != _systems.end(); ++system) {
     const auto& systemRequiredComponents = (*system)->getRequiredComponents();
 

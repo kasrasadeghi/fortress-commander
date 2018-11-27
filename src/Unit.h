@@ -1,22 +1,35 @@
 #pragma once
 
 #include "ECS/Manager.h"
+#include "Components.h"
 
-#include <SFML/Graphics.hpp>
+#include "Config.h"
+#include "Graphics.h"
 
-// enum class UnitType { FRIENDLY, HOSTILE };
+class Unit {
+  glm::vec2 _target;
 
-class Unit : public sf::Drawable {
-  // UnitType _type; // friendly or hostile
-  sf::Vector2f _target;
-  ECS::Manager* _manager;
-
-public:
+  ECS::Manager& _manager;
   const ECS::Entity _id;
 
-  constexpr static float unit_size = 0.5f;
 
-  Unit(sf::Vector2f pos, ECS::Manager* manager /*, UnitType type*/);
+public:
+  constexpr static float unit_size = 0.5f * tile_size;
+  constexpr static float unit_speed = 2.f;
 
-  virtual void draw(sf::RenderTarget& rw, sf::RenderStates states) const;
+  Unit(glm::vec2 pos, ECS::Manager& manager);
+
+  glm::vec2 pos() const {
+    return _manager.getComponent<TransformComponent>(_id).pos;
+  }
+
+  static void holo(View& view, glm::vec2 curr) {
+    InstancedCircle c(curr.x, curr.y);
+    c.size(tile_size, tile_size);
+    c.color(1, 0.5, 0.5 /*TODO , 0.5 */);
+    c.draw(view);
+  }
+
+  void pathTo(glm::vec2 coords);
+  void update(float dt);
 };

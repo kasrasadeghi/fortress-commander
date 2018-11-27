@@ -1,29 +1,31 @@
 #include "Game.h"
-
-#include <sstream>
-#include <stdio.h>
+#include "Config.h"
+#include "Graphics.h"
 
 #include "Events.h"
 #include "Systems.h"
+#include "ECS/Manager.h"
 
-#include <SFML/Graphics.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
-Game::Game()
-    : _font(), _world(World::world_size),
-      _view(sf::Vector2f((view_size * World::tile_size) / 2.f *
-                             widthScalingFactor(),
-                         (view_size * World::tile_size) / 2.f),
-            sf::Vector2f(view_size * World::tile_size * widthScalingFactor(),
-                         view_size * World::tile_size)),
-      _window(sf::VideoMode::getFullscreenModes()[0], "Fortress Commander",
-              sf::Style::Fullscreen),
-      _manager(), _eventManager(std::allocator<void>()),
-      _gameState(_window) {
-  _window.setView(_view);
-  _clock.restart();
-  _window.setFramerateLimit(60);
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/string_cast.hpp>
 
-  if (!_font.loadFromFile("arial.ttf")) { exit(1); }
+#include <iostream>
+#include <sstream>
+#include <vector>
+#include <stdio.h>
+
+Game::Game() :
+      _window("Fortress Commander"),
+      _gameState(_window),
+      _world(World::world_size)
+      {
+  _window.setKeyCallback([this](auto&&... args) { keyCallback(args...); });
+  _window.setMouseCallback([this](auto&&... args) { mouseCallback(args...); });
+  // glfwSwapInterval(1);
+  
+
 
   _manager.createComponentStore<TransformComponent>();
   _manager.createComponentStore<MotionComponent>();
@@ -44,63 +46,72 @@ Game::Game()
   _eventManager.connect<MouseMoveEvent>(this);
 }
 
+template <typename T>
+std::string str(T obj) {
+  std::stringstream ss;
+  ss << obj;
+  return ss.str();
+}
+
 void Game::loop() {
+  float last_time = glfwGetTime();
+  TextRenderer t(_window.defaultView());
+
   while (_window.isOpen()) {
-    auto dt = _clock.getElapsedTime();
-    auto framerate = (1 / dt.asSeconds());
-    _clock.restart();
+    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
 
-    std::stringstream ss;
-    ss << framerate;
-    sf::Text t;
-    t.setFont(_font);
-    t.setString(ss.str());
-    t.setCharacterSize(24);
-    t.setFillColor(sf::Color::Black);
+    float dt = glfwGetTime() - last_time;
+    last_time = glfwGetTime();
 
-    sf::Event event;
-    while (_window.pollEvent(event)) { handleEvent(event); }
 
-    handleViewInput(dt);
+    // if (_mode == ControlMode::BUILD || _mode == ControlMode::TERRAIN) {
+    //   World::tileHolo(_view, getMouseTile());
+    // }
+    // if (_mode == ControlMode::UNIT) {
+    //   Unit::holo(_view, getMouseCoords());
+    // }
 
-    _window.setView(_view);
-    _window.clear();
+    handleTick(dt);
 
-    _window.draw(_world);
-    if (_gameState._mode == ControlMode::BUILD || _gameState._mode == ControlMode::TERRAIN) {
-      const auto currTile = getMouseTile();
-      sf::RectangleShape r(sf::Vector2f(World::tile_size, World::tile_size));
-      r.setPosition(currTile.x * World::tile_size,
-                    currTile.y * World::tile_size);
-      r.setFillColor(sf::Color(255, 200, 200, 200));
-      _window.draw(r);
-    }
-
-    if (_gameState._mode == ControlMode::UNIT) {
-      constexpr auto radius = Unit::unit_size * World::tile_size;
-      const auto curr = getMouseCoords();
-      sf::CircleShape r(Unit::unit_size * World::tile_size);
-      r.setPosition(curr.x - radius, curr.y - radius);
-      r.setFillColor(sf::Color(255, 200, 200, 150));
-      _window.draw(r);
-    }
+    _world.draw(_gameState._view);
+    t.renderText(str(1.f / dt), 100, 50, 1, glm::vec3(0, 0, 0));
 
     _eventManager.update();
-    _manager.update(dt.asSeconds());
-
-    _window.setView(_window.getDefaultView());
-    _window.draw(t);
-
-    _window.display();
+    _manager.update(dt);
+    
+    _window.swapBuffers();
+    glfwPollEvents();
   }
 }
 
 void Game::receive(ECS::EventManager* mgr, const KeyDownEvent& e) {
-  if (e.keycode == sf::Keyboard::Q) _window.close();
-  if (e.keycode == sf::Keyboard::B) _gameState._mode = ControlMode::BUILD;
-  if (e.keycode == sf::Keyboard::U) _gameState._mode = ControlMode::UNIT;
-  if (e.keycode == sf::Keyboard::T) _gameState._mode = ControlMode::TERRAIN;
-  if (e.keycode == sf::Keyboard::Escape) _gameState._mode = ControlMode::NONE;
+
+  std::printf("%d, %d\n", e.key, e.action);
+
+  auto key = e.key;
+  auto action = e.action;
+
+  if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+    _window.close();
+  }
+
+  auto& _mode = _gameState._mode;
+
+  // TODO: temporary. normally left clicking on empty ground gets you out of a mode
+  if (key == GLFW_KEY_Q && action == GLFW_PRESS) {
+    _mode = ControlMode::NONE;
+  }
+
+  if (key == GLFW_KEY_B && action == GLFW_PRESS) {
+    _mode = ControlMode::BUILD;
+  }
+  if (key == GLFW_KEY_U && action == GLFW_PRESS) {
+    _mode = ControlMode::UNIT;
+  }
+  if (key == GLFW_KEY_T && action == GLFW_PRESS) {
+    _mode = ControlMode::TERRAIN;
+  }
 }
 
 void Game::receive(ECS::EventManager* mgr, const MouseDownEvent& e) {
@@ -112,76 +123,78 @@ void Game::receive(ECS::EventManager* mgr, const MouseDownEvent& e) {
   }
   if (_gameState._mode == ControlMode::UNIT) {
     // check if the add unit is in bounds
-    _world._units.push_back(Unit(getMouseCoords(), &_manager));
+    _world._units.push_back(Unit(getMouseCoords(), _manager));
   }
 }
 
 void Game::receive(ECS::EventManager* mgr, const MouseMoveEvent& e) {
   if (_gameState._mode == ControlMode::TERRAIN && 
-      sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+      glfwGetMouseButton(_window.window(), GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
     _world.setCell(getMouseTile(), _paint);
   }
 }
 
-void Game::handleEvent(const sf::Event& event) {
-  if (event.type == sf::Event::Closed) { _window.close(); }
-  else if (event.type == sf::Event::KeyPressed) {
-    _eventManager.event(new KeyDownEvent(event.key.code));
+
+void Game::keyCallback(int key, int scancode, int action, int mods) {
+  if (action == GLFW_PRESS) {
+    _eventManager.event(new KeyDownEvent(key));
   }
-  else if (event.type == sf::Event::KeyReleased) {
-    _eventManager.event(new KeyUpEvent(event.key.code));
-  }
-  else if (event.type == sf::Event::MouseButtonPressed) {
-    _eventManager.event(new MouseDownEvent(event.mouseButton.button, getMouseCoords().x, getMouseCoords().y));
-  }
-  else if (event.type == sf::Event::MouseButtonReleased) {
-    _eventManager.event(new MouseUpEvent(event.mouseButton.button, getMouseCoords().x, getMouseCoords().y));
-  }
-  else if (event.type == sf::Event::MouseMoved) {
-    _eventManager.event(new MouseMoveEvent(getMouseCoords().x, getMouseCoords().y));
+  if (action == GLFW_RELEASE) {
+    _eventManager.event(new KeyUpEvent(key));
   }
 }
 
-void Game::handleViewInput(const sf::Time& dt) {
-  constexpr float speed = 20 * World::tile_size;
-  float d = (speed * dt).asSeconds();
+void Game::mouseCallback(int button, int action, int mods) {
 
-  // mouse
-  constexpr int margin = 20;
-  auto pos = sf::Mouse::getPosition();
-  if (pos.x < margin) { _view.move(-d, 0); }
-  if (pos.y < margin) { _view.move(0, -d); }
-
-  if (pos.x > _window.getSize().x - margin) { _view.move(d, 0); }
-  if (pos.y > _window.getSize().y - margin) { _view.move(0, d); }
-
-  // keyboard
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) { _view.move(0, -d); }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) { _view.move(0, d); }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) { _view.move(-d, 0); }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) { _view.move(d, 0); }
-  if (_gameState._mode == ControlMode::TERRAIN) {
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
-      _world.setCell(getMouseTile(), _paint);
+  auto& _mode = _gameState._mode;
+  
+  // if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS) {
+  //   auto p = getMouseTile();
+  //   std::cout << p.x << ", " << p.y << std::endl;
+  // }
+  if (action == GLFW_PRESS) {
+    switch (_mode) {
+    case ControlMode::NONE:
+      // if (_world._units.size()) _world._units[0].pathTo(getMouseCoords());
+      break;
+    case ControlMode::BUILD:
+      // TODO:_world.addStructure(getMouseTile());
+      break;
+    case ControlMode::TERRAIN:
+      _paint = _world.flipCell(getMouseTile());
+      break;
+    case ControlMode::UNIT:
+      // TODO: check if the add unit is in bounds
+      _world._units.push_back(Unit(getMouseCoords(), _manager));
+      break;
     }
   }
 
-  // lock view to world
-  auto topLeft = _view.getCenter() - (_view.getSize() / 2.f);
-  auto bottomRight = _view.getCenter() + (_view.getSize() / 2.f);
+  
+  if (action == GLFW_PRESS) {
+    _eventManager.event(new MouseDownEvent(button, getMouseCoords().x, getMouseCoords().y));
+  }
+  if (action == GLFW_RELEASE) {
+    _eventManager.event(new MouseUpEvent(button, getMouseCoords().x, getMouseCoords().y));
+  }
+  // if (event.type == sf::Event::MouseMoved) {
+  //   _eventManager.event(new MouseMoveEvent(getMouseCoords().x, getMouseCoords().y));
+  // }
 
-  const auto viewRadius = (view_size * World::tile_size) / 2.f;
-  const auto worldBorder = World::world_size * World::tile_size;
+  //   if (_mode == ControlMode::TERRAIN && event.type == sf::Event::MouseMoved &&
+  //       sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+  //     _world.setCell(getMouseTile(), _paint);
+  //   }
+}
 
-  if (topLeft.x < 0) {
-    _view.setCenter(viewRadius * widthScalingFactor(), _view.getCenter().y);
-  }
-  if (topLeft.y < 0) { _view.setCenter(_view.getCenter().x, viewRadius); }
-  if (bottomRight.x > worldBorder) {
-    _view.setCenter(worldBorder - (viewRadius * widthScalingFactor()),
-                    _view.getCenter().y);
-  }
-  if (bottomRight.y > worldBorder) {
-    _view.setCenter(_view.getCenter().x, worldBorder - viewRadius);
-  }
+void Game::handleTick(float dt) {
+  constexpr float speed = 20 * tile_size;
+  float d = speed * dt;
+
+  _mouseViewMove(d);
+
+  _keyboardViewMove(d);
+
+  // lock view to world by rebounding
+  _reboundViewToWorld();
 }
