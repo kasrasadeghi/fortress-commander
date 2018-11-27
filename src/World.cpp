@@ -59,8 +59,8 @@ void World::_drawUnits(View& view) const {
     positions.emplace_back(u.pos());
   }
 
-  InstancedCircle r(positions);
-  r.size(tile_size, tile_size);
-  r.color(1, 0, 0);
-  r.draw(view);
+  InstancedCircle(positions)
+    .size(tile_size, tile_size)
+    .color(1, 0, 0)
+    .draw(view);
 }
