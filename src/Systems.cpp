@@ -106,6 +106,7 @@ void MoveSystem::updateEntity(float dt, ECS::Entity entity) {
            seesPoint(t + glm::vec2(1, 1));
   };
 
+  // iterate current target until it matches the last one possible to be seen.
   for (auto iter = motion.currentTarget; iter < motion.path.end(); ++iter) {
     glm::ivec2 p = *iter;
     if (seesTile(p)) {
