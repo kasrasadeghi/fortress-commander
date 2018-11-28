@@ -17,8 +17,10 @@ void mat4_print(glm::mat4 m) {
 // clang-format on
 
 void World::_drawRegion(View& view) const {
-  std::vector<glm::vec2> grass;
-  std::vector<glm::vec2> water;
+  const glm::vec4 grassCol(.3, .6, .2, 1);
+  const glm::vec4 waterCol(.1, .3, .8, 1);
+  RectangleBatch rects;
+  rects.size({tile_size, tile_size});
 
   for (int i = 0; i < world_size; ++i) {
     for (int j = 0; j < world_size; ++j) {
@@ -31,20 +33,13 @@ void World::_drawRegion(View& view) const {
       ) continue;
       // clang-format on
 
-      if (_region[i][j] == Tile::GRASS) grass.emplace_back(i * tile_size, j * tile_size);
-      if (_region[i][j] == Tile::WATER) water.emplace_back(i * tile_size, j * tile_size);
+      rects.add()
+        .color(_region[i][j] == Tile::GRASS ? grassCol : waterCol)
+        .position({i * tile_size, j * tile_size});
     }
   }
 
-  InstancedRectangle(grass)
-    .size(tile_size, tile_size)
-    .color(.3, .6, .2)
-    .draw(view);
-
-  InstancedRectangle(water)
-    .size(tile_size, tile_size)
-    .color(.1, .3, .8)
-    .draw(view);
+  rects.draw(view);
 }
 
 void World::_drawUnits(View& view) const {
