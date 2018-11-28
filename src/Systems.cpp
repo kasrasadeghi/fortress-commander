@@ -1,5 +1,6 @@
 #include "Systems.h"
 #include "Game.h"
+#include "Tile.h"
 
 /// returns an empty path on failure
 std::vector<glm::ivec2> MoveSystem::findPath(Region& region, glm::ivec2 start, glm::ivec2 end) {
@@ -11,7 +12,7 @@ std::vector<glm::ivec2> MoveSystem::findPath(Region& region, glm::ivec2 start, g
 
   auto valid = [&region](P p) -> bool {
     auto bounds = p.x >= 0 && p.y >= 0 && p.x < World::world_size && p.y < World::world_size;
-    return bounds && region[p.x][p.y] == Tile::GRASS;
+    return bounds && TileProperties::of(region[p.x][p.y]).walkable;
   };
 
   auto seen = [&alive, &dead](P p) -> bool {
@@ -110,7 +111,7 @@ void MoveSystem::updateEntity(float dt, ECS::Entity entity) {
     auto dir = glm::normalize(path);
     for (float k = 0; k < l; k += 0.2 /* <- precision */) {
       glm::ivec2 p = Game::mapCoordsToTile(source + dir * k);
-      if (region[p.x][p.y] != Tile::GRASS) {
+      if (not TileProperties::of(region[p.x][p.y]).walkable) {
         return false;
       }
     }

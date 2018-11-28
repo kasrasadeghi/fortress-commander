@@ -1,8 +1,7 @@
 #include "Graphics.h"
+#include "Tile.h"
 
 #include <vector>
-
-enum class Tile { NONE, GRASS, WATER };
 
 class Region {
   std::vector<std::vector<Tile>> _data;
@@ -32,7 +31,7 @@ public:
         // clang-format on
 
         rects.add()
-          .color(_data[i][j] == Tile::GRASS ? grassCol : waterCol)
+          .color(TileProperties::of(_data[i][j]).color)
           .position({i * tile_size, j * tile_size});
       }
     }
