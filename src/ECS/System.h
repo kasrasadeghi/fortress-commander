@@ -107,7 +107,7 @@ public:
 
   /**
    * @brief Updates the system
-   * @detail Calls `updateEntity(dt, entity)` on eveery Entity in this System's EntitySet.
+   * @detail Calls `updateEntity(dt, entity)` on every Entity in this System's EntitySet.
    * This can be overridden in derived Systems to update other parts of the System, but
    * the override should be implemented in a refinement-style approach, rather than replacement.
    *
