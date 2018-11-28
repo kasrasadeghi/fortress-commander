@@ -1,8 +1,5 @@
 #pragma once
 
-#include <cmath>
-#include <unordered_set>
-
 #include "Components.h"
 
 #include "ECS/System.h"
@@ -10,11 +7,18 @@
 #include "GameState.h"
 #include "Unit.h"
 
+#include "World.h"
+
+#include <cmath>
+#include <unordered_set>
+#include <deque>
+
 /**
  * @brief Applies motion to entities.
  * @detail Supports simple velocity and also path planning.
  */
 class MoveSystem : public ECS::System {
+  std::vector<glm::ivec2> findPath(Region& region, glm::ivec2 start, glm::ivec2 end);
 
 public:
   MoveSystem(GameState& gameState) : ECS::System(gameState) {
@@ -25,19 +29,7 @@ public:
     setRequiredComponents(std::move(requiredComponents));
   }
 
-  virtual void updateEntity(float dt, ECS::Entity entity) override {
-    TransformComponent& transform = ECS::Manager::getComponent<TransformComponent>(entity);
-    MotionComponent& motion = ECS::Manager::getComponent<MotionComponent>(entity);
-
-    if (not motion.hasTarget) return;
-
-    if (glm::distance(motion.target, transform.pos) > dt * motion.movementSpeed) {
-      auto dir = glm::normalize(motion.target - transform.pos);
-      transform.pos += dir * dt * motion.movementSpeed;
-    } else {
-      transform.pos = motion.target;
-    }
-  }
+  virtual void updateEntity(float dt, ECS::Entity entity) override;
 };
 
 /**

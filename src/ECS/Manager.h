@@ -153,7 +153,7 @@ class Manager {
 
     // Insert the new component's type into the entity's corresponding ComponentTypeSet
     entityIt->second.insert(C::type);
-    return getComponentStore<C>().add(entity, std::move(component));
+    return _getComponentStore<C>().add(entity, std::move(component));
   }
 
   /**
