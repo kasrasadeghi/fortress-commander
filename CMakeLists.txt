@@ -27,6 +27,7 @@ project(${PROJECT_NAME})
 set(SRC_FILES
   src/Game.cpp
   src/Unit.cpp
+  src/Enemy.cpp
   src/World.cpp
   src/GameState.cpp
   src/Components.cpp
