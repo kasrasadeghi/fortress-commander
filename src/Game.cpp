@@ -146,11 +146,6 @@ void Game::mouseCallback(int button, int action, int mods) {
 }
 
 void Game::cursorCallback(double x, double y) {
-  // TODO: move to receive
-  if (_gameState._mode == ControlMode::TERRAIN &&
-      glfwGetMouseButton(_window.window(), GLFW_MOUSE_BUTTON_1)) {
-    _world.setCell(getMouseTile(), _paint);
-  }
   ECS::EventManager::getInstance().event(new MouseMoveEvent(getMouseCoords().x, getMouseCoords().y));
 }
 
