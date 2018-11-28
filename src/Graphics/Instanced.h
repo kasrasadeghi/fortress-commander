@@ -1,13 +1,13 @@
 #pragma once
 
+#include "ResourceManager.h"
 #include "Shader.h"
 #include "View.h"
-#include "ResourceManager.h"
 
 #include <array>
+#include <memory>
 #include <sstream>
 #include <vector>
-#include <memory>
 
 template <typename T>
 inline GLuint createVertexBuffer(const std::vector<T>& vertices) {
@@ -35,9 +35,8 @@ public:
    * @return the vertex array object
    */
   VertexArray(const std::vector<glm::vec2>& vertices, const std::vector<glm::vec2>& positions,
-              const std::vector<glm::vec4>& colors) : 
-              count(vertices.size()),
-              instanceCount(positions.size()) {
+              const std::vector<glm::vec4>& colors)
+      : count(vertices.size()), instanceCount(positions.size()) {
 
     vertexVBO = createVertexBuffer(vertices);
     positionVBO = createVertexBuffer(positions);
@@ -46,20 +45,20 @@ public:
     glGenVertexArrays(1, &VAO);
 
     glBindVertexArray(VAO);
-      glBindBuffer(GL_ARRAY_BUFFER, vertexVBO);
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexVBO);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
 
-      glBindBuffer(GL_ARRAY_BUFFER, positionVBO);
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
-        glVertexAttribDivisor(1, 1); // tell OpenGL there is one position per instance 
+    glBindBuffer(GL_ARRAY_BUFFER, positionVBO);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+    glVertexAttribDivisor(1, 1); // tell OpenGL there is one position per instance
 
-      glBindBuffer(GL_ARRAY_BUFFER, colorVBO);
-        glEnableVertexAttribArray(2);
-        glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-        glVertexAttribDivisor(2, 1);
-      glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, colorVBO);
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+    glVertexAttribDivisor(2, 1);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     glBindVertexArray(0);
   }
@@ -97,15 +96,15 @@ public:
   BaseBatch& position(const glm::vec2& pos) {
     _vaoDirty = true;
     instances.back().position = pos;
-    return *this; 
+    return *this;
   }
-    
+
   BaseBatch& color(const glm::vec4& col) {
     _vaoDirty = true;
     instances.back().color = col;
     return *this;
   }
-    
+
   BaseBatch& size(const glm::vec2& size) {
     _vaoDirty = true;
     _size = size;
@@ -121,8 +120,7 @@ protected:
   BaseBatch() {}
 
   void _updateVAO(const std::vector<glm::vec2>& vertices) {
-    if (!_vaoDirty)
-      return;
+    if (!_vaoDirty) return;
 
     std::vector<glm::vec2> positions;
     std::vector<glm::vec4> colors;
@@ -146,12 +144,7 @@ protected:
 };
 
 class RectangleBatch : public BaseBatch {
-  std::vector<glm::vec2> _rectangleVertices{
-    {1.f, 1.f},
-    {1.f, 0.f},
-    {0.f, 1.f},
-    {0.f, 0.f}
-  };
+  std::vector<glm::vec2> _rectangleVertices{{1.f, 1.f}, {1.f, 0.f}, {0.f, 1.f}, {0.f, 0.f}};
 
 public:
   RectangleBatch() {}
@@ -167,7 +160,7 @@ class CircleBatch : public BaseBatch {
 public:
   CircleBatch(uint size_count = 30) {
     _circleVertices.emplace_back(0, 0);
-    
+
     for (uint i = 0; i < size_count; ++i) {
       float angle = i * 2 * glm::pi<float>() / size_count - glm::half_pi<float>();
       float x = std::sin(angle) * 0.49;
@@ -183,7 +176,6 @@ public:
   }
 };
 
-
 class InstancedRectangle {
   std::vector<glm::vec2> _pos;
 
@@ -192,9 +184,9 @@ class InstancedRectangle {
   const uint _position_count;
 
 public:
-  InstancedRectangle(float x, float y): InstancedRectangle(std::vector{glm::vec2(x, y)}) {}
+  InstancedRectangle(float x, float y) : InstancedRectangle(std::vector{glm::vec2(x, y)}) {}
 
-  InstancedRectangle(const std::vector<glm::vec2>& pos): _pos(pos), _position_count(pos.size()) {}
+  InstancedRectangle(const std::vector<glm::vec2>& pos) : _pos(pos), _position_count(pos.size()) {}
 
   InstancedRectangle& size(GLfloat w, GLfloat h) {
     _size = glm::vec2({w, h});
@@ -211,16 +203,16 @@ public:
     return *this;
   }
 
-  const glm::vec2& size() { return _size; }
+  const glm::vec2& size() {
+    return _size;
+  }
 
   void draw(View& view) {
     RectangleBatch rectangles;
     rectangles.size(_size);
 
     for (glm::vec2 pos : _pos) {
-      rectangles.add()
-        .position(pos)
-        .color(_color);
+      rectangles.add().position(pos).color(_color);
     }
 
     rectangles.draw(view);
@@ -237,9 +229,10 @@ class InstancedCircle {
   uint _size_count;
 
 public:
-  InstancedCircle(float x, float y): InstancedCircle(std::vector{glm::vec2(x, y)}) {}
+  InstancedCircle(float x, float y) : InstancedCircle(std::vector{glm::vec2(x, y)}) {}
 
-  InstancedCircle(const std::vector<glm::vec2>& pos, uint size_count = 30): _pos(pos), _position_count(pos.size()), _size_count(size_count) {}
+  InstancedCircle(const std::vector<glm::vec2>& pos, uint size_count = 30)
+      : _pos(pos), _position_count(pos.size()), _size_count(size_count) {}
 
   InstancedCircle& size(GLfloat w, GLfloat h) {
     _size = glm::vec2(w, h);
@@ -256,18 +249,18 @@ public:
     return *this;
   }
 
-  const glm::vec2& size() { return _size; }
+  const glm::vec2& size() {
+    return _size;
+  }
 
   void draw(View& view) {
     CircleBatch circles;
     circles.size(_size);
 
     for (glm::vec2 pos : _pos) {
-      circles.add()
-        .position(pos)
-        .color(_color);
+      circles.add().position(pos).color(_color);
     }
 
-    circles.draw(view); 
+    circles.draw(view);
   }
 };

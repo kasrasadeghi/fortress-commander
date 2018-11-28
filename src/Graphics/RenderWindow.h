@@ -9,9 +9,8 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-#include <iostream>
 #include <functional>
-
+#include <iostream>
 
 // this plumbing is necessary because
 // a lambda that captures can't be used as a function ptr
@@ -40,7 +39,7 @@ public:
   int _width;
   int _height;
   View _default;
-  
+
   RenderWindow(const char* name) {
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -72,7 +71,7 @@ public:
     float height = static_cast<float>(_height);
     float width = static_cast<float>(_width);
 
-    _default.center(width/2, height/2).radius(width/2, height/2);
+    _default.center(width / 2, height / 2).radius(width / 2, height / 2);
   }
 
   // clang-format off
@@ -90,7 +89,9 @@ public:
 
   /////////////////// Callbacks and Input ///////////////
 
-  int getKey(int key_code) { return glfwGetKey(_window, key_code); }
+  int getKey(int key_code) {
+    return glfwGetKey(_window, key_code);
+  }
 
   glm::vec2 mousePos() {
     // NOTE: this mouse position is "relative to the client area of the window"

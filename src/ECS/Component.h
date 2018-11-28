@@ -27,11 +27,11 @@ struct AbstractComponentStore {
 
 // Mapping from each entity that has a component C to
 // the instance of C that it contains
-template <typename C> class ComponentStore : public AbstractComponentStore {
+template <typename C>
+class ComponentStore : public AbstractComponentStore {
   static_assert(std::is_base_of<Component, C>::value,
                 "C must be a Component or be derived from Component");
-  static_assert(C::type != InvalidComponentType,
-                "C must not be of invalid component type");
+  static_assert(C::type != InvalidComponentType, "C must not be of invalid component type");
 
   std::unordered_map<Entity, C> _store;
   static const ComponentType type = C::type;
@@ -48,13 +48,19 @@ public:
 
   // Remove the entity-component pair from the map
   // Returns success on removing the pair
-  bool remove(Entity entity) { return _store.find(entity) != _store.end(); }
+  bool remove(Entity entity) {
+    return _store.find(entity) != _store.end();
+  }
 
   // Returns true if there is an entity that contains C
-  bool has(Entity entity) const { return _store.find(entity) != _store.end(); }
+  bool has(Entity entity) const {
+    return _store.find(entity) != _store.end();
+  }
 
   // Get the instance of C that is contained in the entity
-  C& get(Entity entity) { return _store.at(entity); }
+  C& get(Entity entity) {
+    return _store.at(entity);
+  }
 
   // Keep a copy of the instance of C contained by the entity,
   // then remove the entity-component pair from the internal map
@@ -66,6 +72,8 @@ public:
     return component;
   }
 
-  const std::unordered_map<Entity, C>& getComponents() { return _store; }
+  const std::unordered_map<Entity, C>& getComponents() {
+    return _store;
+  }
 };
 } // namespace ECS

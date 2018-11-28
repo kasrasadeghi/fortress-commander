@@ -23,7 +23,7 @@ Game::Game() : _window("Fortress Commander"), _gameState(_window), _world(World:
 
   // glfwSwapInterval(1);
 
-  ECS::Manager::createComponentStore<TransformComponent>(); 
+  ECS::Manager::createComponentStore<TransformComponent>();
   ECS::Manager::createComponentStore<MotionComponent>();
   ECS::Manager::createComponentStore<SelectableComponent>();
   ECS::Manager::createComponentStore<CommandableComponent>();
@@ -81,7 +81,7 @@ void Game::loop() {
   }
 }
 
-void Game::receive( const KeyDownEvent& e) {
+void Game::receive(const KeyDownEvent& e) {
   auto key = e.key;
   auto action = e.action;
 
@@ -107,7 +107,7 @@ void Game::receive( const KeyDownEvent& e) {
   }
 }
 
-void Game::receive( const MouseDownEvent& e) {
+void Game::receive(const MouseDownEvent& e) {
   if (_gameState._mode == ControlMode::BUILD) {
     //_world.addStructure(getMouseTile());
   }
@@ -120,7 +120,7 @@ void Game::receive( const MouseDownEvent& e) {
   }
 }
 
-void Game::receive( const MouseMoveEvent& e) {
+void Game::receive(const MouseMoveEvent& e) {
   if (_gameState._mode == ControlMode::TERRAIN &&
       glfwGetMouseButton(_window.window(), GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
     _world.setCell(getMouseTile(), _paint);

@@ -1,13 +1,14 @@
 #include "Shader.h"
 #include "ResourceManager.h"
 
-#include <iostream>
 #include <cerrno>
+#include <iostream>
 
 void Shader::load(std::string vertexPath, std::string fragmentPath, std::string geometryPath) {
   // 1. retrieve the vertex/fragment source code from filePath
   std::string vertexCode = ResourceManager::readFile(vertexPath);
-  std::string fragmentCode = ResourceManager::readFile(fragmentPath);;
+  std::string fragmentCode = ResourceManager::readFile(fragmentPath);
+  ;
   std::string geometryCode = ResourceManager::readFile(geometryPath);
   if (vertexCode == "" || fragmentCode == "") {
     std::cout << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ" << std::endl;

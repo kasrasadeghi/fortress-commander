@@ -17,11 +17,11 @@ class BaseEventSubscriber;
 
 using TypeIndex = std::type_index;
 
-using SubscribersMap = std::unordered_map<
-    TypeIndex,
-    std::vector<std::shared_ptr<BaseEventSubscriber>>>;
+using SubscribersMap =
+    std::unordered_map<TypeIndex, std::vector<std::shared_ptr<BaseEventSubscriber>>>;
 
-template <typename T> TypeIndex getTypeIndex() {
+template <typename T>
+TypeIndex getTypeIndex() {
   return std::type_index(typeid(T));
 }
 
@@ -43,7 +43,8 @@ public:
  *
  * @tparam Event The type of event this subscriber should handle
  */
-template <typename Event> class EventSubscriber : public BaseEventSubscriber {
+template <typename Event>
+class EventSubscriber : public BaseEventSubscriber {
 public:
   virtual ~EventSubscriber() {}
 
@@ -64,9 +65,9 @@ class EventManager {
   ~EventManager() {}
 
   static EventManager& _getInstance() {
-      static EventManager instance;
+    static EventManager instance;
 
-      return instance;
+    return instance;
   }
 
   /**
@@ -75,7 +76,8 @@ class EventManager {
    * @tparam Event The type of events the subscriber receives
    * @param subscriber The instance of EventSubscriber with the Event template parameter
    */
-  template <typename Event> void _connect(EventSubscriber<Event>* subscriber) {
+  template <typename Event>
+  void _connect(EventSubscriber<Event>* subscriber) {
     auto index = getTypeIndex<Event>();
     auto it = _subscribers.find(index);
 
@@ -102,13 +104,16 @@ class EventManager {
 
     if (it != _subscribers.end()) {
       auto secondIndex = it->second.begin();
-      while (secondIndex != it->second.end() &&
-             secondIndex->get() != subscriber) {
+      while (secondIndex != it->second.end() && secondIndex->get() != subscriber) {
         ++secondIndex;
       }
-      if (secondIndex != it->second.end()) { it->second.erase(secondIndex); }
+      if (secondIndex != it->second.end()) {
+        it->second.erase(secondIndex);
+      }
 
-      if (it->second.size() == 0) { _subscribers.erase(it); }
+      if (it->second.size() == 0) {
+        _subscribers.erase(it);
+      }
     }
   }
 
@@ -116,12 +121,13 @@ class EventManager {
    * @brief Dispatches every queued event stored in _events
    */
   void _update() {
-    for (auto event : _events) { event(); }
+    for (auto event : _events) {
+      event();
+    }
 
     _events.clear();
   }
 
-  
   /**
    * @brief Give the EventManager an event to emit to all connected subscribers
    *
@@ -129,7 +135,8 @@ class EventManager {
    * will receive the event.
    * @param event The instance of Event that should be sent to each connected subscriber.
    */
-  template <typename Event> void _event(const Event* event) {
+  template <typename Event>
+  void _event(const Event* event) {
     auto it = _subscribers.find(getTypeIndex<Event>());
 
     if (it != _subscribers.end()) {
@@ -137,8 +144,7 @@ class EventManager {
       for (auto& base : subscribers) {
         auto sub = reinterpret_cast<EventSubscriber<Event>*>(base.get());
 
-        const auto boundFunc =
-            std::bind(&EventSubscriber<Event>::receive, sub, *event);
+        const auto boundFunc = std::bind(&EventSubscriber<Event>::receive, sub, *event);
         _events.push_back(std::function<void()>(boundFunc));
       }
     }
@@ -146,7 +152,8 @@ class EventManager {
   }
 
 public:
-  template <typename Event> static void connect(EventSubscriber<Event>* subscriber) {
+  template <typename Event>
+  static void connect(EventSubscriber<Event>* subscriber) {
     _getInstance()._connect<Event>(subscriber);
   }
   template <typename Event>
@@ -156,7 +163,8 @@ public:
   static void update() {
     _getInstance()._update();
   }
-  template <typename Event> static void event(const Event* event) {
+  template <typename Event>
+  static void event(const Event* event) {
     _getInstance()._event<Event>(event);
   }
 

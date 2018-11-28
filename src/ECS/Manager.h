@@ -27,19 +27,18 @@ class Manager {
     return instance;
   }
 
-  template <typename C> bool _createComponentStore() {
-    static_assert(std::is_base_of<Component, C>::value,
-                  "C must be a descendant of Component");
-    static_assert(C::type != InvalidComponentType,
-                  "C's types must not be invalid");
+  template <typename C>
+  bool _createComponentStore() {
+    static_assert(std::is_base_of<Component, C>::value, "C must be a descendant of Component");
+    static_assert(C::type != InvalidComponentType, "C's types must not be invalid");
 
     return _componentStores
-        .insert(std::make_pair(
-            C::type, AbstractComponentStore::Ptr(new ComponentStore<C>())))
+        .insert(std::make_pair(C::type, AbstractComponentStore::Ptr(new ComponentStore<C>())))
         .second;
   }
 
-  template <typename C> ComponentStore<C>& _getComponentStore() {
+  template <typename C>
+  ComponentStore<C>& _getComponentStore() {
     auto componentStoreIt = _componentStores.find(C::type);
     if (componentStoreIt == _componentStores.end()) {
       throw std::runtime_error("The ComponentStore does not exist");
@@ -48,7 +47,8 @@ class Manager {
     return reinterpret_cast<ComponentStore<C>&>(*componentStoreIt->second);
   }
 
-  template <typename C> C& _getComponent(ECS::Entity entity) {
+  template <typename C>
+  C& _getComponent(ECS::Entity entity) {
     return getComponentStore<C>().get(entity);
   }
 
@@ -59,11 +59,10 @@ class Manager {
     return ++_lastEntity;
   }
 
-  template <typename C> bool _addComponent(const Entity entity, C&& component) {
-    static_assert(std::is_base_of<Component, C>::value,
-                  "C must be a descendant of Component");
-    static_assert(C::type != InvalidComponentType,
-                  "C's types must not be invalid");
+  template <typename C>
+  bool _addComponent(const Entity entity, C&& component) {
+    static_assert(std::is_base_of<Component, C>::value, "C must be a descendant of Component");
+    static_assert(C::type != InvalidComponentType, "C's types must not be invalid");
 
     auto entityIt = _entities.find(entity);
     if (entityIt == _entities.end()) {
@@ -79,16 +78,20 @@ class Manager {
   std::size_t _update(float dt);
 
 public:
-  template <typename C> static bool createComponentStore() {
+  template <typename C>
+  static bool createComponentStore() {
     return _getInstance()._createComponentStore<C>();
   }
-  template <typename C> static ComponentStore<C>& getComponentStore() {
+  template <typename C>
+  static ComponentStore<C>& getComponentStore() {
     return _getInstance()._getComponentStore<C>();
   }
-  template <typename C> static C& getComponent(ECS::Entity entity) {
+  template <typename C>
+  static C& getComponent(ECS::Entity entity) {
     return _getInstance()._getComponent<C>(entity);
   }
-  template <typename C> static bool addComponent(const Entity entity, C&& component) {
+  template <typename C>
+  static bool addComponent(const Entity entity, C&& component) {
     return _getInstance()._addComponent<C>(entity, std::forward<C>(component));
   }
   static void addSystem(const System::Ptr& systemPtr) {

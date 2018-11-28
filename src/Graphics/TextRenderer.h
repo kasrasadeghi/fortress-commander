@@ -1,15 +1,15 @@
 // From https://learnopengl.com/In-Practice/Text-Rendering
 
 // GL includes
+#include "ResourceManager.h"
 #include "Shader.h"
 #include "View.h"
-#include "ResourceManager.h"
 
 // Std. Includes
 #include <iostream>
 #include <map>
-#include <string>
 #include <stdio.h>
+#include <string>
 // GLEW
 // #define GLEW_STATIC
 // #include <GL/glew.h>
@@ -87,9 +87,10 @@ public:
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
       // Now store character for later use
-      Character character = {
-          texture, glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
-          glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top), static_cast<GLuint>(face->glyph->advance.x)};
+      Character character = {texture,
+                             glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
+                             glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
+                             static_cast<GLuint>(face->glyph->advance.x)};
       _characters[c] = character;
     }
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -145,8 +146,8 @@ public:
       glBindTexture(GL_TEXTURE_2D, ch.TextureID);
       // Update content of VBO memory
       glBindBuffer(GL_ARRAY_BUFFER, _VBO);
-      glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices); 
-        // Be sure to use glBufferSubData and not glBufferData
+      glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+      // Be sure to use glBufferSubData and not glBufferData
 
       glBindBuffer(GL_ARRAY_BUFFER, 0);
       // Render quad

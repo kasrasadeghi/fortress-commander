@@ -34,8 +34,8 @@ void World::_drawRegion(View& view) const {
       // clang-format on
 
       rects.add()
-        .color(_region[i][j] == Tile::GRASS ? grassCol : waterCol)
-        .position({i * tile_size, j * tile_size});
+          .color(_region[i][j] == Tile::GRASS ? grassCol : waterCol)
+          .position({i * tile_size, j * tile_size});
     }
   }
 
@@ -48,9 +48,7 @@ void World::_drawUnits(View& view) const {
   circles.size({tile_size, tile_size});
 
   for (auto& u : _units) {
-    circles.add()
-      .position(u.pos())
-      .color(u.selected() ? selectedCol : unselectedCol);
+    circles.add().position(u.pos()).color(u.selected() ? selectedCol : unselectedCol);
   }
 
   circles.draw(view);

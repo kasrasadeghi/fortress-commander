@@ -1,12 +1,10 @@
 #pragma once
 
-#include <string>
 #include <fstream>
+#include <string>
 #include <unordered_map>
 
-enum class SHADER_INDEX {
-  INSTANCED_ARRAY = 0, TEXT = 1
-};
+enum class SHADER_INDEX { INSTANCED_ARRAY = 0, TEXT = 1 };
 
 #include "Shader.h"
 class ResourceManager {
@@ -24,11 +22,11 @@ public:
       std::string contents;
       f.seekg(0, std::ios::end);  // read to the end of the file
       contents.resize(f.tellg()); // get position of the last character (size of file)
-      
-      f.seekg(0, std::ios::beg);  // go to beginning
+
+      f.seekg(0, std::ios::beg); // go to beginning
       f.read(&contents[0], contents.size());
       f.close(); // read whole file and close
-      
+
       return contents;
     }
     return "";

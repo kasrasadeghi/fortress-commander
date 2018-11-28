@@ -7,10 +7,10 @@
 #include <memory>
 #include <set>
 
+#include "../GameState.h"
 #include "Component.h"
 #include "Entity.h"
 #include "Event.h"
-#include "../GameState.h"
 
 namespace ECS {
 class Manager;
@@ -54,8 +54,7 @@ public:
   virtual std::size_t update(float dt) {
     std::size_t updatedEntities = 0;
 
-    for (auto entity = _matchingEntities.begin();
-         entity != _matchingEntities.end(); ++entity) {
+    for (auto entity = _matchingEntities.begin(); entity != _matchingEntities.end(); ++entity) {
       updateEntity(dt, *entity); // each user class should specialize this
                                  // virtual pure function
       ++updatedEntities;

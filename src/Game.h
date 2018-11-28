@@ -100,9 +100,9 @@ public:
 
   void loop();
 
-  void receive( const KeyDownEvent& e) override;
-  void receive( const MouseDownEvent& e) override;
-  void receive( const MouseMoveEvent& e) override;
+  void receive(const KeyDownEvent& e) override;
+  void receive(const MouseDownEvent& e) override;
+  void receive(const MouseMoveEvent& e) override;
 
   void keyCallback(int key, int scancode, int action, int mods);
   void mouseCallback(int button, int action, int mods);

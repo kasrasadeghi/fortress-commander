@@ -17,8 +17,7 @@
 class MoveSystem : public ECS::System {
 
 public:
-  MoveSystem(GameState& gameState)
-      : ECS::System(gameState) {
+  MoveSystem(GameState& gameState) : ECS::System(gameState) {
     ECS::ComponentTypeSet requiredComponents;
     requiredComponents.insert(TransformComponent::type);
     requiredComponents.insert(MotionComponent::type);
@@ -76,8 +75,7 @@ class UnitSelectSystem : public ECS::System,
   }
 
 public:
-  UnitSelectSystem(GameState& gameState)
-      : ECS::System(gameState) {
+  UnitSelectSystem(GameState& gameState) : ECS::System(gameState) {
     ECS::ComponentTypeSet requiredComponents;
     requiredComponents.insert(TransformComponent::type);
     requiredComponents.insert(SelectableComponent::type);
@@ -111,7 +109,7 @@ public:
     ECS::Manager::getComponent<SelectableComponent>(entity).selected = inBox;
   }
 
-  void receive( const MouseDownEvent& e) {
+  void receive(const MouseDownEvent& e) {
     if (_gameState._mode == ControlMode::NONE) {
       if (e.button == GLFW_MOUSE_BUTTON_1) {
         // record first corner of selection
@@ -122,7 +120,7 @@ public:
     }
   }
 
-  void receive( const MouseMoveEvent& e) {
+  void receive(const MouseMoveEvent& e) {
     _mousePos = {e.x, e.y};
 
     if (_mouseDown) {
@@ -137,7 +135,7 @@ public:
     }
   }
 
-  void receive( const MouseUpEvent& e) {
+  void receive(const MouseUpEvent& e) {
     _mouseDown = false;
     _selectionChanged = false;
   }
@@ -149,8 +147,7 @@ public:
  */
 class UnitCommandSystem : public ECS::System, ECS::EventSubscriber<MouseDownEvent> {
 public:
-  UnitCommandSystem(GameState& gameState)
-      : ECS::System(gameState) {
+  UnitCommandSystem(GameState& gameState) : ECS::System(gameState) {
     ECS::ComponentTypeSet requiredComponents;
     requiredComponents.insert(SelectableComponent::type);
     requiredComponents.insert(CommandableComponent::type);
@@ -163,7 +160,7 @@ public:
     // not yet used
   }
 
-  void receive( const MouseDownEvent& e) override {
+  void receive(const MouseDownEvent& e) override {
     if (_gameState._mode == ControlMode::NONE) {
       if (e.button == GLFW_MOUSE_BUTTON_2) {
         // command selected units to move
