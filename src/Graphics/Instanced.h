@@ -94,21 +94,21 @@ public:
     return add(Instance());
   }
 
-  BaseBatch& position(float x, float y) {
+  BaseBatch& position(const glm::vec2& pos) {
     _vaoDirty = true;
-    instances.back().position = {x, y};
+    instances.back().position = pos;
     return *this; 
   }
     
-  BaseBatch& color(float r, float g, float b, float a = 1.f) {
+  BaseBatch& color(const glm::vec4& col) {
     _vaoDirty = true;
-    instances.back().color = {r, g, b, a};
+    instances.back().color = col;
     return *this;
   }
     
-  BaseBatch& size(float x, float y) {
+  BaseBatch& size(const glm::vec2& size) {
     _vaoDirty = true;
-    _size = {x, y};
+    _size = size;
     return *this;
   }
 
@@ -197,12 +197,12 @@ public:
   InstancedRectangle(const std::vector<glm::vec2>& pos): _pos(pos), _position_count(pos.size()) {}
 
   InstancedRectangle& size(GLfloat w, GLfloat h) {
-    _size = glm::vec2(w, h);
+    _size = glm::vec2({w, h});
     return *this;
   }
 
   InstancedRectangle& color(GLfloat r, GLfloat g, GLfloat b, GLfloat a = 1.f) {
-    _color = glm::vec4(r, g, b, a);
+    _color = glm::vec4({r, g, b, a});
     return *this;
   }
 
@@ -215,12 +215,12 @@ public:
 
   void draw(View& view) {
     RectangleBatch rectangles;
-    rectangles.size(_size.x, _size.y);
+    rectangles.size(_size);
 
     for (glm::vec2 pos : _pos) {
       rectangles.add()
-        .position(pos.x, pos.y)
-        .color(_color.r, _color.g, _color.b, _color.a);
+        .position(pos)
+        .color(_color);
     }
 
     rectangles.draw(view);
@@ -260,12 +260,12 @@ public:
 
   void draw(View& view) {
     CircleBatch circles;
-    circles.size(_size.x, _size.y);
+    circles.size(_size);
 
     for (glm::vec2 pos : _pos) {
       circles.add()
-        .position(pos.x, pos.y)
-        .color(_color.r, _color.g, _color.b, _color.a);
+        .position(pos)
+        .color(_color);
     }
 
     circles.draw(view); 
