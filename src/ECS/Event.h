@@ -20,6 +20,8 @@ using TypeIndex = std::type_index;
 using SubscribersMap =
     std::unordered_map<TypeIndex, std::vector<std::shared_ptr<BaseEventSubscriber>>>;
 
+using EventQueue = std::vector<std::function<void()>>;
+
 template <typename T>
 TypeIndex getTypeIndex() {
   return std::type_index(typeid(T));
@@ -140,11 +142,11 @@ class EventManager {
     auto it = _subscribers.find(getTypeIndex<Event>());
 
     if (it != _subscribers.end()) {
-      const auto& subscribers = it->second;
-      for (auto& base : subscribers) {
+      auto subscribers = it->second;
+      for (auto base : subscribers) {
         auto sub = reinterpret_cast<EventSubscriber<Event>*>(base.get());
 
-        const auto boundFunc = std::bind(&EventSubscriber<Event>::receive, sub, *event);
+        auto boundFunc = std::bind(&EventSubscriber<Event>::receive, sub, *event);
         _events.push_back(std::function<void()>(boundFunc));
       }
     }
@@ -171,6 +173,6 @@ public:
 private:
   SubscribersMap _subscribers;
 
-  std::vector<std::function<void()>> _events;
+  EventQueue _events;
 };
 } // namespace ECS
