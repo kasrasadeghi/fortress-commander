@@ -18,6 +18,16 @@
  * @detail Supports simple velocity and also path planning.
  */
 class MoveSystem : public ECS::System {
+  std::vector<glm::ivec2> findPath(std::vector<std::vector<Tile>>& region, glm::ivec2 start, glm::ivec2 end);
+  
+  void updatePosition(float dt, glm::vec2& pos, glm::vec2& target, float speed) {
+    if (glm::distance(target, pos) > dt * speed) {
+      auto dir = glm::normalize(target - pos);
+      pos += dir * dt * speed;
+    } else {
+      pos = target;
+    }
+  }
 
 public:
   MoveSystem(GameState& gameState) : ECS::System(gameState) {
@@ -28,19 +38,7 @@ public:
     setRequiredComponents(std::move(requiredComponents));
   }
 
-  virtual void updateEntity(float dt, ECS::Entity entity) override {
-    TransformComponent& transform = ECS::Manager::getComponent<TransformComponent>(entity);
-    MotionComponent& motion = ECS::Manager::getComponent<MotionComponent>(entity);
-
-    if (not motion.hasTarget) return;
-
-    if (glm::distance(motion.target, transform.pos) > dt * motion.movementSpeed) {
-      auto dir = glm::normalize(motion.target - transform.pos);
-      transform.pos += dir * dt * motion.movementSpeed;
-    } else {
-      transform.pos = motion.target;
-    }
-  }
+  virtual void updateEntity(float dt, ECS::Entity entity) override;
 };
 
 /**

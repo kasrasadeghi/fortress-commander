@@ -30,6 +30,7 @@ set(SRC_FILES
   src/World.cpp
   src/GameState.cpp
   src/Components.cpp
+  src/Systems.cpp
   src/Graphics/Shader.cpp
   src/Graphics/ResourceManager.cpp
   src/ECS/Manager.cpp
