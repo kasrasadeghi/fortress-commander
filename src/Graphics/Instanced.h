@@ -36,7 +36,7 @@ public:
    */
   VertexArray(const std::vector<glm::vec2>& vertices, const std::vector<glm::vec2>& positions,
               const std::vector<glm::vec4>& colors) : 
-              count(vertices.size() + positions.size() + colors.size()),
+              count(vertices.size()),
               instanceCount(positions.size()) {
 
     vertexVBO = createVertexBuffer(vertices);
