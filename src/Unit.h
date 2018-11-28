@@ -8,6 +8,7 @@
 class World;
 
 class Unit {
+protected:
   glm::vec2 _target;
 
   const ECS::Entity _id;
@@ -29,7 +30,4 @@ public:
     c.color(1, 0.5, 0.5, 0.5);
     c.draw(view);
   }
-
-  void pathTo(glm::vec2 coords);
-  void update(float dt);
 };
