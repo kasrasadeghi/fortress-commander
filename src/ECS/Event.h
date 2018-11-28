@@ -59,12 +59,21 @@ public:
  * subscribers on call of update.
  */
 class EventManager {
-  EventManager() {}
+  /**
+   * @brief Map from TypeIndex of Event to the Subscribers for that Event
+   */
+  SubscribersMap _subscribers;
+
+  /**
+   * @brief Container of events that have been queued up for dispatch
+   */
+  EventQueue _events;
+
+  EventManager() = default;
+  ~EventManager() = default;
 
   EventManager(const EventManager&) = delete;
   void operator=(const EventManager&) = delete;
-
-  ~EventManager() {}
 
   static EventManager& _getInstance() {
     static EventManager instance;
@@ -169,10 +178,5 @@ public:
   static void event(const Event* event) {
     _getInstance()._event<Event>(event);
   }
-
-private:
-  SubscribersMap _subscribers;
-
-  EventQueue _events;
 };
 } // namespace ECS
