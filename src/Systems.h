@@ -22,17 +22,14 @@ class MoveSystem : public ECS::System {
   void updatePath(float dt, ECS::Entity entity) {
     TransformComponent& transform = ECS::Manager::getInstance().getComponent<TransformComponent>(entity);
     MotionComponent& motion = ECS::Manager::getInstance().getComponent<MotionComponent>(entity);
-    const float speed = glm::length(motion.velocity);
 
-    glm::vec2 target_dx = motion.target - transform.pos;
-    float len = glm::length(target_dx);
-    if (len < speed * dt) {
+    if (glm::distance(motion.target, transform.pos) < speed * dt) {
       transform.pos = motion.target;
       motion.velocity = {0, 0};
       motion.hasTarget = false;
-    } else if (len > 0) {
-      motion.velocity.x = target_dx.x / len * motion.movementSpeed;
-      motion.velocity.y = target_dx.y / len * motion.movementSpeed;
+    } else {
+      auto direction = glm::normalize(motion.target - transform.pos);
+      motion.velocity = direction * dt * motion.movementSpeed;
     }
   }
 
@@ -50,6 +47,7 @@ public:
     TransformComponent& transform = ECS::Manager::getInstance().getComponent<TransformComponent>(entity);
     MotionComponent& motion = ECS::Manager::getInstance().getComponent<MotionComponent>(entity);
 
+    // hasTarget implies position != target
     if (motion.hasTarget) {
       updatePath(dt, entity);
     }
