@@ -59,22 +59,22 @@ std::vector<glm::ivec2> MoveSystem::findPath(std::vector<std::vector<Tile>>& reg
 }
 
 void MoveSystem::updateEntity(float dt, ECS::Entity entity) {
-  TransformComponent& transform = ECS::Manager::getComponent<TransformComponent>(entity);
+  auto& pos = ECS::Manager::getComponent<TransformComponent>(entity).pos;
   MotionComponent& motion = ECS::Manager::getComponent<MotionComponent>(entity);
 
   if (not motion.hasTarget) return;
 
-  glm::ivec2 curr_cell = Game::mapCoordsToTile(transform.pos);
+  glm::ivec2 curr_cell = Game::mapCoordsToTile(pos);
   glm::ivec2 target_cell = Game::mapCoordsToTile(motion.target);
 
   auto path = findPath(motion.world.region(), curr_cell, target_cell);
 
   if (path.size() >= 2) {
-    auto next = path[1];
-    auto target = glm::vec2(next.x + 0.5f, next.y + 0.5f);
+    auto next = path[0];
+    auto target = Game::centerOfTile(next);
     
-    updatePosition(dt, transform.pos, target, motion.movementSpeed);
+    updatePosition(dt, pos, target, motion.movementSpeed);
   } else {
-    updatePosition(dt, transform.pos, motion.target, motion.movementSpeed);
+    updatePosition(dt, pos, motion.target, motion.movementSpeed);
   } 
 }

@@ -94,6 +94,14 @@ public:
                       static_cast<int>(coords.y / tile_size));
   }
 
+  static glm::vec2 centerOfTile(glm::vec2 p) {
+    return glm::floor(p) + glm::vec2(0.5, 0.5);
+  }
+
+  static glm::vec2 centerOfTile(glm::ivec2 p) {
+    return glm::vec2(p.x, p.y) + glm::vec2(0.5, 0.5);
+  }
+
   glm::vec<2, int> getMouseTile() {
     return mapCoordsToTile(getMouseCoords());
   }

@@ -55,9 +55,13 @@
 # pathfinding
 - floodfill
 >- todo
+- farthest tile you can see
+- group a command unit's pathfinding if they're adj
+- don't walk in water
+- cache path
 - A*
 - don't collide with walls
-- don't walk in water (maybe allow half water)
+- all up to unit radius in water ?
 - constrained Delaunay triangulation ?
 
 # glfw-opengl
