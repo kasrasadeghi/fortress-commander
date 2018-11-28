@@ -25,3 +25,11 @@ glm::vec2 Unit::pos() const {
 bool Unit::selected() const {
   return ECS::Manager::getComponent<SelectableComponent>(_id).selected;
 }
+
+std::vector<glm::ivec2>& Unit::path() const {
+  return ECS::Manager::getComponent<MotionComponent>(_id).path;
+}
+
+glm::vec2 Unit::currentTarget() const {
+  return ECS::Manager::getComponent<MotionComponent>(_id).currentTarget;
+}

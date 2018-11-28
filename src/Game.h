@@ -95,11 +95,11 @@ public:
   }
 
   static glm::vec2 centerOfTile(glm::vec2 p) {
-    return glm::floor(p) + glm::vec2(0.5, 0.5);
+    return glm::floor(p) + glm::vec2(0.5 * tile_size, 0.5 * tile_size);
   }
 
   static glm::vec2 centerOfTile(glm::ivec2 p) {
-    return glm::vec2(p.x, p.y) + glm::vec2(0.5, 0.5);
+    return glm::vec2(p.x, p.y) + glm::vec2(0.5 * tile_size, 0.5 * tile_size);
   }
 
   glm::vec<2, int> getMouseTile() {

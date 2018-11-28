@@ -57,9 +57,9 @@
 - floodfill
 - cache path
 - farthest tile you can see
+- show path
 >- todo
 - don't walk in water
-- show path
 - update cached path on command
 - update cached path on world update
 - group a command unit's pathfinding if they're adj

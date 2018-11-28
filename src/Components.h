@@ -31,6 +31,7 @@ struct MotionComponent : public ECS::Component {
   World& world;
   
   glm::vec2 target;
+  glm::vec2 currentTarget;
   bool hasTarget = false;
   std::vector<glm::ivec2> path;
 

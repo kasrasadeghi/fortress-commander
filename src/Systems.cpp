@@ -77,6 +77,7 @@ void MoveSystem::updateEntity(float dt, ECS::Entity entity) {
     if (glm::distance(target, pos) > dt * motion.movementSpeed) {
       auto dir = glm::normalize(target - pos);
       pos += dir * dt * motion.movementSpeed;
+      motion.currentTarget = target;
     } else {
       pos = target;
       motion.hasTarget = false;
