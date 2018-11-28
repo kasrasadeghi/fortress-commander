@@ -16,23 +16,6 @@
  */
 class MoveSystem : public ECS::System {
 
-  /**
-   * @brief Update motion to move toward target
-   */
-  void updatePath(float dt, ECS::Entity entity) {
-    TransformComponent& transform = ECS::Manager::getInstance().getComponent<TransformComponent>(entity);
-    MotionComponent& motion = ECS::Manager::getInstance().getComponent<MotionComponent>(entity);
-
-    if (glm::distance(motion.target, transform.pos) < speed * dt) {
-      transform.pos = motion.target;
-      motion.velocity = {0, 0};
-      motion.hasTarget = false;
-    } else {
-      auto direction = glm::normalize(motion.target - transform.pos);
-      motion.velocity = direction * dt * motion.movementSpeed;
-    }
-  }
-
 public:
   MoveSystem(GameState& gameState)
       : ECS::System(gameState) {
@@ -47,11 +30,14 @@ public:
     TransformComponent& transform = ECS::Manager::getInstance().getComponent<TransformComponent>(entity);
     MotionComponent& motion = ECS::Manager::getInstance().getComponent<MotionComponent>(entity);
 
-    // hasTarget implies position != target
-    if (motion.hasTarget) {
-      updatePath(dt, entity);
+    if (not motion.hasTarget) return;
+
+    if (glm::distance(motion.target, transform.pos) > dt * motion.movementSpeed) {
+      auto dir = glm::normalize(motion.target - transform.pos);
+      transform.pos += dir * dt * motion.movementSpeed;
+    } else {
+      transform.pos = motion.target;
     }
-    transform.pos += motion.velocity * dt;
   }
 };
 
