@@ -43,24 +43,15 @@ void World::_drawRegion(View& view) const {
 }
 
 void World::_drawUnits(View& view) const {
-  std::vector<glm::vec2> unselected;
-  std::vector<glm::vec2> selected;
+  const glm::vec4 selectedCol{1, 1, 0, 1}, unselectedCol{1, 0, 0, 1};
+  CircleBatch circles;
+  circles.size({tile_size, tile_size});
 
   for (auto& u : _units) {
-    if (u.selected()) {
-      selected.emplace_back(u.pos());
-    } else {
-      unselected.emplace_back(u.pos());
-    }
+    circles.add()
+      .position(u.pos())
+      .color(u.selected() ? selectedCol : unselectedCol);
   }
 
-  InstancedCircle(unselected)
-    .size(tile_size, tile_size)
-    .color(1, 0, 0)
-    .draw(view);
-
-  InstancedCircle(selected)
-    .size(tile_size, tile_size)
-    .color(1, 1, 0)
-    .draw(view);
+  circles.draw(view);
 }
