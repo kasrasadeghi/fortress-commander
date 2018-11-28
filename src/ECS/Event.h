@@ -71,16 +71,15 @@ class EventManager {
   EventManager(const EventManager&) = delete;
   void operator=(const EventManager&) = delete;
 
-public:
-  static EventManager& getInstance() {
+  ~EventManager() {}
+
+  static EventManager& _getInstance() {
       static EventManager instance;
 
       return instance;
   }
 
-  ~EventManager() {}
-
-  template <typename Event> void connect(EventSubscriber<Event>* subscriber) {
+  template <typename Event> void _connect(EventSubscriber<Event>* subscriber) {
     auto index = getTypeIndex<Event>();
     auto it = mSubscribers.find(index);
 
@@ -95,7 +94,7 @@ public:
   }
 
   template <typename Event>
-  void disconnect(EventSubscriber<Event>* subscriber) {
+  void _disconnect(EventSubscriber<Event>* subscriber) {
     auto index = getTypeIndex<Event>();
     auto it = mSubscribers.find(index);
 
@@ -111,7 +110,7 @@ public:
     }
   }
 
-  void update() {
+  void _update() {
     if (mEvents.empty()) { return; }
 
     for (auto event : mEvents) { event(); }
@@ -122,7 +121,7 @@ public:
   // After the data structure for subscribers is modified, this should take an
   // ID
   // so that we can subscribe to multiple channels for the same event
-  template <typename Event> void event(const Event* event) {
+  template <typename Event> void _event(const Event* event) {
     auto it = mSubscribers.find(getTypeIndex<Event>());
 
     if (it != mSubscribers.end()) {
@@ -138,20 +137,35 @@ public:
     delete event;
   }
 
-  template <typename Event> void broadcast(Event& event) {}
+  // template <typename Event> void broadcast(Event& event) {}
 
-  template <typename Result, typename Event>
-  void eventResult(Result* res, Entity id, const Event& event);
+  // template <typename Result, typename Event>
+  // void eventResult(Result* res, Entity id, const Event& event);
 
-  template <typename Result, typename Event>
-  void broadcastResult(Result* res, const Event& event);
+  // template <typename Result, typename Event>
+  // void broadcastResult(Result* res, const Event& event);
 
+  // template <typename Event>
+  // void sendEvent(EventManager* eventManager, const Event& event,
+  //                BaseEventSubscriber* base) {
+  //   auto* sub = reinterpret_cast<EventSubscriber<Event>*>(base);
+
+  //   sub->receive(event);
+  // }
+
+public:
+  template <typename Event> static void connect(EventSubscriber<Event>* subscriber) {
+    _getInstance()._connect<Event>(subscriber);
+  }
   template <typename Event>
-  void sendEvent(EventManager* eventManager, const Event& event,
-                 BaseEventSubscriber* base) {
-    // auto* sub = reinterpret_cast<EventSubscriber<Event>*>(base);
-
-    // sub->receive(event);
+  static void disconnect(EventSubscriber<Event>* subscriber) {
+    _getInstance()._disconnect<Event>(subscriber);
+  }
+  static void update() {
+    _getInstance()._update();
+  }
+  template <typename Event> static void event(const Event* event) {
+    _getInstance()._event<Event>(event);
   }
 
 private:

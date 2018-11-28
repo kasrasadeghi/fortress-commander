@@ -84,9 +84,9 @@ public:
 
     setRequiredComponents(std::move(requiredComponents));
 
-    ECS::EventManager::getInstance().connect<MouseDownEvent>(this);
-    ECS::EventManager::getInstance().connect<MouseMoveEvent>(this);
-    ECS::EventManager::getInstance().connect<MouseUpEvent>(this);
+    ECS::EventManager::connect<MouseDownEvent>(this);
+    ECS::EventManager::connect<MouseMoveEvent>(this);
+    ECS::EventManager::connect<MouseUpEvent>(this);
   }
 
   std::size_t update(float dt) override {
@@ -156,7 +156,7 @@ public:
     requiredComponents.insert(CommandableComponent::type);
     setRequiredComponents(std::move(requiredComponents));
 
-    ECS::EventManager::getInstance().connect<MouseDownEvent>(this);
+    ECS::EventManager::connect<MouseDownEvent>(this);
   }
 
   void updateEntity(float dt, ECS::Entity entity) override {

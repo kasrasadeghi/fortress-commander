@@ -37,9 +37,9 @@ Game::Game() : _window("Fortress Commander"), _gameState(_window), _world(World:
   _unitCommandSystem = new UnitCommandSystem(_gameState);
   ECS::Manager::addSystem(ECS::System::Ptr(_unitCommandSystem));
 
-  ECS::EventManager::getInstance().connect<KeyDownEvent>(this);
-  ECS::EventManager::getInstance().connect<MouseDownEvent>(this);
-  ECS::EventManager::getInstance().connect<MouseMoveEvent>(this);
+  ECS::EventManager::connect<KeyDownEvent>(this);
+  ECS::EventManager::connect<MouseDownEvent>(this);
+  ECS::EventManager::connect<MouseMoveEvent>(this);
 }
 
 template <typename T>
@@ -73,7 +73,7 @@ void Game::loop() {
 
     t.renderText(str(1.f / dt), 100, 50, 1, glm::vec4(0, 0, 0, 1));
 
-    ECS::EventManager::getInstance().update();
+    ECS::EventManager::update();
     ECS::Manager::update(dt);
 
     _window.swapBuffers();
@@ -129,24 +129,24 @@ void Game::receive( const MouseMoveEvent& e) {
 
 void Game::keyCallback(int key, int scancode, int action, int mods) {
   if (action == GLFW_PRESS) {
-    ECS::EventManager::getInstance().event(new KeyDownEvent(key));
+    ECS::EventManager::event(new KeyDownEvent(key));
   }
   if (action == GLFW_RELEASE) {
-    ECS::EventManager::getInstance().event(new KeyUpEvent(key));
+    ECS::EventManager::event(new KeyUpEvent(key));
   }
 }
 
 void Game::mouseCallback(int button, int action, int mods) {
   if (action == GLFW_PRESS) {
-    ECS::EventManager::getInstance().event(new MouseDownEvent(button, getMouseCoords().x, getMouseCoords().y));
+    ECS::EventManager::event(new MouseDownEvent(button, getMouseCoords().x, getMouseCoords().y));
   }
   if (action == GLFW_RELEASE) {
-    ECS::EventManager::getInstance().event(new MouseUpEvent(button, getMouseCoords().x, getMouseCoords().y));
+    ECS::EventManager::event(new MouseUpEvent(button, getMouseCoords().x, getMouseCoords().y));
   }
 }
 
 void Game::cursorCallback(double x, double y) {
-  ECS::EventManager::getInstance().event(new MouseMoveEvent(getMouseCoords().x, getMouseCoords().y));
+  ECS::EventManager::event(new MouseMoveEvent(getMouseCoords().x, getMouseCoords().y));
 }
 
 void Game::handleTick(float dt) {
