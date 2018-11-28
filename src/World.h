@@ -43,7 +43,7 @@ public:
 
   World(size_t size) : _region(size, std::vector<Tile>(size, Tile::GRASS)) {}
 
-  std::vector<std::vector<Tile>> region() { return _region; }
+  std::vector<std::vector<Tile>>& region() { return _region; }
 
   static void tileHolo(View& view, glm::ivec2 tile_index) {
     InstancedRectangle r(tile_index.x * tile_size, tile_index.y * tile_size);
