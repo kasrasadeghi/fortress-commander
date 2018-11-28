@@ -1,3 +1,4 @@
+#pragma once
 
 #include <glm/glm.hpp>
 #include <unordered_map>
@@ -14,6 +15,6 @@ class TileProperties {
 
 public:
   static const TileType& of(Tile t) {
-    return _data.at(t);
+    return TileProperties::_data.at(t);
   }
 };

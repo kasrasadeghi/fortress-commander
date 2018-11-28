@@ -31,7 +31,7 @@ public:
         // clang-format on
 
         rects.add()
-          .color(TileProperties.of(_data[i][j]).color)
+          .color(TileProperties::of(_data[i][j]).color)
           .position({i * tile_size, j * tile_size});
       }
     }
