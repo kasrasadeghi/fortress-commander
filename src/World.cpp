@@ -53,3 +53,7 @@ void World::_drawUnits(View& view) const {
 
   circles.draw(view);
 }
+
+void World::addUnit(glm::vec2 pos) {
+  _units.emplace_back(pos, *this);
+}

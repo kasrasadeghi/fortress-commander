@@ -5,6 +5,8 @@
 
 #include <functional>
 
+class World;
+
 struct TransformComponent : public ECS::Component {
   glm::vec2 pos;
   float rot;
@@ -26,14 +28,14 @@ struct SelectableComponent : public ECS::Component {
 
 struct MotionComponent : public ECS::Component {
   float movementSpeed = 2.f; // TODO: not hardcoded
-  glm::vec2 velocity;
+  World& world;
+  
   glm::vec2 target;
   bool hasTarget = false;
 
   static constexpr ECS::ComponentType type = 3;
 
-  MotionComponent() : velocity(0, 0) {}
-  MotionComponent(glm::vec2 velocity) : velocity(velocity) {}
+  MotionComponent(World& world) : world(world) {}
 
   void pathTo(glm::vec2 pos);
 };

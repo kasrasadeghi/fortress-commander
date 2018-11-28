@@ -116,7 +116,7 @@ void Game::receive(const MouseDownEvent& e) {
   }
   if (_gameState._mode == ControlMode::UNIT) {
     // TODO: check if the add unit is in bounds
-    _world._units.push_back(Unit(getMouseCoords()));
+    _world.addUnit(getMouseCoords());
   }
 }
 
