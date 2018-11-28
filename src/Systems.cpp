@@ -47,8 +47,8 @@ std::vector<glm::ivec2> MoveSystem::findPath(std::vector<std::vector<Tile>>& reg
   while (curr != start) {
     trace.push_back(curr);
     if (not valid(curr)) {
-      std::puts("");
-      break;
+      std::puts("error: invalid point on path");
+      exit(0);
     }
     curr = backtrace[curr.x][curr.y];
   }
