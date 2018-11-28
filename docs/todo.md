@@ -55,10 +55,12 @@
 # pathfinding
 - floodfill
 >- todo
+- cache path
+- show path
+- update cached path
 - farthest tile you can see
 - group a command unit's pathfinding if they're adj
 - don't walk in water
-- cache path
 - A*
 - don't collide with walls
 - all up to unit radius in water ?
