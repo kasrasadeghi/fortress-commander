@@ -85,17 +85,30 @@ void MoveSystem::updateEntity(float dt, ECS::Entity entity) {
     }
   };
 
-  auto seesPoint = [&region, pos](glm::vec2 target) -> bool {
-    auto path = target - pos;
+  // like a raytrace for grass
+  auto grassCast = [&region](glm::vec2 source, glm::vec2 target) -> bool {
+    auto path = target - source;
     auto l = glm::length(path);
-    auto dir = normalize(path);
+    auto dir = glm::normalize(path);
     for (float k = 0; k < l; k += 0.2 /* <- precision */) {
-      glm::ivec2 p = Game::mapCoordsToTile(pos + dir * k);
+      glm::ivec2 p = Game::mapCoordsToTile(source + dir * k);
       if (region[p.x][p.y] != Tile::GRASS) {
         return false;
       }
     }
     return true;
+  };
+
+  auto seesPoint = [&grassCast, &region, pos](glm::vec2 target) -> bool {
+    // auto dir = glm::normalize(target - pos);
+    // auto y = dir.y;
+    // auto x = dir.x;
+
+    // get the two points on the perpendicular diameter
+    // auto left = glm::vec2(-y, x) * Unit::unit_size;
+    // auto right = glm::vec2(y, -x) * Unit::unit_size;
+
+    return grassCast(pos, target) /* && grassCast(left, target) && grassCast(right, target) */;
   };
 
   auto seesTile = [&seesPoint](glm::ivec2 target) -> bool {
