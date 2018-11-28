@@ -19,15 +19,6 @@
  */
 class MoveSystem : public ECS::System {
   std::vector<glm::ivec2> findPath(std::vector<std::vector<Tile>>& region, glm::ivec2 start, glm::ivec2 end);
-  
-  void updatePosition(float dt, glm::vec2& pos, glm::vec2& target, float speed) {
-    if (glm::distance(target, pos) > dt * speed) {
-      auto dir = glm::normalize(target - pos);
-      pos += dir * dt * speed;
-    } else {
-      pos = target;
-    }
-  }
 
 public:
   MoveSystem(GameState& gameState) : ECS::System(gameState) {

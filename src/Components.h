@@ -32,6 +32,7 @@ struct MotionComponent : public ECS::Component {
   
   glm::vec2 target;
   bool hasTarget = false;
+  std::vector<glm::ivec2> path;
 
   static constexpr ECS::ComponentType type = 3;
 

@@ -64,17 +64,48 @@ void MoveSystem::updateEntity(float dt, ECS::Entity entity) {
 
   if (not motion.hasTarget) return;
 
-  glm::ivec2 curr_cell = Game::mapCoordsToTile(pos);
-  glm::ivec2 target_cell = Game::mapCoordsToTile(motion.target);
+  auto& region = motion.world.region();
 
-  auto path = findPath(motion.world.region(), curr_cell, target_cell);
+  if (motion.path.empty()) {
+    glm::ivec2 curr_cell = Game::mapCoordsToTile(pos);
+    glm::ivec2 target_cell = Game::mapCoordsToTile(motion.target);
 
-  if (path.size() >= 2) {
-    auto next = path[0];
-    auto target = Game::centerOfTile(next);
-    
-    updatePosition(dt, pos, target, motion.movementSpeed);
-  } else {
-    updatePosition(dt, pos, motion.target, motion.movementSpeed);
-  } 
+    motion.path = findPath(region, curr_cell, target_cell);
+  }
+
+  auto updatePosition = [dt, &pos, &motion](glm::vec2 target) {
+    if (glm::distance(target, pos) > dt * motion.movementSpeed) {
+      auto dir = glm::normalize(target - pos);
+      pos += dir * dt * motion.movementSpeed;
+    } else {
+      pos = target;
+      motion.hasTarget = false;
+      motion.path.clear();
+    }
+  };
+
+  auto sees = [&region, pos](glm::vec2 target) -> bool {
+    auto path = target - pos;
+    auto l = glm::length(path);
+    auto dir = normalize(path);
+    for (float k = 0; k < l; k += 0.2 /* <- precision */) {
+      glm::ivec2 p = Game::mapCoordsToTile(pos + dir * k);
+      if (region[p.x][p.y] != Tile::GRASS) {
+        return false;
+      }
+    }
+    return true;
+  };
+
+  auto next = motion.path[0];
+  for (auto p : motion.path) {
+    if (sees(p)) {
+      next = p;
+    } else {
+      break;
+    }
+  }
+  auto target = Game::centerOfTile(next);
+  
+  updatePosition(target);
 }
