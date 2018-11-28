@@ -24,7 +24,7 @@ class MoveSystem : public ECS::System {
     MotionComponent& motion = ECS::Manager::getInstance().getComponent<MotionComponent>(entity);
     const float speed = glm::length(motion.velocity);
 
-    glm::vec2 target_dx(motion.target.x - transform.pos.x, motion.target.y - transform.pos.y);
+    glm::vec2 target_dx = motion.target - transform.pos;
     float len = glm::length(target_dx);
     if (len < speed * dt) {
       transform.pos = motion.target;
