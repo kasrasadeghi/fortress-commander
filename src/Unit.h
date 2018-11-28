@@ -21,6 +21,10 @@ public:
     return ECS::Manager::getInstance().getComponent<TransformComponent>(_id).pos;
   }
 
+  bool selected() const {
+    return ECS::Manager::getInstance().getComponent<SelectableComponent>(_id).selected;
+  }
+
   static void holo(View& view, glm::vec2 curr) {
     InstancedCircle c(curr.x, curr.y);
     c.size(tile_size, tile_size);
