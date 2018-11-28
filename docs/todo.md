@@ -56,6 +56,8 @@
 - floodfill
 >- todo
 - A*
+- don't collide with walls
+- don't walk in water (maybe allow half water)
 - constrained Delaunay triangulation ?
 
 # glfw-opengl
