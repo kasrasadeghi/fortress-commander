@@ -57,7 +57,6 @@ public:
 
   void setCell(glm::ivec2 v, Tile t) {
     _snapToRegion(v);
-    std::cout << v.x << ", " << v.y << std::endl;
     _region[v.x][v.y] = t;
   }
 

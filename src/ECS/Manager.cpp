@@ -9,7 +9,7 @@ Manager::Manager()
 
 Manager::~Manager() {}
 
-void Manager::addSystem(const System::Ptr& systemPtr) {
+void Manager::_addSystem(const System::Ptr& systemPtr) {
   if (!systemPtr || systemPtr->getRequiredComponents().empty()) {
     throw std::runtime_error("System should specify required components");
   }
@@ -17,7 +17,7 @@ void Manager::addSystem(const System::Ptr& systemPtr) {
   _systems.push_back(systemPtr);
 }
 
-std::size_t Manager::registerEntity(const Entity entity) {
+std::size_t Manager::_registerEntity(const Entity entity) {
   std::size_t associatedSystems = 0;
 
   auto entityIt = _entities.find(entity);
@@ -41,7 +41,7 @@ std::size_t Manager::registerEntity(const Entity entity) {
   return associatedSystems;
 }
 
-std::size_t Manager::unregisterEntity(const Entity entity) {
+std::size_t Manager::_unregisterEntity(const Entity entity) {
   std::size_t associatedSystems = 0;
 
   auto entityIt = _entities.find(entity);
@@ -58,7 +58,7 @@ std::size_t Manager::unregisterEntity(const Entity entity) {
   return associatedSystems;
 }
 
-std::size_t Manager::update(float dt) {
+std::size_t Manager::_update(float dt) {
   std::size_t updatedEntities = 0;
 
   for (auto system = _systems.begin(); system != _systems.end(); ++system) {

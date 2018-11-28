@@ -18,11 +18,11 @@ public:
   Unit(glm::vec2 pos);
 
   glm::vec2 pos() const {
-    return ECS::Manager::getInstance().getComponent<TransformComponent>(_id).pos;
+    return ECS::Manager::getComponent<TransformComponent>(_id).pos;
   }
 
   bool selected() const {
-    return ECS::Manager::getInstance().getComponent<SelectableComponent>(_id).selected;
+    return ECS::Manager::getComponent<SelectableComponent>(_id).selected;
   }
 
   static void holo(View& view, glm::vec2 curr) {

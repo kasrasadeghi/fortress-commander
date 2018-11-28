@@ -23,19 +23,19 @@ Game::Game() : _window("Fortress Commander"), _gameState(_window), _world(World:
 
   // glfwSwapInterval(1);
 
-  ECS::Manager::getInstance().createComponentStore<TransformComponent>(); 
-  ECS::Manager::getInstance().createComponentStore<MotionComponent>();
-  ECS::Manager::getInstance().createComponentStore<SelectableComponent>();
-  ECS::Manager::getInstance().createComponentStore<CommandableComponent>();
+  ECS::Manager::createComponentStore<TransformComponent>(); 
+  ECS::Manager::createComponentStore<MotionComponent>();
+  ECS::Manager::createComponentStore<SelectableComponent>();
+  ECS::Manager::createComponentStore<CommandableComponent>();
 
   _moveSystem = new MoveSystem(_gameState);
-  ECS::Manager::getInstance().addSystem(ECS::System::Ptr(_moveSystem));
+  ECS::Manager::addSystem(ECS::System::Ptr(_moveSystem));
 
   _unitSelectSystem = new UnitSelectSystem(_gameState);
-  ECS::Manager::getInstance().addSystem(ECS::System::Ptr(_unitSelectSystem));
+  ECS::Manager::addSystem(ECS::System::Ptr(_unitSelectSystem));
 
   _unitCommandSystem = new UnitCommandSystem(_gameState);
-  ECS::Manager::getInstance().addSystem(ECS::System::Ptr(_unitCommandSystem));
+  ECS::Manager::addSystem(ECS::System::Ptr(_unitCommandSystem));
 
   ECS::EventManager::getInstance().connect<KeyDownEvent>(this);
   ECS::EventManager::getInstance().connect<MouseDownEvent>(this);
@@ -74,7 +74,7 @@ void Game::loop() {
     t.renderText(str(1.f / dt), 100, 50, 1, glm::vec4(0, 0, 0, 1));
 
     ECS::EventManager::getInstance().update();
-    ECS::Manager::getInstance().update(dt);
+    ECS::Manager::update(dt);
 
     _window.swapBuffers();
     glfwPollEvents();
