@@ -10,24 +10,29 @@
 #include <vector>
 
 template <typename T>
-inline GLuint createVertexBuffer(const std::vector<T>& vertices) {
-  GLuint VBO;
-  glGenBuffers(1, &VBO);
-  glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(T) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  return VBO;
-}
+class VertexBuffer {
+  size_t _count;
 
-template <typename T>
-struct VertexBuffer {
+public:
   GLuint id;
 
-  VertexBuffer(const std::vector<T>& vertices) {
+  VertexBuffer() {
     glGenBuffers(1, &id);
+  }
+
+  VertexBuffer(const std::vector<T>& vertices) : VertexBuffer() {
+    setVertices(vertices);
+  }
+
+  void setVertices(const std::vector<T>& vertices) {
     glBindBuffer(GL_ARRAY_BUFFER, id);
     glBufferData(GL_ARRAY_BUFFER, sizeof(T) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+    _count = vertices.size();
+  }
+
+  size_t count() {
+    return _count;
   }
 
   ~VertexBuffer() {
@@ -36,56 +41,46 @@ struct VertexBuffer {
 };
 
 class VertexArray {
+  int _position = 0;
+
 public:
-  GLuint VAO;
-  VertexBuffer<glm::vec2> vertexVBO;
-  VertexBuffer<glm::vec2> positionVBO;
-  VertexBuffer<glm::vec4> colorVBO;
-  const std::size_t count, instanceCount;
+  GLuint id;
 
-  /**
-   * @param[out] vertexVBO
-   * @param[out] positionVBO
-   * @param[out] colorVBO
-   * @param[in] vertices
-   * @param[in] positions
-   * @param[in] colors
-   * @return the vertex array object
-   */
-  VertexArray(const std::vector<glm::vec2>& vertices, const std::vector<glm::vec2>& positions,
-              const std::vector<glm::vec4>& colors)
-      : vertexVBO(vertices), positionVBO(positions), colorVBO(colors),
-        count(vertices.size()), instanceCount(positions.size()) {
-
-    glGenVertexArrays(1, &VAO);
-
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexVBO.id);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, positionVBO.id);
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
-    glVertexAttribDivisor(1, 1); // tell OpenGL there is one position per instance
-
-    glBindBuffer(GL_ARRAY_BUFFER, colorVBO.id);
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-    glVertexAttribDivisor(2, 1);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    glBindVertexArray(0);
+  VertexArray() {
+    glGenVertexArrays(1, &id);
   }
 
   ~VertexArray() {
-    glDeleteVertexArrays(1, &VAO);
+    glDeleteVertexArrays(1, &id);
+  }
+
+  template <typename T>
+  VertexArray& addAttrib(const VertexBuffer<T>& VBO, bool instanced = false) {
+    glBindVertexArray(id);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO.id);
+    glEnableVertexAttribArray(_position);
+    glVertexAttribPointer(_position, T::length(), GL_FLOAT, GL_FALSE, T::length() * sizeof(float), (void*)0);
+    if (instanced) glVertexAttribDivisor(_position, 1);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    glBindVertexArray(0);
+
+    _position += 1;
+    return *this;
+  }
+
+  template <typename T>
+  VertexArray& addAttribInstanced(const VertexBuffer<T>& VBO) {
+    return addAttrib(VBO, true);
   }
 };
 
 class BaseBatch {
   bool _vaoDirty = true;
-  std::unique_ptr<VertexArray> _va = nullptr;
+  VertexArray _VAO;
+  VertexBuffer<glm::vec2> _vertexVBO, _positionVBO;
+  VertexBuffer<glm::vec4> _colorVBO;
 
 public:
   struct Instance {
@@ -129,7 +124,11 @@ protected:
   const Shader& _shader = ResourceManager::getShader(SHADER_INDEX::INSTANCED_ARRAY);
   glm::vec2 _size{1.f, 1.f};
 
-  BaseBatch() {}
+  BaseBatch() {
+    _VAO.addAttrib(_vertexVBO);
+    _VAO.addAttribInstanced(_positionVBO);
+    _VAO.addAttribInstanced(_colorVBO);
+  }
 
   void _updateVAO(const std::vector<glm::vec2>& vertices) {
     if (!_vaoDirty) return;
@@ -140,7 +139,9 @@ protected:
       positions.push_back(i.position);
       colors.push_back(i.color);
     }
-    _va.reset(new VertexArray(vertices, positions, colors));
+    _vertexVBO.setVertices(vertices);
+    _positionVBO.setVertices(positions);
+    _colorVBO.setVertices(colors);
   }
 
   void _drawVerticesInstanced(View& view, const std::vector<glm::vec2>& vertices, GLenum mode) {
@@ -149,8 +150,8 @@ protected:
     _shader.use();
     _shader.setMat4("projection", view.proj());
     _shader.setVec2("size", _size); // TODO: instanced size
-    glBindVertexArray(_va->VAO);
-    glDrawArraysInstanced(mode, 0, _va->count, _va->instanceCount);
+    glBindVertexArray(_VAO.id);
+    glDrawArraysInstanced(mode, 0, _vertexVBO.count(), instances.size());
     glBindVertexArray(0);
   }
 };
