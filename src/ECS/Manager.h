@@ -23,17 +23,17 @@ public:
   template <typename C> bool createComponentStore() {
     static_assert(std::is_base_of<Component, C>::value,
                   "C must be a descendant of Component");
-    static_assert(C::_type != InvalidComponentType,
+    static_assert(C::type != InvalidComponentType,
                   "C's types must not be invalid");
 
     return _componentStores
         .insert(std::make_pair(
-            C::_type, AbstractComponentStore::Ptr(new ComponentStore<C>())))
+            C::type, AbstractComponentStore::Ptr(new ComponentStore<C>())))
         .second;
   }
 
   template <typename C> ComponentStore<C>& getComponentStore() {
-    auto componentStoreIt = _componentStores.find(C::_type);
+    auto componentStoreIt = _componentStores.find(C::type);
     if (componentStoreIt == _componentStores.end()) {
       throw std::runtime_error("The ComponentStore does not exist");
     }
@@ -55,7 +55,7 @@ public:
   template <typename C> bool addComponent(const Entity entity, C&& component) {
     static_assert(std::is_base_of<Component, C>::value,
                   "C must be a descendant of Component");
-    static_assert(C::_type != InvalidComponentType,
+    static_assert(C::type != InvalidComponentType,
                   "C's types must not be invalid");
 
     auto entityIt = _entities.find(entity);
@@ -63,7 +63,7 @@ public:
       throw std::runtime_error("The entity does not exist");
     }
 
-    entityIt->second.insert(C::_type);
+    entityIt->second.insert(C::type);
     return getComponentStore<C>().add(entity, std::move(component));
   }
 

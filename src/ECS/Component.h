@@ -16,7 +16,7 @@ static const ComponentType InvalidComponentType = 0;
 // The user should write a specialized component class that inherits
 // from this class, storing its own data and setting its own type
 struct Component {
-  static const ComponentType _type = InvalidComponentType;
+  static const ComponentType type = InvalidComponentType;
 };
 
 // Used to store base pointers to ComponentStores of arbitrary types in data
@@ -30,11 +30,11 @@ struct AbstractComponentStore {
 template <typename C> class ComponentStore : public AbstractComponentStore {
   static_assert(std::is_base_of<Component, C>::value,
                 "C must be a Component or be derived from Component");
-  static_assert(C::_type != InvalidComponentType,
+  static_assert(C::type != InvalidComponentType,
                 "C must not be of invalid component type");
 
   std::unordered_map<Entity, C> _store;
-  static const ComponentType _type = C::_type;
+  static const ComponentType type = C::type;
 
 public:
   ComponentStore() {}

@@ -40,8 +40,8 @@ public:
   MoveSystem(ECS::Manager& manager, ECS::EventManager& eventManager, GameState& gameState)
       : ECS::System(manager, eventManager, gameState) {
     ECS::ComponentTypeSet requiredComponents;
-    requiredComponents.insert(TransformComponent::_type);
-    requiredComponents.insert(MotionComponent::_type);
+    requiredComponents.insert(TransformComponent::type);
+    requiredComponents.insert(MotionComponent::type);
 
     setRequiredComponents(std::move(requiredComponents));
   }
@@ -95,8 +95,8 @@ public:
   UnitSelectSystem(ECS::Manager& manager, ECS::EventManager& eventManager, GameState& gameState)
       : ECS::System(manager, eventManager, gameState) {
     ECS::ComponentTypeSet requiredComponents;
-    requiredComponents.insert(TransformComponent::_type);
-    requiredComponents.insert(SelectableComponent::_type);
+    requiredComponents.insert(TransformComponent::type);
+    requiredComponents.insert(SelectableComponent::type);
 
     setRequiredComponents(std::move(requiredComponents));
 
@@ -168,8 +168,8 @@ public:
   UnitCommandSystem(ECS::Manager& manager, ECS::EventManager& eventManager, GameState& gameState)
       : ECS::System(manager, eventManager, gameState) {
     ECS::ComponentTypeSet requiredComponents;
-    requiredComponents.insert(SelectableComponent::_type);
-    requiredComponents.insert(CommandableComponent::_type);
+    requiredComponents.insert(SelectableComponent::type);
+    requiredComponents.insert(CommandableComponent::type);
     setRequiredComponents(std::move(requiredComponents));
 
     eventManager.connect<MouseDownEvent>(this);
