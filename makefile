@@ -22,3 +22,7 @@ format:
 .PHONY: clean
 clean:
 	rm -rf build
+
+.PHONY: cpp
+cpp:
+	@python3 checker.py
