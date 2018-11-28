@@ -71,13 +71,13 @@ void MoveSystem::updateEntity(float dt, ECS::Entity entity) {
     glm::ivec2 target_cell = Game::mapCoordsToTile(motion.target);
 
     motion.path = findPath(region, curr_cell, target_cell);
+    motion.currentTarget = motion.path.begin();
   }
 
   auto updatePosition = [dt, &pos, &motion](glm::vec2 target) {
     if (glm::distance(target, pos) > dt * motion.movementSpeed) {
       auto dir = glm::normalize(target - pos);
       pos += dir * dt * motion.movementSpeed;
-      motion.currentTarget = target;
     } else {
       pos = target;
       motion.hasTarget = false;
@@ -85,7 +85,7 @@ void MoveSystem::updateEntity(float dt, ECS::Entity entity) {
     }
   };
 
-  auto sees = [&region, pos](glm::vec2 target) -> bool {
+  auto seesPoint = [&region, pos](glm::vec2 target) -> bool {
     auto path = target - pos;
     auto l = glm::length(path);
     auto dir = normalize(path);
@@ -98,15 +98,23 @@ void MoveSystem::updateEntity(float dt, ECS::Entity entity) {
     return true;
   };
 
-  auto next = motion.path[0];
-  for (auto p : motion.path) {
-    if (sees(p)) {
-      next = p;
+  auto seesTile = [&seesPoint](glm::ivec2 target) -> bool {
+    glm::vec2 t {target.x, target.y};
+    return seesPoint(t) && 
+           seesPoint(t + glm::vec2(0, 1)) &&
+           seesPoint(t + glm::vec2(1, 0)) &&
+           seesPoint(t + glm::vec2(1, 1));
+  };
+
+  for (auto iter = motion.currentTarget; iter < motion.path.end(); ++iter) {
+    glm::ivec2 p = *iter;
+    if (seesTile(p)) {
+      motion.currentTarget = iter;
     } else {
       break;
     }
   }
-  auto target = Game::centerOfTile(next);
+  auto target = Game::centerOfTile(*motion.currentTarget);
   
   updatePosition(target);
 }

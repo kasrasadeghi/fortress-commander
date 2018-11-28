@@ -66,10 +66,12 @@ void World::_drawUnits(View& view) const {
         .color({1, 0, 0, 0.3});
     }
 
-    auto target = u.currentTarget();
-    rectangles.add()
-      .position(target - pathTileOffset)
-      .color({0, 0, 1, 0.3});
+    if (not path.empty()) {
+      auto target = u.currentTarget();
+      rectangles.add()
+        .position(Game::centerOfTile(target) - pathTileOffset)
+        .color({0, 0, 1, 0.3});
+    }
   }
   // clang-format on
 

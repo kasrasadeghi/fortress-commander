@@ -30,6 +30,6 @@ std::vector<glm::ivec2>& Unit::path() const {
   return ECS::Manager::getComponent<MotionComponent>(_id).path;
 }
 
-glm::vec2 Unit::currentTarget() const {
-  return ECS::Manager::getComponent<MotionComponent>(_id).currentTarget;
+glm::ivec2 Unit::currentTarget() const {
+  return ECS::Manager::getComponent<MotionComponent>(_id).currentTarget.operator*();
 }

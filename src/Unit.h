@@ -21,7 +21,7 @@ public:
   glm::vec2 pos() const;
   bool selected() const;
   std::vector<glm::ivec2>& path() const;
-  glm::vec2 currentTarget() const;
+  glm::ivec2 currentTarget() const;
 
   static void holo(View& view, glm::vec2 curr) {
     InstancedCircle c(curr.x, curr.y);

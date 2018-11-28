@@ -58,7 +58,9 @@
 - cache path
 - farthest tile you can see
 - show path
+- farthest tile you can see from you current target
 >- todo
+- bug: seesPoint only checks if your center can see, but not if your sides can see
 - don't walk in water
 - update cached path on command
 - update cached path on world update
