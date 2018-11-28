@@ -47,9 +47,8 @@ class Manager {
     return reinterpret_cast<ComponentStore<C>&>(*componentStoreIt->second);
   }
 
-  template <typename C>
-  C& _getComponent(ECS::Entity entity) {
-    return getComponentStore<C>().get(entity);
+  template <typename C> C& _getComponent(ECS::Entity entity) {
+    return _getComponentStore<C>().get(entity);
   }
 
   void _addSystem(const System::Ptr& systemPtr);
@@ -70,7 +69,7 @@ class Manager {
     }
 
     entityIt->second.insert(C::type);
-    return getComponentStore<C>().add(entity, std::move(component));
+    return _getComponentStore<C>().add(entity, std::move(component));
   }
 
   std::size_t _registerEntity(const Entity entity);
