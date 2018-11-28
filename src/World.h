@@ -5,7 +5,7 @@
 
 enum class Tile { NONE, GRASS, WATER };
 
-class World /* : public sf::Drawable */ {
+class World {
   std::vector<std::vector<Tile>> _region; // this should be a square
 
   std::vector<Unit> _units;
