@@ -75,6 +75,6 @@ void MoveSystem::updateEntity(float dt, ECS::Entity entity) {
     
     updatePosition(dt, transform.pos, target, motion.movementSpeed);
   } else {
-    updatePosition(dt, transform.pos, motion.target, motion.movementSpeed);    
+    updatePosition(dt, transform.pos, motion.target, motion.movementSpeed);
   } 
 }
