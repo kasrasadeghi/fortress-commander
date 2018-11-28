@@ -53,6 +53,46 @@ void World::_drawUnits(View& view) const {
   rectangles.draw(view);
 }
 
+void World::_drawEnemies(View& view) const {
+  const glm::vec4 enemyColor{1, 0, 1, 1};
+  CircleBatch circles;
+  circles.size({tile_size, tile_size});
+
+  RectangleBatch rectangles;
+  rectangles.size({tile_size * 0.8, tile_size * 0.8});
+
+  glm::vec2 pathTileOffset(0.4 * tile_size, 0.4 * tile_size);
+
+  // clang-format off
+  for (auto& e : _enemies) {
+    circles.add()
+      .position(e.pos())
+      .color(enemyColor);
+    
+    auto& path = e.path();
+    for (auto p : path) {
+      rectangles.add()
+        .position(Game::centerOfTile(p) - pathTileOffset)
+        .color({1, 0, 0, 0.3});
+    }
+
+    if (not path.empty()) {
+      auto target = e.currentTarget();
+      rectangles.add()
+        .position(Game::centerOfTile(target) - pathTileOffset)
+        .color({0, 0, 1, 0.3});
+    }
+  }
+  // clang-format on
+
+  circles.draw(view);
+  rectangles.draw(view);
+}
+
 void World::addUnit(glm::vec2 pos) {
   _units.emplace_back(pos, *this);
+}
+
+void World::addEnemy(glm::vec2 pos) {
+  _enemies.emplace_back(pos, *this);
 }

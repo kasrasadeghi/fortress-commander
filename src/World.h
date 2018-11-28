@@ -2,15 +2,19 @@
 
 #include "Graphics.h"
 #include "Unit.h"
+#include "Enemy.h"
 #include "Region.h"
 
 class World {
   Region _region; // this should be a square
 
   std::vector<Unit> _units;
+  std::vector<Enemy> _enemies;
+
   // std::vector<Structure> _structures;
 
   void _drawUnits(View& view) const;
+  void _drawEnemies(View& view) const;
 
   // stuff to make out of bounds clicks snap back to bounds
   bool _snapToRegion(glm::ivec2& v) {
@@ -63,7 +67,9 @@ public:
   virtual void draw(View& view) const {
     _region.draw(view);
     _drawUnits(view);
+    _drawEnemies(view);
   }
 
   void addUnit(glm::vec2 pos);
+  void addEnemy(glm::vec2 pos);
 };
