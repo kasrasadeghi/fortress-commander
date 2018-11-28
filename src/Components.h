@@ -31,7 +31,7 @@ struct MotionComponent : public ECS::Component {
   World& world;
   
   glm::vec2 target;
-  std::vector<glm::ivec2>::iterator currentTarget;
+  std::vector<glm::ivec2>::iterator currentTarget; // when path.empty, this iterator is invalid
   bool hasTarget = false;
   std::vector<glm::ivec2> path;
 
