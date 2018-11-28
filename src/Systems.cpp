@@ -1,7 +1,7 @@
 #include "Systems.h"
 #include "Game.h"
 
-std::vector<glm::ivec2> MoveSystem::findPath(std::vector<std::vector<Tile>>& region, glm::ivec2 start, glm::ivec2 end) {
+std::vector<glm::ivec2> MoveSystem::findPath(Region& region, glm::ivec2 start, glm::ivec2 end) {
   using P = glm::ivec2;
 
   std::deque<P> alive;

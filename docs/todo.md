@@ -37,9 +37,9 @@
   - check radius of unit
 - extract holos
 - init #selection
+- extract region
 
 >- TODO
-- extract region
 - shift select, control select #selection
 - extract tile ?
   - put static holo in there

@@ -2,16 +2,14 @@
 
 #include "Graphics.h"
 #include "Unit.h"
-
-enum class Tile { NONE, GRASS, WATER };
+#include "Region.h"
 
 class World {
-  std::vector<std::vector<Tile>> _region; // this should be a square
+  Region _region; // this should be a square
 
   std::vector<Unit> _units;
   // std::vector<Structure> _structures;
 
-  void _drawRegion(View& view) const;
   void _drawUnits(View& view) const;
 
   // stuff to make out of bounds clicks snap back to bounds
@@ -41,9 +39,9 @@ class World {
 public:
   constexpr static int world_size = 100;
 
-  World(size_t size) : _region(size, std::vector<Tile>(size, Tile::GRASS)) {}
+  World(size_t size) : _region({size, std::vector<Tile>(size, Tile::GRASS)}) {}
 
-  std::vector<std::vector<Tile>>& region() { return _region; }
+  Region& region() { return _region; }
 
   static void tileHolo(View& view, glm::ivec2 tile_index) {
     InstancedRectangle r(tile_index.x * tile_size, tile_index.y * tile_size);
@@ -63,7 +61,7 @@ public:
   }
 
   virtual void draw(View& view) const {
-    _drawRegion(view);
+    _region.draw(view);
     _drawUnits(view);
   }
 
