@@ -1,6 +1,7 @@
 #include "Systems.h"
 #include "Game.h"
 
+/// returns an empty path on failure
 std::vector<glm::ivec2> MoveSystem::findPath(Region& region, glm::ivec2 start, glm::ivec2 end) {
   using P = glm::ivec2;
 
@@ -42,12 +43,21 @@ std::vector<glm::ivec2> MoveSystem::findPath(Region& region, glm::ivec2 start, g
     dead.push_back(curr);
   }
 
+  if (backtrace[end.x][end.y] == P(-1, -1)) {
+    return std::vector<P>();
+  }
+
   std::vector<P> trace;
   auto curr = end;
   while (curr != start) {
     trace.push_back(curr);
     if (not valid(curr)) {
       std::puts("error: invalid point on path");
+      std::printf("[");
+      for (auto i : trace) {
+        std::printf(" (%d, %d)", i.x, i.y);
+      }
+      std::printf(" ]\n");
       exit(0);
     }
     curr = backtrace[curr.x][curr.y];
@@ -70,7 +80,13 @@ void MoveSystem::updateEntity(float dt, ECS::Entity entity) {
     glm::ivec2 curr_cell = Game::mapCoordsToTile(pos);
     glm::ivec2 target_cell = Game::mapCoordsToTile(motion.target);
 
-    motion.path = findPath(region, curr_cell, target_cell);
+    auto path = findPath(region, curr_cell, target_cell);
+    if (path.empty()) { // pathfinding failed
+      motion.hasTarget = false;
+      return;
+    }
+    motion.path = std::move(path);
+
     motion.currentTarget = motion.path.begin();
   }
 
@@ -80,8 +96,10 @@ void MoveSystem::updateEntity(float dt, ECS::Entity entity) {
       pos += dir * dt * motion.movementSpeed;
     } else {
       pos = target;
-      motion.hasTarget = false;
-      motion.path.clear();
+      if (target == motion.target) {
+        motion.hasTarget = false;
+        motion.path.clear();
+      }
     }
   };
 
@@ -100,15 +118,15 @@ void MoveSystem::updateEntity(float dt, ECS::Entity entity) {
   };
 
   auto seesPoint = [&grassCast, &region, pos](glm::vec2 target) -> bool {
-    // auto dir = glm::normalize(target - pos);
-    // auto y = dir.y;
-    // auto x = dir.x;
+    auto dir = glm::normalize(target - pos);
+    auto y = dir.y;
+    auto x = dir.x;
 
     // get the two points on the perpendicular diameter
-    // auto left = glm::vec2(-y, x) * Unit::unit_size;
-    // auto right = glm::vec2(y, -x) * Unit::unit_size;
+    auto left = glm::vec2(-y, x) * Unit::unit_size;
+    auto right = glm::vec2(y, -x) * Unit::unit_size;
 
-    return grassCast(pos, target) /* && grassCast(left, target) && grassCast(right, target) */;
+    return grassCast(pos, target) && grassCast(pos + left, target) && grassCast(pos + right, target);
   };
 
   auto seesTile = [&seesPoint](glm::ivec2 target) -> bool {
@@ -118,6 +136,22 @@ void MoveSystem::updateEntity(float dt, ECS::Entity entity) {
            seesPoint(t + glm::vec2(1, 0)) &&
            seesPoint(t + glm::vec2(1, 1));
   };
+
+  // possibly more optimal path finding
+  // auto seesTile = [&seesPoint](glm::ivec2 target) -> bool {
+  //   glm::vec2 t {target.x + 0.5, target.y + 0.5};
+  //   auto dir = glm::normalize(target - pos);
+  //   auto y = dir.y;
+  //   auto x = dir.x;
+
+  //   // get the two points on the perpendicular diameter
+  //   auto left = glm::vec2(-y, x) * Unit::unit_size;
+  //   auto right = glm::vec2(y, -x) * Unit::unit_size;
+
+  //   return grassCast(pos + left, target + left) && grassCast(pos + right, target + right);
+  // };
+
+  // TODO: investigate only iterating once target location is reached
 
   // iterate current target until it matches the last one possible to be seen.
   for (auto iter = motion.currentTarget; iter < motion.path.end(); ++iter) {
