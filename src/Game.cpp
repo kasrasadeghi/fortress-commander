@@ -22,7 +22,7 @@ Game::Game() : _window("Fortress Commander"), _gameState(_window), _world(World:
   _window.setMouseCallback([this](auto&&... args) { mouseCallback(args...); });
   _window.setCursorCallback([this](auto&&... args) { cursorCallback(args...); });
 
-  // glfwSwapInterval(1);
+  glfwSwapInterval(0); // oh, it's on by default
 
   ECS::Manager::createComponentStore<TransformComponent>();
   ECS::Manager::createComponentStore<MotionComponent>();
