@@ -40,10 +40,9 @@
 
 >- TODO
 - shift select, control select #selection
-- extract tile
+- extract tile ?
   - put static holo in there
-- build structures instead of flipping cells
-  - maybe a region edit mode?
+- build structures
 - check if unit construction is in bounds
 - check if structure construction is in bounds
 - color illegal area for construction
@@ -52,6 +51,12 @@
   - https://www.youtube.com/watch?v=FSoFJAmh96g
 - load a map from a file
 - make a map
+
+# pathfinding
+- floodfill
+>- todo
+- A*
+- constrained Delaunay triangulation ?
 
 # glfw-opengl
 >- done
