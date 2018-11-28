@@ -19,10 +19,28 @@ inline GLuint createVertexBuffer(const std::vector<T>& vertices) {
   return VBO;
 }
 
+template <typename T>
+struct VertexBuffer {
+  GLuint id;
+
+  VertexBuffer(const std::vector<T>& vertices) {
+    glGenBuffers(1, &id);
+    glBindBuffer(GL_ARRAY_BUFFER, id);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(T) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+  }
+
+  ~VertexBuffer() {
+    glDeleteBuffers(1, &id);
+  }
+};
+
 class VertexArray {
 public:
   GLuint VAO;
-  GLuint vertexVBO, positionVBO, colorVBO;
+  VertexBuffer<glm::vec2> vertexVBO;
+  VertexBuffer<glm::vec2> positionVBO;
+  VertexBuffer<glm::vec4> colorVBO;
   const std::size_t count, instanceCount;
 
   /**
@@ -36,25 +54,22 @@ public:
    */
   VertexArray(const std::vector<glm::vec2>& vertices, const std::vector<glm::vec2>& positions,
               const std::vector<glm::vec4>& colors)
-      : count(vertices.size()), instanceCount(positions.size()) {
-
-    vertexVBO = createVertexBuffer(vertices);
-    positionVBO = createVertexBuffer(positions);
-    colorVBO = createVertexBuffer(colors);
+      : vertexVBO(vertices), positionVBO(positions), colorVBO(colors),
+        count(vertices.size()), instanceCount(positions.size()) {
 
     glGenVertexArrays(1, &VAO);
 
     glBindVertexArray(VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexVBO.id);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
 
-    glBindBuffer(GL_ARRAY_BUFFER, positionVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, positionVBO.id);
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
     glVertexAttribDivisor(1, 1); // tell OpenGL there is one position per instance
 
-    glBindBuffer(GL_ARRAY_BUFFER, colorVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, colorVBO.id);
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
     glVertexAttribDivisor(2, 1);
@@ -65,9 +80,6 @@ public:
 
   ~VertexArray() {
     glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &vertexVBO);
-    glDeleteBuffers(1, &positionVBO);
-    glDeleteBuffers(1, &colorVBO);
   }
 };
 
