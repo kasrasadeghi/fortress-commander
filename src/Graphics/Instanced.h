@@ -7,6 +7,7 @@
 #include <array>
 #include <sstream>
 #include <vector>
+#include <memory>
 
 template <typename T>
 inline GLuint createVertexBuffer(const std::vector<T>& vertices) {
@@ -72,6 +73,9 @@ public:
 };
 
 class BaseBatch {
+  bool _vaoDirty = true;
+  std::unique_ptr<VertexArray> _va = nullptr;
+
 public:
   struct Instance {
     glm::vec2 position;
@@ -81,6 +85,7 @@ public:
   std::vector<Instance> instances;
 
   BaseBatch& add(Instance i) {
+    _vaoDirty = true;
     instances.push_back(i);
     return *this;
   }
@@ -90,16 +95,19 @@ public:
   }
 
   BaseBatch& position(float x, float y) {
+    _vaoDirty = true;
     instances.back().position = {x, y};
     return *this; 
   }
     
   BaseBatch& color(float r, float g, float b, float a = 1.f) {
+    _vaoDirty = true;
     instances.back().color = {r, g, b, a};
     return *this;
   }
     
   BaseBatch& size(float x, float y) {
+    _vaoDirty = true;
     _size = {x, y};
     return *this;
   }
@@ -112,20 +120,27 @@ protected:
 
   BaseBatch() {}
 
-  void _drawVerticesInstanced(View& view, const std::vector<glm::vec2>& vertices, GLenum mode) {
+  void _updateVAO(const std::vector<glm::vec2>& vertices) {
+    if (!_vaoDirty)
+      return;
+
     std::vector<glm::vec2> positions;
     std::vector<glm::vec4> colors;
     for (const Instance& i : instances) {
       positions.push_back(i.position);
       colors.push_back(i.color);
     }
-    auto va = VertexArray(vertices, positions, colors);
+    _va.reset(new VertexArray(vertices, positions, colors));
+  }
+
+  void _drawVerticesInstanced(View& view, const std::vector<glm::vec2>& vertices, GLenum mode) {
+    _updateVAO(vertices);
 
     _shader.use();
     _shader.setMat4("projection", view.proj());
     _shader.setVec2("size", _size); // TODO: instanced size
-    glBindVertexArray(va.VAO);
-    glDrawArraysInstanced(mode, 0, va.count, va.instanceCount);
+    glBindVertexArray(_va->VAO);
+    glDrawArraysInstanced(mode, 0, _va->count, _va->instanceCount);
     glBindVertexArray(0);
   }
 };
