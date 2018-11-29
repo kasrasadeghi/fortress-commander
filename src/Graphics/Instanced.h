@@ -60,7 +60,7 @@ public:
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO.id);
     glEnableVertexAttribArray(_position);
-    glVertexAttribPointer(_position, T::length(), GL_FLOAT, GL_FALSE, T::length() * sizeof(float), (void*)0);
+    glVertexAttribPointer(_position, sizeof(T) / sizeof(float), GL_FLOAT, GL_FALSE, sizeof(T), (void*)0);
     if (instanced) glVertexAttribDivisor(_position, 1);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -81,11 +81,13 @@ class BaseBatch {
   VertexArray _VAO;
   VertexBuffer<glm::vec2> _vertexVBO, _positionVBO;
   VertexBuffer<glm::vec4> _colorVBO;
+  VertexBuffer<glm::float32> _rotationVBO;
 
 public:
   struct Instance {
     glm::vec2 position;
     glm::vec4 color;
+    glm::float32 rotation;
   };
 
   std::vector<Instance> instances;
@@ -112,6 +114,12 @@ public:
     return *this;
   }
 
+  BaseBatch& rotation(const glm::float32& rot) {
+    _vaoDirty = true;
+    instances.back().rotation = rot;
+    return *this;
+  }
+
   BaseBatch& size(const glm::vec2& size) {
     _vaoDirty = true;
     _size = size;
@@ -128,6 +136,7 @@ protected:
     _VAO.addAttrib(_vertexVBO);
     _VAO.addAttribInstanced(_positionVBO);
     _VAO.addAttribInstanced(_colorVBO);
+    _VAO.addAttribInstanced(_rotationVBO);
   }
 
   void _updateVAO(const std::vector<glm::vec2>& vertices) {
@@ -135,13 +144,16 @@ protected:
 
     std::vector<glm::vec2> positions;
     std::vector<glm::vec4> colors;
+    std::vector<glm::float32> rotations;
     for (const Instance& i : instances) {
       positions.push_back(i.position);
       colors.push_back(i.color);
+      rotations.push_back(i.rotation);
     }
     _vertexVBO.setVertices(vertices);
     _positionVBO.setVertices(positions);
     _colorVBO.setVertices(colors);
+    _rotationVBO.setVertices(rotations);
   }
 
   void _drawVerticesInstanced(View& view, const std::vector<glm::vec2>& vertices, GLenum mode) {
