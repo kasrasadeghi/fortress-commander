@@ -22,3 +22,7 @@ std::vector<glm::ivec2>& Enemy::path() const {
 glm::ivec2 Enemy::currentTarget() const {
   return ECS::Manager::getComponent<MotionComponent>(_id).currentTarget.operator*();
 }
+
+void Enemy::pathTo(glm::vec2 v) {
+  ECS::Manager::getComponent<MotionComponent>(_id).pathTo(v);
+}

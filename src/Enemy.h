@@ -23,4 +23,5 @@ public:
   bool selected() const;
   std::vector<glm::ivec2>& path() const;
   glm::ivec2 currentTarget() const;
+  void pathTo(glm::vec2 v);
 };
