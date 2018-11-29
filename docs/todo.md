@@ -84,6 +84,7 @@
 # structures and resources
 - build structures (MouseDown)
 - draw structures
+- structure holo
 >- todo
 - special base structure
 - check if unit construction is in bounds
