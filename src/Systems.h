@@ -193,11 +193,11 @@ public:
   void receive(const MouseDownEvent& e) override {
     if (_gameState._mode == ControlMode::NONE) {
       if (e.button == GLFW_MOUSE_BUTTON_2) {
-	bool foundEnemy = _attackClickedEnemy({e.x, e.y});
+      	bool foundEnemy = _attackClickedEnemy({e.x, e.y});
 
         if (not foundEnemy) { // invoke the position handler on the selected units
           _invokePositionHandler(e.x, e.y);
-	}
+	      }
       }
     }
   }
