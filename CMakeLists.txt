@@ -33,6 +33,7 @@ set(SRC_FILES
   src/GameState.cpp
   src/Components.cpp
   src/Systems.cpp
+  src/Structure.cpp
   src/Graphics/Shader.cpp
   src/Graphics/ResourceManager.cpp
   src/ECS/Manager.cpp

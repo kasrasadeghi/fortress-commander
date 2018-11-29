@@ -104,6 +104,20 @@ void World::_drawEnemies(View& view) const {
   rectangles.draw(view);
 }
 
+void World::_drawStructures(View& view) const {
+  const glm::vec4 color {0.5, 0.5, 0.5, 1};
+
+  const glm::vec2 offset(-tile_size * 0.5, -tile_size * 0.5);
+  RectangleBatch rb;
+
+  for (const auto& structure : _structures) {
+    rb.add()
+      .color(color)
+      .size({tile_size, tile_size})
+      .position(structure.pos() * tile_size - offset);
+  }
+}
+
 void World::addUnit(glm::vec2 pos) {
   _units.emplace_back(pos, *this);
 }
@@ -111,4 +125,8 @@ void World::addUnit(glm::vec2 pos) {
 void World::addEnemy(glm::vec2 pos) {
   _enemies.emplace_back(pos, *this);
   _enemies.back().pathTo({world_size / 2.f, world_size / 2.f});
+}
+
+void World::addStructure(glm::ivec2 cell) {
+  _structures.emplace_back(cell, *this);
 }

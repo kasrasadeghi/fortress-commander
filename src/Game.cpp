@@ -76,7 +76,10 @@ void Game::loop() {
     _world.draw(_gameState._view);
 
     auto& _mode = _gameState._mode;
-    if (_mode == ControlMode::BUILD || _mode == ControlMode::TERRAIN) {
+    if (_mode == ControlMode::BUILD) {
+      Structure::holo(_gameState._view, getMouseTile()); 
+    }
+    if (_mode == ControlMode::TERRAIN) {
       World::tileHolo(_gameState._view, getMouseTile());
     }
     if (_mode == ControlMode::UNIT) {
@@ -122,7 +125,7 @@ void Game::receive(const KeyDownEvent& e) {
 
 void Game::receive(const MouseDownEvent& e) {
   if (_gameState._mode == ControlMode::BUILD) {
-    //_world.addStructure(getMouseTile());
+    _world.addStructure(getMouseTile());
   }
   if (_gameState._mode == ControlMode::TERRAIN) {
     _paint = _world.flipCell(getMouseTile());
