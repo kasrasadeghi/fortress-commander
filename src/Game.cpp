@@ -66,6 +66,16 @@ void Game::loop() {
 
     handleTick(dt);
     _world.draw(_gameState._view);
+    LineBatch()
+      .add()
+        .points({50, 50}, getMouseCoords())
+        .lineWidth(0.5)
+        .color({1, 0, 0, 1})
+      .add()
+        .points({40, 40}, getMouseCoords())
+        .lineWidth(0.2)
+        .color({1, 1, 0, 0.8})
+      .draw(_gameState._view);
 
     auto& _mode = _gameState._mode;
     if (_mode == ControlMode::BUILD || _mode == ControlMode::TERRAIN) {
@@ -79,7 +89,7 @@ void Game::loop() {
 
     ECS::EventManager::update();
     ECS::Manager::update(dt);
-    spawner.spawn();
+    spawner.update(dt);
 
     _window.swapBuffers();
     glfwPollEvents();
