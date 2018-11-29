@@ -82,9 +82,10 @@
 - melee attack
 
 # structures and resources
+- build structures (MouseDown)
+- draw structures
 >- todo
 - special base structure
-- build structures
 - check if unit construction is in bounds
 - check if structure construction is in bounds
 - color illegal area for construction
