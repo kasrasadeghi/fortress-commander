@@ -44,7 +44,7 @@ std::vector<glm::ivec2> MoveSystem::findPath(Region& region, glm::ivec2 start, g
 
     if (curr == end) {
       std::vector<P> trace;
-      const auto curr = end;
+      auto curr = end;
       while (curr != start) {
         trace.push_back(curr);
         curr = backtrace[curr.x][curr.y];
