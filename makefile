@@ -26,3 +26,7 @@ clean:
 .PHONY: cpp
 cpp:
 	@python3 checker.py
+
+.PHONY: gdb
+gdb:
+	gdb build/fortress-commander
