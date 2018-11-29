@@ -57,6 +57,7 @@
   - check radius of unit
 - extract holos
 >- todo
+- check if unit construction is in bounds
 
 # enemies
 - make enemy spawn not bound to framerate, but a timer
@@ -87,7 +88,6 @@
 - structure holo
 >- todo
 - special base structure
-- check if unit construction is in bounds
 - check if structure construction is in bounds
 - color illegal area for construction
 - multiblock structures?
