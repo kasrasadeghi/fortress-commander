@@ -48,8 +48,10 @@ public:
   Region& region() { return _region; }
 
   static void tileHolo(View& view, glm::ivec2 tile_index) {
+    glm::vec2 offset(-0.5, -0.5);
+
     RectangleBatch().add()
-      .position({tile_index.x * tile_size, tile_index.y * tile_size})
+      .position(glm::vec2(tile_index.x * tile_size, tile_index.y * tile_size) - offset * tile_size)
       .color({.7, .7, .7, .5})
       .size({tile_size, tile_size})
       .draw(view);

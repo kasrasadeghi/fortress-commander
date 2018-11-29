@@ -22,10 +22,12 @@ void World::_drawUnits(View& view) const {
   CircleBatch circles;
   circles.size({tile_size, tile_size});
 
+  constexpr float pathMarkerSize = 0.8;
   RectangleBatch rectangles;
-  rectangles.size({tile_size * 0.8, tile_size * 0.8});
+  rectangles.size({tile_size * pathMarkerSize, tile_size * pathMarkerSize});
 
-  glm::vec2 pathTileOffset(0.4 * tile_size, 0.4 * tile_size);
+  glm::vec2 pathTileOffset(0.5 * pathMarkerSize * tile_size, 0.5 * pathMarkerSize * tile_size);
+  pathTileOffset -= glm::vec2(0.5, 0.5) * (tile_size * pathMarkerSize);
 
   // clang-format off
   for (auto& u : _units) {

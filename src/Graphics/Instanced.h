@@ -169,7 +169,7 @@ protected:
 };
 
 class RectangleBatch : public BaseBatch {
-  std::vector<glm::vec2> _rectangleVertices{{1.f, 1.f}, {1.f, 0.f}, {0.f, 1.f}, {0.f, 0.f}};
+  std::vector<glm::vec2> _rectangleVertices{{0.5, 0.5}, {0.5, -0.5}, {-0.5, 0.5}, {-0.5, -0.5}};
 
 public:
   RectangleBatch() {}

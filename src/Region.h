@@ -14,8 +14,7 @@ public:
   Tile& at(glm::ivec2 p) { return _data[p.x][p.y]; }
 
   void draw(View& view) const {
-    const glm::vec4 grassCol(.3, .6, .2, 1);
-    const glm::vec4 waterCol(.1, .3, .8, 1);
+    const glm::vec2 offset(-tile_size * 0.5, -tile_size * 0.5);
     RectangleBatch rects;
     rects.size({tile_size, tile_size});
 
@@ -32,7 +31,7 @@ public:
 
         rects.add()
           .color(TileProperties::of(_data[i][j]).color)
-          .position({i * tile_size, j * tile_size});
+          .position(glm::vec2(i * tile_size, j * tile_size) - offset);
       }
     }
 

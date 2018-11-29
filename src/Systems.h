@@ -84,7 +84,7 @@ public:
       // draw box around selection
       auto size_axes = _boxBottomRight - _boxTopLeft;
       RectangleBatch().add()
-          .position(_boxTopLeft)
+          .position((_boxTopLeft + _boxBottomRight) / 2.f)
           .size(size_axes)
           .color({0.8, 0.8, 1, 0.4})
           .draw(_gameState._view);
