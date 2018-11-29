@@ -2,71 +2,105 @@
 #include "Game.h"
 #include "Tile.h"
 
+#include <queue>
+#include <set>
+#include <unordered_map>
+
+template<
+  class T,
+  class Container = std::vector<T>,
+  class Compare = std::less<typename Container::value_type>
+> class MyQueue : public std::priority_queue<T, Container, Compare>
+{
+public:
+
+  bool contains(const T&val) const
+  {
+    auto first = this->c.cbegin();
+    auto last = this->c.cend();
+    while (first!=last) {
+      if (*first==val) return true;
+      ++first;
+    }
+    return false;
+  }
+};
+
+
+std::map<glm::ivec2, float> F_SCORE;
+struct minimumFScore {  
+  bool operator()(const glm::ivec2& lhs, const glm::ivec2& rhs) const {
+    return F_SCORE.at(lhs) < F_SCORE.at(rhs);
+  }
+};
+
 /// returns an empty path on failure
 std::vector<glm::ivec2> MoveSystem::findPath(Region& region, glm::ivec2 start, glm::ivec2 end) {
   using P = glm::ivec2;
+  std::set<P> closed;
 
-  std::deque<P> alive;
-  std::deque<P> dead;
-  alive.push_back(start);
+  F_SCORE.clear();
+  std::map<P, float> gScore;
+  std::map<P, P> cameFrom;
+
+  auto heuristic = [end](P p){
+    return glm::distance(glm::vec2(p), glm::vec2(end));
+  };
+
+  gScore[start] = 0;
+  F_SCORE[start] = heuristic(start);
+
+  // auto cmp = [&fScore](P left, P right) -> bool {
+  //   return fScore[left] < fScore[right];
+  // };
+
+  MyQueue<P, std::vector<P>, minimumFScore> open;
 
   auto valid = [&region](P p) -> bool {
     auto bounds = p.x >= 0 && p.y >= 0 && p.x < World::world_size && p.y < World::world_size;
     return bounds && TileProperties::of(region[p.x][p.y]).walkable;
   };
 
-  auto seen = [&alive, &dead](P p) -> bool {
-    return std::find(alive.begin(), alive.end(), p) != alive.end() ||
-          std::find(dead.begin(), dead.end(), p) != dead.end();
-  };
-
-  constexpr auto ws = World::world_size;
-
-  std::vector<std::vector<P>> backtrace(ws, std::vector(ws, P(-1, -1)));
-
-  while (not alive.empty()) {
-    auto curr = alive.front();
-    alive.pop_front();
+  while (not open.empty()) {
+    auto curr = open.top();
 
     if (curr == end) {
-      break;
+      std::vector<P> backtrace;
+      backtrace.push_back(end);
+      while (backtrace.back() != start) {
+        backtrace.push_back(cameFrom[backtrace.back()]);
+      }
+      std::reverse(backtrace.begin(), backtrace.end());
+      return backtrace;
     }
-    
+
+    open.pop();
+    closed.insert(curr);
+
     std::vector<P> neighbors = {curr + P(0, 1), curr + P(0, -1), curr + P(1, 0), curr + P(-1, 0)};
 
-    // get valid neighbors
-    for (auto& n : neighbors) {
-      if (valid(n) && not seen(n)) {
-        backtrace[n.x][n.y] = curr;
-        alive.push_back(n);
+    for (auto n : neighbors) {
+      if (valid(n)) {
+        if (closed.count(n) > 0) {
+          continue;
+        }
+
+        auto tentative_gScore = gScore[curr] + 1;
+        
+        if (not open.contains(n)) {
+          open.push(n);
+        } else if (tentative_gScore >= gScore[n]) {
+          continue;
+        }
+
+        cameFrom[n] = curr;
+        gScore[n] = tentative_gScore;
+        F_SCORE[n] = gScore[n] + heuristic(n);
       }
     }
-    dead.push_back(curr);
   }
 
-  if (backtrace[end.x][end.y] == P(-1, -1)) {
-    return std::vector<P>();
-  }
-
-  std::vector<P> trace;
-  auto curr = end;
-  while (curr != start) {
-    trace.push_back(curr);
-    if (not valid(curr)) {
-      std::puts("error: invalid point on path");
-      std::printf("[");
-      for (auto i : trace) {
-        std::printf(" (%d, %d)", i.x, i.y);
-      }
-      std::printf(" ]\n");
-      exit(0);
-    }
-    curr = backtrace[curr.x][curr.y];
-  }
-
-  std::reverse(trace.begin(), trace.end());
-
-  return trace;
+  return std::vector<P>();
 }
 
 void MoveSystem::updateEntity(float dt, ECS::Entity entity) {
