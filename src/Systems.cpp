@@ -130,12 +130,39 @@ void MoveSystem::updateEntity(float dt, ECS::Entity entity) {
     return grassCast(pos, target) && grassCast(pos + left, target) && grassCast(pos + right, target);
   };
 
-  auto seesTile = [&seesPoint](glm::ivec2 target) -> bool {
-    glm::vec2 t {target.x, target.y};
-    return seesPoint(t) && 
-           seesPoint(t + glm::vec2(0, 1)) &&
-           seesPoint(t + glm::vec2(1, 0)) &&
-           seesPoint(t + glm::vec2(1, 1));
+  auto valid = [](glm::ivec2 p) -> bool {
+    return 0 <= p.x && 0 <= p.y && p.x < World::world_size && p.y < World::world_size;
+  };
+
+  auto seesTile = [&seesPoint, &valid](glm::ivec2 target) -> bool {
+    glm::vec2 t;
+    glm::ivec2 curr;
+
+    curr = target;
+    t = {curr.x, curr.y};
+    if (valid(curr) && not seesPoint(t)) {
+      return false;
+    }
+
+    curr = target + glm::ivec2(0, 1);
+    t = {curr.x, curr.y};
+    if (valid(curr) && not seesPoint(t)) {
+      return false;
+    }
+
+    curr = target + glm::ivec2(1, 0);
+    t = {curr.x, curr.y};
+    if (valid(curr) && not seesPoint(t)) {
+      return false;
+    }
+
+    curr = target + glm::ivec2(0, 1);
+    t = {curr.x, curr.y};
+    if (valid(curr) && not seesPoint(t)) {
+      return false;
+    }
+    
+    return true;
   };
 
   // possibly more optimal path finding
