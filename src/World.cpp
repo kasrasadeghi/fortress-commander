@@ -89,6 +89,13 @@ void World::_drawEnemies(View& view) const {
         .position(Game::centerOfTile(target) - pathTileOffset)
         .size(pathTileSize)
         .color({0, 0, 1, 0.3});
+      
+      LineBatch()
+        .add()
+          .points(e.pos(), Game::centerOfTile(target))
+          .lineWidth(0.2)
+          .color({1, 0, 1, 1})
+        .draw(view);
     }
   }
   // clang-format on
