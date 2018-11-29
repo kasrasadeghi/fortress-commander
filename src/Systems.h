@@ -83,9 +83,10 @@ public:
     if (_selectionChanged) {
       // draw box around selection
       auto size_axes = _boxBottomRight - _boxTopLeft;
-      InstancedRectangle(_boxTopLeft.x, _boxTopLeft.y)
-          .size(size_axes.x, size_axes.y)
-          .color(0.8, 0.8, 1, 0.4)
+      RectangleBatch().add()
+          .position(_boxTopLeft)
+          .size(size_axes)
+          .color({0.8, 0.8, 1, 0.4})
           .draw(_gameState._view);
     }
     return ECS::System::update(dt);

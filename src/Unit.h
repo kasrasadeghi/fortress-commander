@@ -25,9 +25,10 @@ public:
   glm::ivec2 currentTarget() const;
 
   static void holo(View& view, glm::vec2 curr) {
-    InstancedCircle c(curr.x, curr.y);
-    c.size(tile_size, tile_size);
-    c.color(1, 0.5, 0.5, 0.5);
-    c.draw(view);
+    CircleBatch().add()
+      .position(curr)
+      .size({tile_size, tile_size})
+      .color({1, 0.5, 0.5, 0.5})
+      .draw(view);
   }
 };

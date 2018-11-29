@@ -48,10 +48,11 @@ public:
   Region& region() { return _region; }
 
   static void tileHolo(View& view, glm::ivec2 tile_index) {
-    InstancedRectangle r(tile_index.x * tile_size, tile_index.y * tile_size);
-    r.color(.7, .7, .7, .5);
-    r.size(tile_size, tile_size);
-    r.draw(view);
+    RectangleBatch().add()
+      .position({tile_index.x * tile_size, tile_index.y * tile_size})
+      .color({.7, .7, .7, .5})
+      .size({tile_size, tile_size})
+      .draw(view);
   }
 
   Tile flipCell(glm::ivec2 v) {
