@@ -40,6 +40,9 @@ Game::Game() : _window("Fortress Commander"), _gameState(_window), _world(World:
   _unitCommandSystem = new UnitCommandSystem(_gameState);
   ECS::Manager::addSystem(ECS::System::Ptr(_unitCommandSystem));
 
+  _battleSystem = new BattleSystem(_gameState);
+  ECS::Manager::addSystem(ECS::System::Ptr(_battleSystem));
+
   ECS::EventManager::connect<KeyDownEvent>(this);
   ECS::EventManager::connect<MouseDownEvent>(this);
   ECS::EventManager::connect<MouseMoveEvent>(this);

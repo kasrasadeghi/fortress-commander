@@ -1,12 +1,13 @@
 #include "Enemy.h"
 #include "Game.h"
 
-#include "Components.h"
 #include "World.h"
 
 Enemy::Enemy(glm::vec2 pos, World& world) : _target(pos), _id(ECS::Manager::createEntity()) {
   ECS::Manager::addComponent<TransformComponent>(_id, TransformComponent(pos, 0.f));
   ECS::Manager::addComponent<MotionComponent>(_id, MotionComponent(world));
+  ECS::Manager::addComponent<HealthComponent>(_id, HealthComponent(health));
+  ECS::Manager::addComponent<AttackComponent>(_id, AttackComponent(strength));
 
   ECS::Manager::registerEntity(_id);
 }

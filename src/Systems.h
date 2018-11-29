@@ -166,3 +166,22 @@ public:
     }
   }
 };
+
+/**
+ * @brief Facilitates battle between Units and Enemies
+ *
+ */
+class BattleSystem : public ECS::System { 
+public:
+  BattleSystem(GameState& gameState) : ECS::System(gameState) {
+    ECS::ComponentTypeSet requiredComponents;
+    requiredComponents.insert(TransformComponent::type);
+    requiredComponents.insert(HealthComponent::type);
+    requiredComponents.insert(AttackComponent::type);
+
+    setRequiredComponents(std::move(requiredComponents));
+  }
+
+  void updateEntity(float dt, ECS::Entity entity) override {
+  }
+};

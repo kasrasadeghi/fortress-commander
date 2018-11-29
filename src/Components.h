@@ -53,3 +53,23 @@ struct CommandableComponent : public ECS::Component {
   CommandableComponent() : positionHandler([](glm::vec2) {}) {}
   CommandableComponent(positionHandlerType positionHandler) : positionHandler(positionHandler) {}
 };
+
+struct HealthComponent : public ECS::Component {
+  using HealthValue = short;
+  HealthValue health;
+
+  static constexpr ECS::ComponentTypeId type = 5;
+
+  HealthComponent() : health(0) {}
+  HealthComponent(HealthValue health) : health(health) {}
+};
+
+struct AttackComponent : public ECS::Component {
+  using StrengthValue = short;
+  StrengthValue strength;
+
+  static constexpr ECS::ComponentTypeId type = 6;
+
+  AttackComponent() : strength(0) {}
+  AttackComponent(StrengthValue strength) : strength(strength) {}
+};
