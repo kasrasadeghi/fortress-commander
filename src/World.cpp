@@ -116,6 +116,8 @@ void World::_drawStructures(View& view) const {
       .size({tile_size, tile_size})
       .position(structure.pos() * tile_size - offset);
   }
+
+  rb.draw(view);
 }
 
 void World::addUnit(glm::vec2 pos) {

@@ -84,9 +84,10 @@
 
 # structures and resources
 - build structures (MouseDown)
-- draw structures
 - structure holo
+- draw structures
 >- todo
+- make structures not build on other structures
 - special base structure
 - check if structure construction is in bounds
 - color illegal area for construction
