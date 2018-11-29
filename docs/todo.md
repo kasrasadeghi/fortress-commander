@@ -1,16 +1,26 @@
-# misc
-## done
+# project meta
+- clang-format
+>- todo
+
+# view and basic rendering
 - render grid
 - view grid
 - keyboard move view
 - mouse move view
 - sleep for framerate limiting
-- add a world that can be drawn
-- clang-format
 - start the camera at one of the 4 corners (chose top left)
 - lock the camera to view
-- it crashes when detecting mouse position
+- bug: it crashes when detecting mouse position
+  - mouse position was out of the world sometimes
 - clean up lock camera code
+- add framerate
+- start camera in middle of world
+>- todo
+- view.zoom for scroll wheel?
+  - https://www.youtube.com/watch?v=FSoFJAmh96g
+
+# world
+- add a world that can be drawn
 - click the map to change the tile
   - click and drag
   - click scroll the side
@@ -18,12 +28,16 @@
 - clean up tile coloring
 - it just crashes sometimes??
   - the cell flips were out of bounds
-- standardize semi-java case naming conventions (only under for private);
+>- todo
+- extract region
+- extract tile ?
+  - put static holo in there
+
+# units
 - draw a single unit
 - add a unit in UNIT mode
 - draw multiple units stored in vector
 - properly utilize tile_size so we can change it (needed for fonts)
-- add framerate
 - extract world
 - use world_size
   - replace _region.size() with world_size constexpr in World
@@ -36,24 +50,38 @@
   - so we don't have cyclic dependencies and post-scaling
   - check radius of unit
 - extract holos
-- init #selection
-- extract region
-- make enemy spawn not bound to framerate, but a timer
-  - waves ?
 
->- TODO
-- shift select, control select #selection
-- extract tile ?
-  - put static holo in there
+# enemies
+- make enemy spawn not bound to framerate, but a timer
+  - waves
+>- todo
+
+# selection, commands
+- select a unit
+- move command
+- attack command
+- attack move command
+>- todo
+- shift select, control select
+
+# map gen
+- load a map from a file
+- make a map
+
+# battle system
+- ranged attack
+- health
+>- todo
+- melee attack
+
+# structures and resources
+>- todo
+- special base structure
 - build structures
 - check if unit construction is in bounds
 - check if structure construction is in bounds
 - color illegal area for construction
 - multiblock structures?
-- view.zoom for scroll wheel?
-  - https://www.youtube.com/watch?v=FSoFJAmh96g
-- load a map from a file
-- make a map
 
 # pathfinding
 - floodfill
@@ -71,11 +99,9 @@
 - group a command unit's pathfinding if they're adj
 - A*
 - don't collide with walls
-- all up to unit radius in water ?
 - constrained Delaunay triangulation ?
 
 # glfw-opengl
->- done
 - cache shaders
 - rectangle shape
 - render tiles
@@ -96,10 +122,13 @@
 - terrain holo
 >- feature parity!
 - rotation
+>- todo
 
 # advanced graphics
 - text rendering
+- line rendering
 >- todo
+- sprite rendering
 - text renderer takes in a view and draws to the view ?
 
 # ergonomics and refactoring
