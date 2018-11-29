@@ -77,6 +77,7 @@ public:
 };
 
 class BaseBatch {
+protected:
   bool _vaoDirty = true;
   VertexArray _VAO;
   VertexBuffer<glm::vec2> _vertexVBO, _positionVBO;
@@ -202,5 +203,60 @@ public:
 
   void draw(View& view) override {
     _drawVerticesInstanced(view, _circleVertices, GL_TRIANGLE_FAN);
+  }
+};
+
+class LineBatch : public RectangleBatch {
+  constexpr static float _defaultInstanceWidth = 0.1f;
+  float _instanceWidth = _defaultInstanceWidth;  
+  void _applyWidth() {
+    size({instances.back().size.x, _instanceWidth});
+  }
+
+public:
+  LineBatch() {}
+
+  LineBatch& add(Instance i) {
+    _vaoDirty = true;
+    instances.push_back(i);
+    _instanceWidth = _defaultInstanceWidth;
+    return *this;
+  }
+
+  LineBatch& add() {
+    return add(Instance());
+  }
+
+  LineBatch& position(const glm::vec2& pos) {
+    _vaoDirty = true;
+    instances.back().position = pos;
+    return *this;
+  }
+
+  LineBatch& color(const glm::vec4& col) {
+    _vaoDirty = true;
+    instances.back().color = col;
+    return *this;
+  }
+
+  LineBatch& rotation(const glm::float32& rot) {
+    _vaoDirty = true;
+    instances.back().rotation = rot;
+    return *this;
+  }
+
+  LineBatch& points(const glm::vec2& a, const glm::vec2& b) {
+    position((a + b) / 2.f);
+    size({glm::distance(a, b), 1.f});
+    glm::vec2 dir = glm::normalize(b - a);
+    rotation(-atan2(dir.y, dir.x));
+    _applyWidth();
+    return *this;
+  }
+
+  LineBatch& lineWidth(float width) {
+    _instanceWidth = width;
+    _applyWidth();
+    return *this;
   }
 };
