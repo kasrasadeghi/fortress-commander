@@ -19,6 +19,8 @@ std::vector<glm::ivec2> MoveSystem::findPath(Region& region, glm::ivec2 start, g
   using P = glm::ivec2;
 
   std::deque<P> alive;
+  std::unordered_set<P> aliveSet;
+  
   std::unordered_set<P> dead;
   alive.push_back(start);
 
@@ -27,8 +29,8 @@ std::vector<glm::ivec2> MoveSystem::findPath(Region& region, glm::ivec2 start, g
     return bounds && TileProperties::of(region[p.x][p.y]).walkable;
   };
 
-  auto seen = [&alive, &dead](P p) -> bool {
-    return std::find(alive.begin(), alive.end(), p) != alive.end() || dead.count(p) > 0;
+  auto seen = [&](P p) -> bool {
+    return aliveSet.count(p) > 0 || dead.count(p) > 0;
   };
 
   constexpr auto ws = World::world_size;
@@ -38,18 +40,20 @@ std::vector<glm::ivec2> MoveSystem::findPath(Region& region, glm::ivec2 start, g
   while (not alive.empty()) {
     auto curr = alive.front();
     alive.pop_front();
+    aliveSet.erase(curr);
 
     if (curr == end) {
       break;
     }
     
-    std::vector<P> neighbors = {curr + P(0, 1), curr + P(0, -1), curr + P(1, 0), curr + P(-1, 0)};
+    const std::vector<P> neighbors = {curr + P(0, 1), curr + P(0, -1), curr + P(1, 0), curr + P(-1, 0)};
 
     // get valid neighbors
     for (auto& n : neighbors) {
       if (valid(n) && not seen(n)) {
         backtrace[n.x][n.y] = curr;
         alive.push_back(n);
+        aliveSet.insert(n);
       }
     }
     dead.insert(curr);
