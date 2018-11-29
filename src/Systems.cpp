@@ -43,7 +43,16 @@ std::vector<glm::ivec2> MoveSystem::findPath(Region& region, glm::ivec2 start, g
     aliveSet.erase(curr);
 
     if (curr == end) {
-      break;
+      std::vector<P> trace;
+      const auto curr = end;
+      while (curr != start) {
+        trace.push_back(curr);
+        curr = backtrace[curr.x][curr.y];
+      }
+
+      std::reverse(trace.begin(), trace.end());
+
+      return trace;
     }
     
     const std::vector<P> neighbors = {curr + P(0, 1), curr + P(0, -1), curr + P(1, 0), curr + P(-1, 0)};
@@ -59,29 +68,7 @@ std::vector<glm::ivec2> MoveSystem::findPath(Region& region, glm::ivec2 start, g
     dead.insert(curr);
   }
 
-  if (backtrace[end.x][end.y] == P(-1, -1)) {
-    return std::vector<P>();
-  }
-
-  std::vector<P> trace;
-  auto curr = end;
-  while (curr != start) {
-    trace.push_back(curr);
-    if (not valid(curr)) {
-      std::puts("error: invalid point on path");
-      std::printf("[");
-      for (auto i : trace) {
-        std::printf(" (%d, %d)", i.x, i.y);
-      }
-      std::printf(" ]\n");
-      exit(0);
-    }
-    curr = backtrace[curr.x][curr.y];
-  }
-
-  std::reverse(trace.begin(), trace.end());
-
-  return trace;
+  return std::vector<P>();
 }
 
 void MoveSystem::updateEntity(float dt, ECS::Entity entity) {

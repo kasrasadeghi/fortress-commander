@@ -38,10 +38,10 @@
 - extract holos
 - init #selection
 - extract region
-
->- TODO
 - make enemy spawn not bound to framerate, but a timer
   - waves ?
+
+>- TODO
 - shift select, control select #selection
 - extract tile ?
   - put static holo in there
@@ -97,24 +97,24 @@
 >- feature parity!
 - rotation
 
-## advanced graphics
+# advanced graphics
 - text rendering
 >- todo
 - text renderer takes in a view and draws to the view ?
 
-## ergonomics and refactoring
+# ergonomics and refactoring
 - terrain paint
 - shape renaming
 - single position constructor
->- todo
 - alpha value color
-- base shape instance ?
+- base shape instance
 - vertex array and vertex buffer #refactoring
-
-## further optimization
 >- todo
-- geometry shaders #graphics
-- instanced colors too ? #graphics
-- instanced colors by sectioning ? #graphics
-- sending more instances at once ? #graphics
-- precomputation of noninstanced vertex rectangles ? #graphics
+
+# graphics optimization
+>- todo
+- geometry shaders 
+- instanced colors too ?
+- instanced colors by sectioning ? 
+- sending more instances at once ? 
+- precomputation of noninstanced vertex rectangles ? 
