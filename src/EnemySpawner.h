@@ -7,10 +7,22 @@
 
 #include <random>
 
+namespace std {
+  template <>
+  struct hash<glm::ivec2> {
+    size_t operator()(const glm::ivec2& k) const {
+      return std::hash<int>()(k.x) ^ std::hash<int>()(k.y);
+    }
+  };
+} // namespace std
+
 class EnemySpawner {
   constexpr static float world_bounds = World::world_size * tile_size;
   constexpr static float spawn_interval = 5; // seconds  
-  constexpr static float spawn_count = 1;
+  constexpr static int spawn_group_count = 1; // number of groups
+  constexpr static int spawn_group_size = 3; // max enemies per group
+  constexpr static int spawn_tiles_from_edge = 4; // offset of group from edge of map
+  constexpr static float spawn_group_radius = 3;
 
   std::mt19937 _mt;
   World& _world;
@@ -18,44 +30,52 @@ class EnemySpawner {
 
   std::uniform_int_distribution<int> _sideDist{0, 3};
   std::uniform_real_distribution<float> _fdist{tile_size / 2.f, world_bounds - tile_size / 2.f};
+  std::uniform_real_distribution<float> _angleDist{0, glm::pi<float>() * 2};
 
   float _pos() { return _fdist(_mt); }
   int _side() { return _sideDist(_mt); }
+  glm::vec2 _spawnOffset() { 
+    float dir = _angleDist(_mt);
+    float len = std::uniform_real_distribution<float>(0, spawn_group_radius)(_mt);
+    return glm::vec2(cos(dir) * len, sin(dir) * len); 
+  }
+
 public:                       // seed with random device
   EnemySpawner(World& world): _mt((std::random_device{})()), _world(world) {}
 
   void update(float dt) {
     timer -= dt;
     if (timer <= 0) {
-      for (size_t i = 0; i < spawn_count; ++i) {
-        spawn();
-      }
+      spawn();
       timer = spawn_interval;
     }
   }
 
   void spawn() {
-    int side = _side();
+    for (int i = 0; i < spawn_group_count; ++i) {
+      int side = _side();
     
-    glm::vec2 pos;
-    if (side == 0) {
-      pos = {tile_size / 2.f, _pos()};
-    }
-    if (side == 1) {
-      pos = {_pos(), tile_size / 2.f};
-    }
-    if (side == 2) {
-      pos = {world_bounds - tile_size / 2.f, _pos()};
-    }
-    if (side == 3) {
-      pos = {_pos(), world_bounds - tile_size / 2.f};
-    }
+      glm::vec2 pos;
+      if (side == 0) {
+        pos = {tile_size / 2.f + spawn_tiles_from_edge, _pos()};
+      }
+      if (side == 1) {
+        pos = {_pos(), tile_size / 2.f + spawn_tiles_from_edge};
+      }
+      if (side == 2) {
+        pos = {world_bounds - (tile_size / 2.f + spawn_tiles_from_edge), _pos()};
+      }
+      if (side == 3) {
+        pos = {_pos(), world_bounds - (tile_size / 2.f + spawn_tiles_from_edge)};
+      }
 
-    auto cell = Game::mapCoordsToTile(pos);
-    if (cell.x == 100 || cell.y == 100) {
-      std::printf("(%f, %f) -> (%d, %d)\n", pos.x, pos.y, cell.x, cell.y);
+      for (int j = 0; j < spawn_group_size; ++j) {
+        auto offsetPos = pos + _spawnOffset();
+        if (offsetPos.x < 0 || offsetPos.y < 0 || offsetPos.x >= world_bounds || offsetPos.y >= world_bounds) {
+          continue;
+        }
+        _world.addEnemy(offsetPos);
+      }
     }
-
-    _world.addEnemy(pos);
-  }
+ }
 };
