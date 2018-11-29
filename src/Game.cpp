@@ -30,6 +30,8 @@ Game::Game() : _window("Fortress Commander"), _gameState(_window), _world(World:
   ECS::Manager::createComponentStore<MotionComponent>();
   ECS::Manager::createComponentStore<SelectableComponent>();
   ECS::Manager::createComponentStore<CommandableComponent>();
+  ECS::Manager::createComponentStore<HealthComponent>();
+  ECS::Manager::createComponentStore<AttackComponent>();
 
   _moveSystem = new MoveSystem(_gameState);
   ECS::Manager::addSystem(ECS::System::Ptr(_moveSystem));
