@@ -10,12 +10,11 @@
 class World;
 
 class Unit {
-protected:
   glm::vec2 _target;
 
+public:
   const ECS::Entity _id;
 
-public:
   constexpr static float unit_size = 0.5f * tile_size;
   constexpr static float unit_speed = 2.f;
   constexpr static HealthComponent::HealthValue health = 150;

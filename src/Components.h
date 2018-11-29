@@ -68,6 +68,8 @@ struct AttackComponent : public ECS::Component {
   using StrengthValue = short;
   StrengthValue strength;
 
+  ECS::Entity target;
+
   static constexpr ECS::ComponentTypeId type = 6;
 
   AttackComponent() : strength(0) {}

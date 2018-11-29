@@ -7,10 +7,11 @@
 #include <memory>
 #include <set>
 
-#include "../GameState.h"
 #include "Component.h"
 #include "Entity.h"
 #include "Event.h"
+
+class GameState;
 
 namespace ECS {
 class Manager;

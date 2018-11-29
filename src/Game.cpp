@@ -19,7 +19,7 @@
 #include <stdio.h>
 #include <vector>
 
-Game::Game() : _window("Fortress Commander"), _gameState(_window), _world(World::world_size) {
+Game::Game() : _window("Fortress Commander"), _gameState(_window, _world._units, _world._enemies), _world(World::world_size) {
   _window.setKeyCallback([this](auto&&... args) { keyCallback(args...); });
   _window.setMouseCallback([this](auto&&... args) { mouseCallback(args...); });
   _window.setCursorCallback([this](auto&&... args) { cursorCallback(args...); });
