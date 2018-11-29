@@ -18,9 +18,9 @@
  * @detail Supports simple velocity and also path planning.
  */
 class MoveSystem : public ECS::System {
-  std::vector<glm::ivec2> findPath(Region& region, glm::ivec2 start, glm::ivec2 end);
 
 public:
+  static std::vector<glm::ivec2> findPath(Region& region, glm::ivec2 start, glm::ivec2 end);
   MoveSystem(GameState& gameState) : ECS::System(gameState) {
     ECS::ComponentTypeSet requiredComponents;
     requiredComponents.insert(TransformComponent::type);

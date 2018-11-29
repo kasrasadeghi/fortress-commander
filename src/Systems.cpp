@@ -2,12 +2,24 @@
 #include "Game.h"
 #include "Tile.h"
 
+#include <unordered_set>
+#include <functional>
+
+namespace std {
+template <>
+struct hash<glm::ivec2> {
+  size_t operator()(const glm::ivec2& k) const {
+    return std::hash<int>()(k.x) ^ std::hash<int>()(k.y);
+  }
+};
+} // namespace std
+
 /// returns an empty path on failure
 std::vector<glm::ivec2> MoveSystem::findPath(Region& region, glm::ivec2 start, glm::ivec2 end) {
   using P = glm::ivec2;
 
   std::deque<P> alive;
-  std::deque<P> dead;
+  std::unordered_set<P> dead;
   alive.push_back(start);
 
   auto valid = [&region](P p) -> bool {
@@ -16,8 +28,7 @@ std::vector<glm::ivec2> MoveSystem::findPath(Region& region, glm::ivec2 start, g
   };
 
   auto seen = [&alive, &dead](P p) -> bool {
-    return std::find(alive.begin(), alive.end(), p) != alive.end() ||
-          std::find(dead.begin(), dead.end(), p) != dead.end();
+    return std::find(alive.begin(), alive.end(), p) != alive.end() || dead.count(p) > 0;
   };
 
   constexpr auto ws = World::world_size;
@@ -41,7 +52,7 @@ std::vector<glm::ivec2> MoveSystem::findPath(Region& region, glm::ivec2 start, g
         alive.push_back(n);
       }
     }
-    dead.push_back(curr);
+    dead.insert(curr);
   }
 
   if (backtrace[end.x][end.y] == P(-1, -1)) {
