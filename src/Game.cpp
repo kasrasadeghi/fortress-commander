@@ -42,6 +42,9 @@ Game::Game() : _window("Fortress Commander"), _gameState(_window, _world._units,
   _unitCommandSystem = new UnitCommandSystem(_gameState);
   ECS::Manager::addSystem(ECS::System::Ptr(_unitCommandSystem));
 
+  _unitCollisionSystem = new UnitCollisionSystem(_gameState);
+  ECS::Manager::addSystem(ECS::System::Ptr(_unitCollisionSystem));
+
   _battleSystem = new BattleSystem(_gameState);
   ECS::Manager::addSystem(ECS::System::Ptr(_battleSystem));
 

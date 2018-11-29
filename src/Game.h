@@ -21,6 +21,7 @@ class Game : public ECS::EventSubscriber<KeyDownEvent>,
 
   UnitSelectSystem* _unitSelectSystem;
   UnitCommandSystem* _unitCommandSystem;
+  UnitCollisionSystem* _unitCollisionSystem;
   MoveSystem* _moveSystem;
   BattleSystem* _battleSystem;
 

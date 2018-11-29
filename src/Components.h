@@ -2,6 +2,7 @@
 
 #include "ECS/Component.h"
 #include "Graphics.h"
+#include "Config.h"
 
 #include <functional>
 
@@ -15,6 +16,8 @@ struct TransformComponent : public ECS::Component {
 
   TransformComponent() : pos(0.f, 0.f), rot(0.f) {}
   TransformComponent(glm::vec2 pos, float rot) : pos(pos), rot(rot) {}
+
+  void translate(glm::vec2 displacement); 
 };
 
 struct SelectableComponent : public ECS::Component {
@@ -55,7 +58,6 @@ struct CommandableComponent : public ECS::Component {
 };
 
 struct HealthComponent : public ECS::Component {
-  using HealthValue = short;
   HealthValue health;
 
   static constexpr ECS::ComponentTypeId type = 5;
@@ -65,7 +67,6 @@ struct HealthComponent : public ECS::Component {
 };
 
 struct AttackComponent : public ECS::Component {
-  using StrengthValue = short;
   StrengthValue strength;
 
   ECS::Entity target;

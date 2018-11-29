@@ -217,3 +217,30 @@ public:
   void updateEntity(float dt, ECS::Entity entity) override {
   }
 };
+
+class UnitCollisionSystem : public ECS::System {
+public:
+  UnitCollisionSystem(GameState& gameState) : ECS::System(gameState) {
+    ECS::ComponentTypeSet requiredComponents;
+    requiredComponents.insert(TransformComponent::type);
+
+    setRequiredComponents(std::move(requiredComponents));
+  }
+
+  void updateEntity(float dt, ECS::Entity entity) override {
+    const glm::vec2& pos = ECS::Manager::getComponent<TransformComponent>(entity).pos;
+    for (ECS::Entity other : entities()) {
+      const glm::vec2& otherPos = ECS::Manager::getComponent<TransformComponent>(other).pos;
+      const float dist = glm::distance(pos, otherPos);
+      if (dist == 0)
+        continue;
+      if (dist < Unit::unit_size * 2) {
+        float overlapDistance = Unit::unit_size * 2 - dist;
+        glm::vec2 halfOverlap = glm::normalize(otherPos - pos) * overlapDistance / 2.f;
+        
+        ECS::Manager::getComponent<TransformComponent>(entity).translate(-halfOverlap);
+        ECS::Manager::getComponent<TransformComponent>(other).translate(halfOverlap);
+      }
+    }
+  }
+};
