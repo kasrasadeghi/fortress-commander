@@ -167,6 +167,15 @@ class UnitCommandSystem : public ECS::System, ECS::EventSubscriber<MouseDownEven
     return true;
   }
 
+  void _invokePositionHandler(float x, float y) {
+    for (ECS::Entity entity : entities()) {
+      bool selected = ECS::Manager::getComponent<SelectableComponent>(entity).selected;
+      if (selected) {
+        ECS::Manager::getComponent<CommandableComponent>(entity).positionHandler({x, y});
+      }
+    }
+  }
+
 public:
   UnitCommandSystem(GameState& gameState) : ECS::System(gameState), _enemies(gameState.enemies) {
     ECS::ComponentTypeSet requiredComponents;
@@ -186,13 +195,8 @@ public:
       if (e.button == GLFW_MOUSE_BUTTON_2) {
 	bool foundEnemy = _attackClickedEnemy({e.x, e.y});
 
-        if (not foundEnemy) { // command selected units to move
-          for (ECS::Entity entity : entities()) {
-            bool selected = ECS::Manager::getComponent<SelectableComponent>(entity).selected;
-            if (selected) {
-              ECS::Manager::getComponent<CommandableComponent>(entity).positionHandler({e.x, e.y});
-	    }
-          }
+        if (not foundEnemy) { // invoke the position handler on the selected units
+          _invokePositionHandler(e.x, e.y);
 	}
       }
     }
@@ -204,6 +208,27 @@ public:
  *
  */
 class BattleSystem : public ECS::System { 
+  void _performAttack(const ECS::Entity entity, const ECS::Entity target) {
+    if (entity == ECS::InvalidEntityId || target == ECS::InvalidEntityId) {
+      return;
+    }
+
+    auto& targetHealth = ECS::Manager::getComponent<HealthComponent>(target).health;
+    auto entityStrength = ECS::Manager::getComponent<AttackComponent>(entity).strength;
+
+    // Augment the target's health according to the attack strength
+    targetHealth -= entityStrength;
+
+    // Reset the attack timer so we will attack again after attackCooldown
+    ECS::Manager::getComponent<AttackComponent>(entity).attackTimer = 0.f;
+  }
+
+  void _die(const ECS::Entity entity) {
+    std::cout << "Entity " << entity << " has died." << std::endl;
+    
+    // TODO: Implement death
+  }
+
 public:
   BattleSystem(GameState& gameState) : ECS::System(gameState) {
     ECS::ComponentTypeSet requiredComponents;
@@ -215,6 +240,35 @@ public:
   }
 
   void updateEntity(float dt, ECS::Entity entity) override {
+    if (ECS::Manager::getComponent<HealthComponent>(entity).health <= 0) {
+      _die(entity);
+    }
+
+   auto target = ECS::Manager::getComponent<AttackComponent>(entity).target;
+
+    if (target == ECS::InvalidEntityId) {
+      return;
+    }
+ 
+    auto pos = ECS::Manager::getComponent<TransformComponent>(entity).pos;
+    auto targetPos = ECS::Manager::getComponent<TransformComponent>(target).pos;
+
+    auto dist = glm::distance(pos, targetPos);
+
+    auto& attackTimer = ECS::Manager::getComponent<AttackComponent>(entity).attackTimer;
+    auto& entityBattling = ECS::Manager::getComponent<AttackComponent>(entity).battling;
+
+    entityBattling = dist < 5.f; // TODO: don't hardcode the RoI, perform raycast?
+    
+    if (entityBattling) {
+      attackTimer += dt;
+
+      if (attackTimer > ECS::Manager::getComponent<AttackComponent>(entity).attackCooldown) {
+        _performAttack(entity, target);
+      }
+    } else { // Reset the timer so we attack immediately on engaging
+      attackTimer = ECS::Manager::getComponent<AttackComponent>(entity).attackCooldown; 
+    }
   }
 };
 

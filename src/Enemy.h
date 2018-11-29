@@ -20,6 +20,7 @@ public:
   constexpr static float unit_speed = 2.f;
   constexpr static HealthValue health = 100;
   constexpr static StrengthValue strength = 25;
+  constexpr static float attackCooldown = 1.f;
 
   Enemy(glm::vec2 pos, World&);
 

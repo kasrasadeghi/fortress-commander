@@ -70,9 +70,15 @@ struct AttackComponent : public ECS::Component {
   StrengthValue strength;
 
   ECS::Entity target;
+  bool battling;
+
+  float attackTimer;
+  float attackCooldown;
 
   static constexpr ECS::ComponentTypeId type = 6;
 
-  AttackComponent() : strength(0) {}
-  AttackComponent(StrengthValue strength) : strength(strength) {}
+  AttackComponent() : AttackComponent(0, 1.f) {}
+  AttackComponent(StrengthValue strength, float attackCooldown) : strength(strength),
+	target(ECS::InvalidEntityId), battling(false),
+	attackTimer(0.f), attackCooldown(attackCooldown) {}
 };
