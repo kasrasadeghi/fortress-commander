@@ -19,6 +19,12 @@
 - view.zoom for scroll wheel?
   - https://www.youtube.com/watch?v=FSoFJAmh96g
 
+# ecs and event manager
+- create
+- static
+>- todo
+- entity delete
+
 # world
 - add a world that can be drawn
 - click the map to change the tile
@@ -50,6 +56,7 @@
   - so we don't have cyclic dependencies and post-scaling
   - check radius of unit
 - extract holos
+>- todo
 
 # enemies
 - make enemy spawn not bound to framerate, but a timer
