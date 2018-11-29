@@ -16,7 +16,6 @@ public:
   void draw(View& view) const {
     const glm::vec2 offset(-tile_size * 0.5, -tile_size * 0.5);
     RectangleBatch rects;
-    rects.size({tile_size, tile_size});
 
     for (uint i = 0; i < _data.size(); ++i) {
       for (uint j = 0; j < _data[i].size(); ++j) {
@@ -31,6 +30,7 @@ public:
 
         rects.add()
           .color(TileProperties::of(_data[i][j]).color)
+          .size({tile_size, tile_size})
           .position(glm::vec2(i * tile_size, j * tile_size) - offset);
       }
     }

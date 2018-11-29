@@ -3,10 +3,10 @@ layout (location = 0) in vec2 vertex;
 layout (location = 1) in vec2 currpos;
 layout (location = 2) in vec4 color;
 layout (location = 3) in float rotation;
+layout (location = 4) in vec2 size;
 
 varying vec4 instance_color;
 
-uniform vec2 size;
 uniform mat4 projection;
 
 void main()

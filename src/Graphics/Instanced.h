@@ -82,12 +82,14 @@ class BaseBatch {
   VertexBuffer<glm::vec2> _vertexVBO, _positionVBO;
   VertexBuffer<glm::vec4> _colorVBO;
   VertexBuffer<glm::float32> _rotationVBO;
+  VertexBuffer<glm::vec2> _sizeVBO;
 
 public:
   struct Instance {
     glm::vec2 position;
     glm::vec4 color;
     glm::float32 rotation;
+    glm::vec2 size;
   };
 
   std::vector<Instance> instances;
@@ -122,7 +124,7 @@ public:
 
   BaseBatch& size(const glm::vec2& size) {
     _vaoDirty = true;
-    _size = size;
+    instances.back().size = size;
     return *this;
   }
 
@@ -130,13 +132,13 @@ public:
 
 protected:
   const Shader& _shader = ResourceManager::getShader(SHADER_INDEX::INSTANCED_ARRAY);
-  glm::vec2 _size{1.f, 1.f};
 
   BaseBatch() {
     _VAO.addAttrib(_vertexVBO);
     _VAO.addAttribInstanced(_positionVBO);
     _VAO.addAttribInstanced(_colorVBO);
     _VAO.addAttribInstanced(_rotationVBO);
+    _VAO.addAttribInstanced(_sizeVBO);
   }
 
   void _updateVAO(const std::vector<glm::vec2>& vertices) {
@@ -145,15 +147,18 @@ protected:
     std::vector<glm::vec2> positions;
     std::vector<glm::vec4> colors;
     std::vector<glm::float32> rotations;
+    std::vector<glm::vec2> sizes;
     for (const Instance& i : instances) {
       positions.push_back(i.position);
       colors.push_back(i.color);
       rotations.push_back(i.rotation);
+      sizes.push_back(i.size);
     }
     _vertexVBO.setVertices(vertices);
     _positionVBO.setVertices(positions);
     _colorVBO.setVertices(colors);
     _rotationVBO.setVertices(rotations);
+    _sizeVBO.setVertices(sizes);
   }
 
   void _drawVerticesInstanced(View& view, const std::vector<glm::vec2>& vertices, GLenum mode) {
@@ -161,7 +166,6 @@ protected:
 
     _shader.use();
     _shader.setMat4("projection", view.proj());
-    _shader.setVec2("size", _size); // TODO: instanced size
     glBindVertexArray(_VAO.id);
     glDrawArraysInstanced(mode, 0, _vertexVBO.count(), instances.size());
     glBindVertexArray(0);
