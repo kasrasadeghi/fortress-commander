@@ -97,4 +97,5 @@ void World::addUnit(glm::vec2 pos) {
 
 void World::addEnemy(glm::vec2 pos) {
   _enemies.emplace_back(pos, *this);
+  _enemies.back().pathTo({world_size / 2.f, world_size / 2.f});
 }

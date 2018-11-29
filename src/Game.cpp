@@ -2,6 +2,8 @@
 #include "Config.h"
 #include "Graphics.h"
 
+#include "EnemySpawner.h"
+
 #include "ECS/Manager.h"
 #include "Events.h"
 #include "Systems.h"
@@ -53,6 +55,7 @@ std::string str(T obj) {
 void Game::loop() {
   float last_time = glfwGetTime();
   TextRenderer t(_window.defaultView());
+  EnemySpawner spawner(_world);
 
   while (_window.isOpen()) {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -76,6 +79,7 @@ void Game::loop() {
 
     ECS::EventManager::update();
     ECS::Manager::update(dt);
+    spawner.spawn();
 
     _window.swapBuffers();
     glfwPollEvents();

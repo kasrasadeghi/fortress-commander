@@ -40,6 +40,8 @@
 - extract region
 
 >- TODO
+- make enemy spawn not bound to framerate, but a timer
+  - waves ?
 - shift select, control select #selection
 - extract tile ?
   - put static holo in there
