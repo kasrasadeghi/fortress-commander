@@ -85,19 +85,6 @@ void MoveSystem::updateEntity(float dt, ECS::Entity entity) {
     motion.currentTarget = motion.path.begin();
   }
 
-  auto updatePosition = [dt, &pos, &motion](glm::vec2 target) {
-    if (glm::distance(target, pos) > dt * motion.movementSpeed) {
-      auto dir = glm::normalize(target - pos);
-      pos += dir * dt * motion.movementSpeed;
-    } else {
-      pos = target;
-      if (target == motion.target) {
-        motion.hasTarget = false;
-        motion.path.clear();
-      }
-    }
-  };
-
   // like a raytrace for grass
   auto grassCast = [&region](glm::vec2 source, glm::vec2 target) -> bool {
     auto path = target - source;
@@ -158,21 +145,6 @@ void MoveSystem::updateEntity(float dt, ECS::Entity entity) {
     
     return true;
   };
-
-  // possibly more optimal path finding
-  // auto seesTile = [&seesPoint](glm::ivec2 target) -> bool {
-  //   glm::vec2 t {target.x + 0.5, target.y + 0.5};
-  //   auto dir = glm::normalize(target - pos);
-  //   auto y = dir.y;
-  //   auto x = dir.x;
-
-  //   // get the two points on the perpendicular diameter
-  //   auto left = glm::vec2(-y, x) * Unit::unit_size;
-  //   auto right = glm::vec2(y, -x) * Unit::unit_size;
-
-  //   return grassCast(pos + left, target + left) && grassCast(pos + right, target + right);
-  // };
-
   // TODO: investigate only iterating once target location is reached
 
   // iterate current target until it matches the last one possible to be seen.
@@ -185,6 +157,19 @@ void MoveSystem::updateEntity(float dt, ECS::Entity entity) {
     }
   }
   auto target = Game::centerOfTile(*motion.currentTarget);
+
+  auto updatePosition = [dt, &pos, &motion](glm::vec2 target) {
+    if (glm::distance(target, pos) > dt * motion.movementSpeed) {
+      auto dir = glm::normalize(target - pos);
+      pos += dir * dt * motion.movementSpeed;
+    } else {
+      pos = target;
+      if (target == motion.target) {
+        motion.hasTarget = false;
+        motion.path.clear();
+      }
+    }
+  };
   
   updatePosition(target);
 }
