@@ -105,6 +105,8 @@
 - bug: doesn't actually go to the tile farthest along the path that you can see, 
   - it goes to the tile farthest along the path that is contiguously visible
 >- todo
+- pathfind shorter distances for the zombies ?
+- pathfinding update queue and asynchronous approach ?
 - update cached path on world update
 - group a command unit's pathfinding if they're adj
 - A*
