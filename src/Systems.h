@@ -284,6 +284,11 @@ public:
   void updateEntity(float dt, ECS::Entity entity) override {
     const glm::vec2& pos = ECS::Manager::getComponent<TransformComponent>(entity).pos;
     for (ECS::Entity other : entities()) {
+      if (not ECS::Manager::getComponent<TransformComponent>(entity).movable ||
+	  not ECS::Manager::getComponent<TransformComponent>(other).movable) {
+        continue;
+      }
+
       const glm::vec2& otherPos = ECS::Manager::getComponent<TransformComponent>(other).pos;
       const float dist = glm::distance(pos, otherPos);
       if (dist == 0)

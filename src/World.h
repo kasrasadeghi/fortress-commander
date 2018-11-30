@@ -88,9 +88,9 @@ public:
 
   virtual void draw(View& view) const {
     _region.draw(view);
-    _drawUnits(view);
-    _drawEnemies(view);
     _drawStructures(view);
+    _drawEnemies(view);
+    _drawUnits(view);
   }
 
   void addUnit(glm::vec2 pos);
