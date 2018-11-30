@@ -2,21 +2,24 @@ SHELL := /bin/bash
 
 default:
 .PHONY: default
-default: build
-	cd build; cmake -DTEST=false .. && make -j2
+default: build\:false
 	cd build; ./fortress-commander
 
 .PHONY: test
-test: build
-	cd build; cmake -DTEST=true .. && make -j2
+test: build\:true
 	cd build; ./fortress-commander_TEST
 
-.PHONY: cmake
-cmake: build
-	cd build; cmake -DTEST=false ..
-
 .PHONY: build
-build:
+build\:%: cmake\:%
+	cd build; make -j2
+
+# usage cmake:true for testing, cmake:false otherwise
+.PHONY: cmake\:%
+cmake\:%: buildfolder
+	cd build; cmake -DTEST=$* ..
+
+.PHONY: buildfolder
+buildfolder:
 	[[ -d build ]] || mkdir build
 
 .PHONY: format
