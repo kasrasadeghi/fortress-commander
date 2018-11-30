@@ -73,6 +73,7 @@
 - shift select, control select
 
 # map gen
+>- todo
 - load a map from a file
 - make a map
 
@@ -106,6 +107,7 @@
   - it goes to the tile farthest along the path that is contiguously visible
 >- todo
 - pathfind shorter distances for the zombies ?
+  - potential map ?
 - pathfinding update queue and asynchronous approach ?
 - update cached path on world update
 - group a command unit's pathfinding if they're adj
@@ -113,6 +115,7 @@
 - don't collide with walls
 - constrained Delaunay triangulation ?
 - multithreaded pathfinding (nuclear option)
+  - job queue
 
 # glfw-opengl
 - cache shaders
