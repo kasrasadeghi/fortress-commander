@@ -102,9 +102,9 @@
 - bug: seesPoint only checks if your center can see, but not if your sides can see
 - don't walk in water
 - update cached path on command
->- todo
 - bug: doesn't actually go to the tile farthest along the path that you can see, 
   - it goes to the tile farthest along the path that is contiguously visible
+>- todo
 - update cached path on world update
 - group a command unit's pathfinding if they're adj
 - A*

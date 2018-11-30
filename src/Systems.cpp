@@ -147,13 +147,12 @@ void MoveSystem::updateEntity(float dt, ECS::Entity entity) {
   };
   // TODO: investigate only iterating once target location is reached
 
-  // iterate current target until it matches the last one possible to be seen.
+  // iterate from current target until the last one possible to be seen
+  // set the current target to that last one
   for (auto iter = motion.currentTarget; iter < motion.path.end(); ++iter) {
     glm::ivec2 p = *iter;
     if (seesTile(p)) {
       motion.currentTarget = iter;
-    } else {
-      break;
     }
   }
   auto target = Game::centerOfTile(*motion.currentTarget);
