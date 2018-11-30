@@ -75,14 +75,18 @@ void Game::loop() {
     handleTick(dt);
     _world.draw(_gameState._view);
 
+    glm::vec4 modeColor(.9, .9, .1, 1);
     auto& _mode = _gameState._mode;
     if (_mode == ControlMode::BUILD) {
+      t.renderText("BUILD", _window.width() - 200, 50, 1, modeColor);
       Structure::holo(_gameState._view, getMouseTile()); 
     }
     if (_mode == ControlMode::TERRAIN) {
+      t.renderText("TERRAIN", _window.width() - 300, 50, 1, modeColor);
       World::tileHolo(_gameState._view, getMouseTile());
     }
     if (_mode == ControlMode::UNIT) {
+      t.renderText("UNIT", _window.width() - 200, 50, 1, modeColor);
       Unit::holo(_gameState._view, getMouseCoords());
     }
 
