@@ -10,24 +10,34 @@
 class World;
 
 class Structure {
-  glm::vec2 _target;
-
 public:
-  const ECS::Entity _id;
+  const ECS::Entity id;
 
   constexpr static HealthValue health = 500;
 
   Structure(glm::vec2 pos, World&);
 
-  glm::vec2 pos() const;
+  glm::vec2 pos() const;  
 
-  static void holo(View& view, glm::ivec2 p) {
-    glm::vec2 offset(-0.5, -0.5);
-
-    RectangleBatch().add()
-      .position(glm::vec2(p.x * tile_size, p.y * tile_size) - offset * tile_size)
-      .color({.7, .7, .7, .5})
-      .size({tile_size, tile_size})
-      .draw(view);
+  inline bool operator==(const Structure& o) const {
+    return pos() == o.pos();
   }
 };
+
+namespace std {
+template <>
+struct hash<glm::vec2> {
+  size_t operator()(const glm::vec2& k) const {
+    return std::hash<float>()(k.x) ^ std::hash<float>()(k.y);
+  }
+};
+} // namespace std
+
+namespace std {
+template <>
+struct hash<Structure> {
+  size_t operator()(const Structure& k) const {
+    return std::hash<glm::vec2>()(k.pos());
+  }
+};
+} // namespace std

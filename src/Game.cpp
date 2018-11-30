@@ -79,7 +79,7 @@ void Game::loop() {
     auto& _mode = _gameState._mode;
     if (_mode == ControlMode::BUILD) {
       t.renderText("BUILD", _window.width() - 200, 50, 1, modeColor);
-      Structure::holo(_gameState._view, getMouseTile()); 
+      _world.structHolo(_gameState._view, getMouseTile()); 
     }
     if (_mode == ControlMode::TERRAIN) {
       t.renderText("TERRAIN", _window.width() - 300, 50, 1, modeColor);

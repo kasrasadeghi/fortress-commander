@@ -6,12 +6,14 @@
 #include "Structure.h"
 #include "Region.h"
 
+#include <unordered_set>
+
 class World {
   Region _region; // this should be a square
 
   std::vector<Unit> _units;
   std::vector<Enemy> _enemies;
-  std::vector<Structure> _structures;
+  std::unordered_set<Structure> _structures;
 
   void _drawUnits(View& view) const;
   void _drawEnemies(View& view) const;
@@ -58,6 +60,20 @@ public:
       .draw(view);
   }
 
+  void structHolo(View& view, glm::ivec2 p) {
+    const glm::vec2 offset(-0.5, -0.5);
+    const glm::vec4 buildColor {.7, .7, .7, .5};
+    const glm::vec4 occupiedColor {1, .3, .3, .5};
+
+    const glm::vec4 color = structureAt(p) ? occupiedColor : buildColor;
+
+    RectangleBatch().add()
+      .position(glm::vec2(p.x * tile_size, p.y * tile_size) - offset * tile_size)
+      .color(color)
+      .size({tile_size, tile_size})
+      .draw(view);
+  }
+
   Tile flipCell(glm::ivec2 v) {
     _snapToRegion(v);
     return _region[v.x][v.y] = (_region[v.x][v.y] == Tile::GRASS) ? Tile::WATER : Tile::GRASS;
@@ -78,4 +94,7 @@ public:
   void addUnit(glm::vec2 pos);
   void addEnemy(glm::vec2 pos);
   void addStructure(glm::ivec2 cell);
+
+  bool structureAt(glm::ivec2 cell);
+  // bool unitAt(glm::ivec2 cell);
 };

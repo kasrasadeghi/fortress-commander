@@ -11,6 +11,10 @@ test: build
 	cd build; cmake -DTEST=true .. && make -j2
 	cd build; ./fortress-commander_TEST
 
+.PHONY: cmake
+cmake: build
+	cd build; cmake -DTEST=false ..
+
 .PHONY: build
 build:
 	[[ -d build ]] || mkdir build
