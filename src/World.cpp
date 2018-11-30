@@ -130,9 +130,10 @@ void World::addEnemy(glm::vec2 pos) {
 }
 
 void World::addStructure(glm::ivec2 cell) {
-  _structures.emplace(cell, *this);
+  _structures.emplace_back(cell, *this);
+  _structure_pos_set.emplace(cell);
 }
 
 bool World::structureAt(glm::ivec2 cell) {
-  return _structures.count(Structure(glm::vec2{cell.x * tile_size, cell.y * tile_size}, *this)) > 0;
+  return _structure_pos_set.count(cell) > 0;
 }

@@ -5,6 +5,7 @@
 #include "Enemy.h"
 #include "Structure.h"
 #include "Region.h"
+#include "GlmHashes.h"
 
 #include <unordered_set>
 
@@ -13,7 +14,8 @@ class World {
 
   std::vector<Unit> _units;
   std::vector<Enemy> _enemies;
-  std::unordered_set<Structure> _structures;
+  std::vector<Structure> _structures;
+  std::unordered_set<glm::ivec2> _structure_pos_set;
 
   void _drawUnits(View& view) const;
   void _drawEnemies(View& view) const;
