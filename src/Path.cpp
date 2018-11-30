@@ -45,6 +45,7 @@ Path findPath(Region& region, glm::ivec2 start, glm::ivec2 end) {
 
       return trace;
     }
+    dead.insert(curr);
     
     const std::vector<P> neighbors = {curr + P(0, 1), curr + P(0, -1), curr + P(1, 0), curr + P(-1, 0)};
 
@@ -56,7 +57,6 @@ Path findPath(Region& region, glm::ivec2 start, glm::ivec2 end) {
         aliveSet.insert(n);
       }
     }
-    dead.insert(curr);
   }
 
   return Path();
