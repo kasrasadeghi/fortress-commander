@@ -112,6 +112,7 @@
 - A*
 - don't collide with walls
 - constrained Delaunay triangulation ?
+- multithreaded pathfinding (nuclear option)
 
 # glfw-opengl
 - cache shaders
