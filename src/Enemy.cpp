@@ -2,6 +2,7 @@
 #include "Game.h"
 
 #include "World.h"
+#include "Path.h"
 
 Enemy::Enemy(glm::vec2 pos, World& world) : _target(pos), _id(ECS::Manager::createEntity()) {
   ECS::Manager::addComponent<TransformComponent>(_id, TransformComponent(pos, 0.f));
@@ -16,7 +17,7 @@ glm::vec2 Enemy::pos() const {
   return ECS::Manager::getComponent<TransformComponent>(_id).pos;
 }
 
-std::vector<glm::ivec2>& Enemy::path() const {
+Path& Enemy::path() const {
   return ECS::Manager::getComponent<MotionComponent>(_id).path;
 }
 

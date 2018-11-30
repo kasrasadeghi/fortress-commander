@@ -2,6 +2,7 @@
 #include "Game.h"
 
 #include "World.h"
+#include "Path.h"
 
 Unit::Unit(glm::vec2 pos, World& world) : _target(pos), _id(ECS::Manager::createEntity()) {
 
@@ -28,7 +29,7 @@ bool Unit::selected() const {
   return ECS::Manager::getComponent<SelectableComponent>(_id).selected;
 }
 
-std::vector<glm::ivec2>& Unit::path() const {
+Path& Unit::path() const {
   return ECS::Manager::getComponent<MotionComponent>(_id).path;
 }
 

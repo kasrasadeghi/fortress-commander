@@ -3,11 +3,12 @@
 #include "Tile.h"
 
 #include "GlmHashes.h"
+#include "Path.h"
 
 #include <unordered_set>
 
 /// returns an empty path on failure
-std::vector<glm::ivec2> MoveSystem::findPath(Region& region, glm::ivec2 start, glm::ivec2 end) {
+Path MoveSystem::findPath(Region& region, glm::ivec2 start, glm::ivec2 end) {
   using P = glm::ivec2;
 
   std::deque<P> alive;
@@ -35,14 +36,14 @@ std::vector<glm::ivec2> MoveSystem::findPath(Region& region, glm::ivec2 start, g
     aliveSet.erase(curr);
 
     if (curr == end) {
-      std::vector<P> trace;
+      Path trace;
       auto curr = end;
       while (curr != start) {
-        trace.push_back(curr);
+        trace.push_front(curr);
         curr = backtrace[curr.x][curr.y];
       }
 
-      std::reverse(trace.begin(), trace.end());
+      // std::reverse(trace.begin(), trace.end());
 
       return trace;
     }
@@ -60,7 +61,7 @@ std::vector<glm::ivec2> MoveSystem::findPath(Region& region, glm::ivec2 start, g
     dead.insert(curr);
   }
 
-  return std::vector<P>();
+  return Path();
 }
 
 void MoveSystem::updateEntity(float dt, ECS::Entity entity) {

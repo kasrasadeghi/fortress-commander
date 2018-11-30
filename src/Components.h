@@ -4,7 +4,10 @@
 #include "Graphics.h"
 #include "Config.h"
 
+#include "Path.h"
+
 #include <functional>
+#include <deque>
 
 class World;
 
@@ -36,9 +39,9 @@ struct MotionComponent : public ECS::Component {
   World& world;
   
   glm::vec2 target;
-  std::vector<glm::ivec2>::iterator currentTarget; // when path.empty, this iterator is invalid
+  Path::iterator currentTarget; // when path.empty, this iterator is invalid
   bool hasTarget = false;
-  std::vector<glm::ivec2> path;
+  Path path;
 
   static constexpr ECS::ComponentTypeId type = 3;
 

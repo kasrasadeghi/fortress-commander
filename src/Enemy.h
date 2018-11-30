@@ -6,6 +6,7 @@
 
 #include "Config.h"
 #include "Graphics.h"
+#include "Path.h"
 
 class World;
 
@@ -26,7 +27,7 @@ public:
 
   glm::vec2 pos() const;
   bool selected() const;
-  std::vector<glm::ivec2>& path() const;
+  Path& path() const;
   glm::ivec2 currentTarget() const;
   void pathTo(glm::vec2 v);
 };

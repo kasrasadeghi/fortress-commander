@@ -20,7 +20,7 @@
 class MoveSystem : public ECS::System {
 
 public:
-  static std::vector<glm::ivec2> findPath(Region& region, glm::ivec2 start, glm::ivec2 end);
+  static Path findPath(Region& region, glm::ivec2 start, glm::ivec2 end);
   MoveSystem(GameState& gameState) : ECS::System(gameState) {
     ECS::ComponentTypeSet requiredComponents;
     requiredComponents.insert(TransformComponent::type);
