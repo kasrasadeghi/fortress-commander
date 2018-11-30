@@ -3,18 +3,12 @@
 #include "Config.h"
 #include "World.h"
 
+#include "GlmHashes.h"
+
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <random>
 
-namespace std {
-  template <>
-  struct hash<glm::ivec2> {
-    size_t operator()(const glm::ivec2& k) const {
-      return std::hash<int>()(k.x) ^ std::hash<int>()(k.y);
-    }
-  };
-} // namespace std
 
 class EnemySpawner {
   constexpr static float world_bounds = World::world_size * tile_size;

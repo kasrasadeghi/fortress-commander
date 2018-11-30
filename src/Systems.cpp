@@ -2,17 +2,9 @@
 #include "Game.h"
 #include "Tile.h"
 
-#include <unordered_set>
-#include <functional>
+#include "GlmHashes.h"
 
-namespace std {
-template <>
-struct hash<glm::ivec2> {
-  size_t operator()(const glm::ivec2& k) const {
-    return std::hash<int>()(k.x) ^ std::hash<int>()(k.y);
-  }
-};
-} // namespace std
+#include <unordered_set>
 
 /// returns an empty path on failure
 std::vector<glm::ivec2> MoveSystem::findPath(Region& region, glm::ivec2 start, glm::ivec2 end) {
