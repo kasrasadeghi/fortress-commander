@@ -15,6 +15,7 @@ Path findPath(Region& region, glm::ivec2 start, glm::ivec2 end) {
   
   std::unordered_set<P> dead;
   alive.push_back(start);
+  aliveSet.insert(start);
 
   auto valid = [&region](P p) -> bool {
     auto bounds = p.x >= 0 && p.y >= 0 && p.x < World::world_size && p.y < World::world_size;
