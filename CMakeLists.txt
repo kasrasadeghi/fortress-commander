@@ -30,6 +30,7 @@ set(SRC_FILES
   src/Enemy.cpp
   src/World.cpp
   src/Tile.cpp
+  src/Path.cpp
   src/GameState.cpp
   src/Components.cpp
   src/Systems.cpp

@@ -1,5 +1,8 @@
+#pragma once
+
 #include "Graphics.h"
 #include "Tile.h"
+#include "Config.h"
 
 #include <vector>
 
