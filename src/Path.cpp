@@ -52,6 +52,54 @@ Path findPath(Region& region, glm::ivec2 start, glm::ivec2 end) {
     return inBounds && TileProperties::of(region[p.x][p.y]).walkable;
   };
 
+  auto direction = [](const P& from, const P& to) {
+    P diff = to - from;
+    return P{
+      diff.x > 0 ? 1 : (diff.x < 0 ? -1 : 0),
+      diff.y > 0 ? 1 : (diff.y < 0 ? -1 : 0)
+    };
+  };
+
+  auto diagonal = [](const P& dir) { return dir.x != 0 && dir.y != 0; };
+
+  auto rotateR = [](const P& p) { return P{-p.y, p.x}; };
+  auto rotateL = [](const P& p) { return P{p.y, -p.x}; };
+
+  auto neighborsOf = [](const P& x) {
+    return std::vector<P>{
+      x + P{1, 0},
+      x + P{-1, 0},
+      x + P{0, 1},
+      x + P{0, -1},
+      x + P{1, 1},
+      x + P{-1, 1},
+      x + P{1, -1},
+      x + P{-1, -1}
+    };
+  };
+
+  // requires that x has a parent (x is not start)
+  auto prunedNeighbors = [&](const P& parent, const P& x){
+    std::vector<P> neighbors;
+    const P dir = direction(parent, x);
+    if (diagonal(dir)) {
+      const P dx = P{dir.x, 0};
+      const P dy = P{0, dir.y};
+      if (valid(x + dir)) { neighbors.push_back(x + dir); }
+      if (valid(x + dx)) { neighbors.push_back(x + dx); }
+      if (valid(x + dy)) { neighbors.push_back(x + dy); }
+      if (!valid(x - dx)) { neighbors.push_back(x - dx + dy); }
+      if (!valid(x - dy)) { neighbors.push_back(x - dy + dx); }
+    } else {
+      if (valid(x + dir)) { neighbors.push_back(x + dir); }
+      if (!valid(x + rotateL(dir))) { neighbors.push_back(x + rotateL(dir) + dir); }
+      if (!valid(x + rotateR(dir))) { neighbors.push_back(x + rotateR(dir) + dir); }
+    }
+    return neighbors;
+  };
+
+  // auto jump = [&start, &end](const P& x, const P& dir){};
+
   fScore[start] = heuristic(start);
   gScore[start] = 0;
 
@@ -70,7 +118,10 @@ Path findPath(Region& region, glm::ivec2 start, glm::ivec2 end) {
     open.erase(current);
     closed.insert(current);
 
-    const std::vector<P> neighbors = {current + P(0, 1), current + P(0, -1), current + P(1, 0), current + P(-1, 0)};
+    std::vector<P> neighbors;
+    if (cameFrom.count(current) > 0) { neighbors = prunedNeighbors(cameFrom[current], current); }
+    else {neighbors = neighborsOf(current); }
+
     for (P neighbor : neighbors) { 
       if (closed.count(neighbor) > 0) {
         continue;
