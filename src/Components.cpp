@@ -8,7 +8,7 @@ void TransformComponent::translate(glm::vec2 displacement) {
   pos += displacement;
   pos.x = std::min(World::world_size * tile_size - border, std::max(border, pos.x));
   pos.y = std::min(World::world_size * tile_size - border, std::max(border, pos.y));
-};
+}
 
 void MotionComponent::pathTo(glm::vec2 pos) {
   target = Game::centerOfTile(pos);
