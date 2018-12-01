@@ -131,7 +131,7 @@ void World::addEnemy(glm::vec2 pos) {
 
 void World::addStructure(glm::ivec2 cell) {
   _structures.emplace_back(cell, *this);
-  _structure_pos_set.emplace(cell);
+  _region.addStructure(cell);
 
   for (auto& u : _units) {
     u.repath();
@@ -140,8 +140,4 @@ void World::addStructure(glm::ivec2 cell) {
   for (auto& u : _enemies) {
     u.repath();
   }
-}
-
-bool World::structureAt(glm::ivec2 cell) {
-  return _structure_pos_set.count(cell) > 0;
 }

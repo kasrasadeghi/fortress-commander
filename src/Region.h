@@ -3,11 +3,14 @@
 #include "Graphics.h"
 #include "Tile.h"
 #include "Config.h"
+#include "GlmHashes.h"
 
+#include <unordered_set>
 #include <vector>
 
 class Region {
   std::vector<std::vector<Tile>> _data;
+  std::unordered_set<glm::ivec2> _structure_pos_set;
 
 public:
   Region(std::vector<std::vector<Tile>> data): _data(data) {}
@@ -40,4 +43,7 @@ public:
 
     rects.draw(view);
   }
+
+  bool structureAt(glm::ivec2 cell);
+  void addStructure(glm::ivec2 cell);
 };

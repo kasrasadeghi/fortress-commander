@@ -31,6 +31,7 @@ set(SRC_FILES
   src/World.cpp
   src/Tile.cpp
   src/Path.cpp
+  src/Region.cpp
   src/GameState.cpp
   src/Components.cpp
   src/Systems.cpp

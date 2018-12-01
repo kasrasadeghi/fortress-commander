@@ -5,9 +5,7 @@
 #include "Enemy.h"
 #include "Structure.h"
 #include "Region.h"
-#include "GlmHashes.h"
 
-#include <unordered_set>
 
 class World {
   Region _region; // this should be a square
@@ -15,7 +13,6 @@ class World {
   std::vector<Unit> _units;
   std::vector<Enemy> _enemies;
   std::vector<Structure> _structures;
-  std::unordered_set<glm::ivec2> _structure_pos_set;
 
   void _drawUnits(View& view) const;
   void _drawEnemies(View& view) const;
@@ -65,7 +62,7 @@ public:
     const glm::vec4 buildColor {.7, .7, .7, .5};
     const glm::vec4 occupiedColor {1, .3, .3, .5};
 
-    const glm::vec4 color = structureAt(p) ? occupiedColor : buildColor;
+    const glm::vec4 color = _region.structureAt(p) ? occupiedColor : buildColor;
 
     RectangleBatch().add()
       .position(glm::vec2(p.x * tile_size, p.y * tile_size) - offset * tile_size)
@@ -95,6 +92,5 @@ public:
   void addEnemy(glm::vec2 pos);
   void addStructure(glm::ivec2 cell);
 
-  bool structureAt(glm::ivec2 cell);
   // bool unitAt(glm::ivec2 cell);
 };
