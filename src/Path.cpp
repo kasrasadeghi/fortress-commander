@@ -98,7 +98,9 @@ Path findPath(Region& region, glm::ivec2 start, glm::ivec2 end) {
     return neighbors;
   };
 
-  // auto jump = [&start, &end](const P& x, const P& dir){};
+  auto jump = [&start, &end](const P& x, const P& dir){
+    return x;
+  };
 
   fScore[start] = heuristic(start);
   gScore[start] = 0;
@@ -129,6 +131,8 @@ Path findPath(Region& region, glm::ivec2 start, glm::ivec2 end) {
       if (not valid(neighbor)) {
         continue;
       }
+
+      neighbor = jump(neighbor, direction(current, neighbor));
 
       gScore.try_emplace(neighbor, std::numeric_limits<float>::infinity()); // default to inf
 
