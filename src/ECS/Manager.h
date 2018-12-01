@@ -118,8 +118,8 @@ class Manager {
       while (_lastEntity != MaxEntityId) {
         if (_entities.find(_lastEntity) == _entities.end()) {
           break;
-	}
-	++_lastEntity;
+        }
+        ++_lastEntity;
       }
 
       if (_lastEntity == MaxEntityId) {
