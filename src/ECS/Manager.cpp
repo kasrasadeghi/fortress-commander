@@ -29,13 +29,13 @@ std::size_t Manager::_registerEntity(const Entity entity) {
 
   // For each system in _systems, let's perform a check to see if the registered
   // entity has all the components required by the system
-  for (auto system = _systems.begin(); system != _systems.end(); ++system) {
-    const auto& systemRequiredComponents = (*system)->getRequiredComponents();
+  for (auto& system : _systems) {
+    const auto& systemRequiredComponents = system->getRequiredComponents();
 
     if (std::includes(entityComponents.begin(), entityComponents.end(),
                       systemRequiredComponents.begin(), systemRequiredComponents.end())) {
       // If the entity applies to the system criteria, then let's register it with the system
-      (*system)->registerEntity(entity);
+      system->registerEntity(entity);
       ++associatedSystems;
     }
   }
@@ -54,8 +54,8 @@ std::size_t Manager::_unregisterEntity(const Entity entity) {
 
   auto entityComponents = entityIt->second;
 
-  for (auto system = _systems.begin(); system != _systems.end(); ++system) {
-    associatedSystems += (*system)->unregisterEntity(entity);
+  for (auto& system : _systems) {
+    associatedSystems += system->unregisterEntity(entity);
   }
 
   return associatedSystems;
@@ -65,8 +65,8 @@ std::size_t Manager::_update(float dt) {
   std::size_t updatedSystems = 0;
 
   // Update each system in _systems with the dt given to Manager
-  for (auto system = _systems.begin(); system != _systems.end(); ++system) {
-    if ((*system)->update(dt)) {
+  for (auto& system : _systems) {
+    if (system->update(dt)) {
       ++updatedSystems;
     }
   }
