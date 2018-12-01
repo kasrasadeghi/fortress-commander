@@ -28,3 +28,7 @@ glm::ivec2 Enemy::currentTarget() const {
 void Enemy::pathTo(glm::vec2 v) {
   ECS::Manager::getComponent<MotionComponent>(_id).pathTo(v);
 }
+
+void Enemy::repath() const {
+  return ECS::Manager::getComponent<MotionComponent>(_id).repath();  
+}

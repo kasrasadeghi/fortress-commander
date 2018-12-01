@@ -132,6 +132,14 @@ void World::addEnemy(glm::vec2 pos) {
 void World::addStructure(glm::ivec2 cell) {
   _structures.emplace_back(cell, *this);
   _structure_pos_set.emplace(cell);
+
+  for (auto& u : _units) {
+    u.repath();
+  }
+
+  for (auto& u : _enemies) {
+    u.repath();
+  }
 }
 
 bool World::structureAt(glm::ivec2 cell) {

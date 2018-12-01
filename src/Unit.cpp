@@ -33,6 +33,10 @@ Path& Unit::path() const {
   return ECS::Manager::getComponent<MotionComponent>(_id).path;
 }
 
+void Unit::repath() const {
+  return ECS::Manager::getComponent<MotionComponent>(_id).repath();
+}
+
 glm::ivec2 Unit::currentTarget() const {
   return ECS::Manager::getComponent<MotionComponent>(_id).currentTarget.operator*();
 }

@@ -28,6 +28,7 @@ public:
   bool selected() const;
   Path& path() const;
   glm::ivec2 currentTarget() const;
+  void repath() const;
 
   static void holo(View& view, glm::vec2 curr) {
     CircleBatch().add()

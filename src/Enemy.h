@@ -30,4 +30,5 @@ public:
   Path& path() const;
   glm::ivec2 currentTarget() const;
   void pathTo(glm::vec2 v);
+  void repath() const;
 };

@@ -46,6 +46,11 @@ struct MotionComponent : public ECS::Component {
   MotionComponent(World& world) : world(world) {}
 
   void pathTo(glm::vec2 pos);
+  void repath() {
+    if (hasTarget) {
+      pathTo(target);
+    }
+  }
 };
 
 struct CommandableComponent : public ECS::Component {
