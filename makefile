@@ -24,7 +24,7 @@ buildfolder:
 
 .PHONY: format
 format:
-	clang-format -i src/*.cpp src/*.h
+	clang-format -i src/*.cpp src/*.h src/*/*.cpp src/*/*.h
 
 .PHONY: clean
 clean:
