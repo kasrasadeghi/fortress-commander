@@ -37,3 +37,9 @@ cpp:
 .PHONY: gdb
 gdb:
 	gdb build/fortress-commander
+
+.PHONY: profile
+profile: build\:true
+	valgrind --tool=callgrind build/fortress-commander_TEST
+	kcachegrind callgrind.out.*
+	rm -f callgrind.out.*
