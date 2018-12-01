@@ -234,5 +234,9 @@ public:
   static bool deleteEntity(Entity id) {
     return _getInstance()._deleteEntity(id);
   }
+  template <typename C>
+  static bool hasComponent(Entity id) {
+    return _getInstance()._getComponentStore<C>().has(id);
+  }
 };
 } // namespace ECS

@@ -225,7 +225,11 @@ class BattleSystem : public ECS::System {
   void _die(const ECS::Entity entity) {
     std::cout << "Entity " << entity << " has died." << std::endl;
     
-    // TODO: Implement death
+    if (ECS::Manager::hasComponent<SpawnableComponent>(entity)) {
+      // delete enemy
+    } else {
+      // delete unit
+    }
   }
 
 public:
