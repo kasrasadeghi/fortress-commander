@@ -49,6 +49,8 @@ public:
     rects.draw(view);
   }
 
-  bool structureAt(glm::ivec2 cell);
+  bool structureAt(glm::ivec2 cell) const;
   void addStructure(glm::ivec2 cell);
+
+  void removeStructure(glm::ivec2 cell);
 };

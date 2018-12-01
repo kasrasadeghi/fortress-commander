@@ -141,3 +141,22 @@ void World::addStructure(glm::ivec2 cell) {
     u.repath();
   }
 }
+
+void World::sellStructure(glm::ivec2 cell) {
+  for (auto iter = _structures.begin(); iter < _structures.end(); ++iter) {
+    if (iter->pos() == glm::vec2{cell}) {
+      ECS::Manager::deleteEntity(iter->id);
+      iter = _structures.erase(iter);
+    }
+  }
+
+  _region.removeStructure(cell);
+
+  for (auto& u : _units) {
+    u.repath();
+  }
+
+  for (auto& u : _enemies) {
+    u.repath();
+  }
+}

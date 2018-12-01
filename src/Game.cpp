@@ -81,6 +81,10 @@ void Game::loop() {
       t.renderText("BUILD", _window.width() - 200, 50, 1, modeColor);
       _world.structHolo(_gameState._view, getMouseTile()); 
     }
+    if (_mode == ControlMode::SELL) {
+      t.renderText("SELL", _window.width() - 200, 50, 1, modeColor);
+      _world.structHolo(_gameState._view, getMouseTile()); 
+    }
     if (_mode == ControlMode::TERRAIN) {
       t.renderText("TERRAIN", _window.width() - 300, 50, 1, modeColor);
       World::tileHolo(_gameState._view, getMouseTile());
@@ -119,6 +123,9 @@ void Game::receive(const KeyDownEvent& e) {
   if (key == GLFW_KEY_B && action == GLFW_PRESS) {
     _mode = ControlMode::BUILD;
   }
+  if (key == GLFW_KEY_X && action == GLFW_PRESS) {
+    _mode = ControlMode::SELL;
+  }
   if ((key == GLFW_KEY_U || key == GLFW_KEY_E) && action == GLFW_PRESS) {
     _mode = ControlMode::UNIT;
   }
@@ -130,6 +137,9 @@ void Game::receive(const KeyDownEvent& e) {
 void Game::receive(const MouseDownEvent& e) {
   if (_gameState._mode == ControlMode::BUILD) {
     _world.addStructure(getMouseTile());
+  }
+  if (_gameState._mode == ControlMode::SELL) {
+    _world.sellStructure(getMouseTile());
   }
   if (_gameState._mode == ControlMode::TERRAIN) {
     _paint = _world.flipCell(getMouseTile());

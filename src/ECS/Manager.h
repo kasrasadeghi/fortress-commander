@@ -134,6 +134,17 @@ class Manager {
     return _lastEntity;
   }
 
+
+  /**
+   * @brief Deletes the given entity id and unregisters it from all relevant systems
+   * 
+   * @param id The entity to delete
+   */
+  bool _deleteEntity(Entity id) {
+    _unregisterEntity(id);
+    return _entities.erase(id);
+  }
+
   /**
    * @brief Associates the instance of C with the provided Entity
    *
@@ -219,6 +230,9 @@ public:
   }
   static std::size_t update(float dt) {
     return _getInstance()._update(dt);
+  }
+  static bool deleteEntity(Entity id) {
+    return _getInstance()._deleteEntity(id);
   }
 };
 } // namespace ECS

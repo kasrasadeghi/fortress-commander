@@ -4,7 +4,7 @@
 
 #include "Enemy.h"
 
-enum class ControlMode { NONE, BUILD, UNIT, TERRAIN };
+enum class ControlMode { NONE, BUILD, SELL, UNIT, TERRAIN };
 
 class Unit;
 class Enemy;

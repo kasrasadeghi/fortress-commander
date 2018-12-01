@@ -17,5 +17,11 @@ public:
 
   Structure(glm::vec2 pos, World&);
 
+  Structure& operator=(const Structure& o) {
+    ECS::Entity& _id = const_cast<ECS::Entity&>(id);
+    _id = o.id;
+    return *this;
+  }
+  
   glm::vec2 pos() const;
 };
