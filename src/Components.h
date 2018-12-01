@@ -14,13 +14,11 @@ class World;
 struct TransformComponent : public ECS::Component {
   glm::vec2 pos;
   float rot;
-  bool movable;
 
   static constexpr ECS::ComponentTypeId type = 1;
 
   TransformComponent() : TransformComponent({0.f, 0.f}, 0.f) {}
-  TransformComponent(glm::vec2 pos, float rot) : TransformComponent(pos, rot, true) {}
-  TransformComponent(glm::vec2 pos, float rot, bool movable) : pos(pos), rot(rot), movable(movable) {}
+  TransformComponent(glm::vec2 pos, float rot) : pos(pos), rot(rot) {}
 
   void translate(glm::vec2 displacement); 
 };

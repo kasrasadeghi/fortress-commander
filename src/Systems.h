@@ -272,6 +272,8 @@ public:
 };
 
 class UnitCollisionSystem : public ECS::System {
+  std::unordered_map<ECS::Entity, bool> _movable;
+
 public:
   UnitCollisionSystem(GameState& gameState) : ECS::System(gameState) {
     ECS::ComponentTypeSet requiredComponents;
@@ -280,19 +282,25 @@ public:
     setRequiredComponents(std::move(requiredComponents));
   }
 
+  bool registerEntity(ECS::Entity entity) {
+    _movable.insert({entity, ECS::Manager::getComponentStore<MotionComponent>().has(entity)});
+    
+    return ECS::System::registerEntity(entity);
+  }
+
   void updateEntity(float dt, ECS::Entity entity) override {
     const glm::vec2& pos = ECS::Manager::getComponent<TransformComponent>(entity).pos;
     for (ECS::Entity other : entities()) {
-      if (not ECS::Manager::getComponent<TransformComponent>(entity).movable ||
-	  not ECS::Manager::getComponent<TransformComponent>(other).movable) {
+      if (not _movable.at(entity) ||
+	  not _movable.at(other)) {
         continue;
       }
 
       const glm::vec2& otherPos = ECS::Manager::getComponent<TransformComponent>(other).pos;
       const float dist = glm::distance(pos, otherPos);
-      if (dist == 0)
+      if (dist == 0) {
         continue;
-      if (dist < Unit::unit_size * 2) {
+      } else if (dist < Unit::unit_size * 2) {
         float overlapDistance = Unit::unit_size * 2 - dist;
         glm::vec2 halfOverlap = glm::normalize(otherPos - pos) * overlapDistance / 2.f;
         

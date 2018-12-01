@@ -80,7 +80,7 @@ public:
    *
    * @return Success in inserting the Entity
    */
-  bool registerEntity(Entity entity) {
+  virtual bool registerEntity(Entity entity) {
     return _matchingEntities.insert(entity).second;
   }
 
