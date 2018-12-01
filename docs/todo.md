@@ -18,6 +18,8 @@
 >- todo
 - view.zoom for scroll wheel?
   - https://www.youtube.com/watch?v=FSoFJAmh96g
+- remove keyboard view controls
+- toggle debug mode
 
 # ecs and event manager
 - create
