@@ -27,7 +27,7 @@ Path findPath(Region& region, glm::ivec2 start, glm::ivec2 end) {
 
   auto valid = [&region](P p) -> bool {
     auto bounds = p.x >= 0 && p.y >= 0 && p.x < world_size && p.y < world_size;
-    return bounds && TileProperties::of(region[p.x][p.y]).walkable;
+    return bounds && TileProperties::of(region[p.x][p.y]).walkable && (not region.structureAt(p));
   };
 
   auto seen = [&](P p) -> bool {

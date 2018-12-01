@@ -89,6 +89,7 @@
 - draw structures
 - make structures not build on other structures
 >- todo
+- sell blocks
 - special base structure
 - check if structure construction is in bounds
 - color illegal area for construction
@@ -105,11 +106,14 @@
 - update cached path on command
 - bug: doesn't actually go to the tile farthest along the path that you can see, 
   - it goes to the tile farthest along the path that is contiguously visible
+- update path on structure construction
 >- todo
+- update path on structure sell
+
+- update cached path on terrain update
 - pathfind shorter distances for the zombies ?
   - potential map ?
 - pathfinding update queue and asynchronous approach ?
-- update cached path on world update
 - group a command unit's pathfinding if they're adj
 - A*
 - don't collide with walls

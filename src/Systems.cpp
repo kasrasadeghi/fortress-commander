@@ -29,21 +29,20 @@ void MoveSystem::updateEntity(float dt, ECS::Entity entity) {
     motion.currentTarget = motion.path.begin();
   }
 
-  // like a raytrace for grass
-  auto grassCast = [&region](glm::vec2 source, glm::vec2 target) -> bool {
+  auto raycast = [&region](glm::vec2 source, glm::vec2 target) -> bool {
     auto path = target - source;
     auto l = glm::length(path);
     auto dir = glm::normalize(path);
     for (float k = 0; k < l; k += 0.2 /* <- precision */) {
       glm::ivec2 p = Game::mapCoordsToTile(source + dir * k);
-      if (not TileProperties::of(region[p.x][p.y]).walkable) {
+      if (not TileProperties::of(region[p.x][p.y]).walkable || region.structureAt(p)) {
         return false;
       }
     }
     return true;
   };
 
-  auto seesPoint = [&grassCast, &region, pos](glm::vec2 target) -> bool {
+  auto seesPoint = [&raycast, &region, pos](glm::vec2 target) -> bool {
     auto dir = glm::normalize(target - pos);
     auto y = dir.y;
     auto x = dir.x;
@@ -52,7 +51,7 @@ void MoveSystem::updateEntity(float dt, ECS::Entity entity) {
     auto left = glm::vec2(-y, x) * Unit::unit_size;
     auto right = glm::vec2(y, -x) * Unit::unit_size;
 
-    return grassCast(pos, target) && grassCast(pos + left, target) && grassCast(pos + right, target);
+    return raycast(pos, target) && raycast(pos + left, target) && raycast(pos + right, target);
   };
 
   auto valid = [](glm::ivec2 p) -> bool {
