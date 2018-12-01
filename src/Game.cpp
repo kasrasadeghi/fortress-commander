@@ -14,12 +14,14 @@
 #include <glm/gtx/string_cast.hpp>
 
 #include <iostream>
-#include <sstream>
 #include <random>
+#include <sstream>
 #include <stdio.h>
 #include <vector>
 
-Game::Game() : _window("Fortress Commander"), _gameState(_window, _world._units, _world._enemies), _world(world_size) {
+Game::Game()
+    : _window("Fortress Commander"), _gameState(_window, _world._units, _world._enemies),
+      _world(world_size) {
   _window.setKeyCallback([this](auto&&... args) { keyCallback(args...); });
   _window.setMouseCallback([this](auto&&... args) { mouseCallback(args...); });
   _window.setCursorCallback([this](auto&&... args) { cursorCallback(args...); });
@@ -79,11 +81,11 @@ void Game::loop() {
     auto& _mode = _gameState._mode;
     if (_mode == ControlMode::BUILD) {
       t.renderText("BUILD", _window.width() - 200, 50, 1, modeColor);
-      _world.structHolo(_gameState._view, getMouseTile()); 
+      _world.structHolo(_gameState._view, getMouseTile());
     }
     if (_mode == ControlMode::SELL) {
       t.renderText("SELL", _window.width() - 200, 50, 1, modeColor);
-      _world.structHolo(_gameState._view, getMouseTile()); 
+      _world.structHolo(_gameState._view, getMouseTile());
     }
     if (_mode == ControlMode::TERRAIN) {
       t.renderText("TERRAIN", _window.width() - 300, 50, 1, modeColor);

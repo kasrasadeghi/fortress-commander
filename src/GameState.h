@@ -20,5 +20,5 @@ struct GameState {
   std::vector<Unit>& units;
   std::vector<Enemy>& enemies;
 
-  GameState(RenderWindow& window, std::vector<Unit>& units, std::vector<Enemy>& enemies); 
+  GameState(RenderWindow& window, std::vector<Unit>& units, std::vector<Enemy>& enemies);
 };

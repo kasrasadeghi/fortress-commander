@@ -10,8 +10,8 @@
 #include "World.h"
 
 #include <cmath>
-#include <unordered_set>
 #include <deque>
+#include <unordered_set>
 
 /**
  * @brief Applies motion to entities.
@@ -82,7 +82,8 @@ public:
     if (_selectionChanged) {
       // draw box around selection
       auto size_axes = _boxBottomRight - _boxTopLeft;
-      RectangleBatch().add()
+      RectangleBatch()
+          .add()
           .position((_boxTopLeft + _boxBottomRight) / 2.f)
           .size(size_axes)
           .color({0.8, 0.8, 1, 0.4})
@@ -139,7 +140,7 @@ public:
  */
 class UnitCommandSystem : public ECS::System, ECS::EventSubscriber<MouseDownEvent> {
   std::vector<Enemy>& _enemies;
-  
+
   bool _attackClickedEnemy(glm::vec2 clickedPos) {
     ECS::Entity found = ECS::InvalidEntityId;
     for (auto enemy : _enemies) {
@@ -183,7 +184,7 @@ public:
     setRequiredComponents(std::move(requiredComponents));
 
     ECS::EventManager::connect<MouseDownEvent>(this);
-  } 
+  }
 
   void updateEntity(float dt, ECS::Entity entity) override {
     // not yet used
@@ -192,11 +193,11 @@ public:
   void receive(const MouseDownEvent& e) override {
     if (_gameState._mode == ControlMode::NONE) {
       if (e.button == GLFW_MOUSE_BUTTON_2) {
-      	bool foundEnemy = _attackClickedEnemy({e.x, e.y});
+        bool foundEnemy = _attackClickedEnemy({e.x, e.y});
 
         if (not foundEnemy) { // invoke the position handler on the selected units
           _invokePositionHandler(e.x, e.y);
-	      }
+        }
       }
     }
   }
@@ -206,7 +207,7 @@ public:
  * @brief Facilitates battle between Units and Enemies
  *
  */
-class BattleSystem : public ECS::System { 
+class BattleSystem : public ECS::System {
   void _performAttack(const ECS::Entity entity, const ECS::Entity target) {
     if (entity == ECS::InvalidEntityId || target == ECS::InvalidEntityId) {
       return;
@@ -224,7 +225,7 @@ class BattleSystem : public ECS::System {
 
   void _die(const ECS::Entity entity) {
     auto& world = ECS::Manager::getComponent<TransformComponent>(entity).world;
-    
+
     if (ECS::Manager::hasComponent<CommandableComponent>(entity)) {
       world.removeUnit(entity); // delete unit
     } else {
@@ -247,12 +248,12 @@ public:
       _die(entity);
     }
 
-   auto target = ECS::Manager::getComponent<AttackComponent>(entity).target;
+    auto target = ECS::Manager::getComponent<AttackComponent>(entity).target;
 
     if (target == ECS::InvalidEntityId) {
       return;
     }
- 
+
     auto pos = ECS::Manager::getComponent<TransformComponent>(entity).pos;
     auto targetPos = ECS::Manager::getComponent<TransformComponent>(target).pos;
 
@@ -262,7 +263,7 @@ public:
     auto& entityBattling = ECS::Manager::getComponent<AttackComponent>(entity).battling;
 
     entityBattling = dist < 5.f; // TODO: don't hardcode the RoI, perform raycast?
-    
+
     if (entityBattling) {
       attackTimer += dt;
 
@@ -270,7 +271,7 @@ public:
         _performAttack(entity, target);
       }
     } else { // Reset the timer so we attack immediately on engaging
-      attackTimer = ECS::Manager::getComponent<AttackComponent>(entity).attackCooldown; 
+      attackTimer = ECS::Manager::getComponent<AttackComponent>(entity).attackCooldown;
     }
   }
 };
@@ -288,15 +289,14 @@ public:
 
   bool registerEntity(ECS::Entity entity) {
     _movable.insert({entity, ECS::Manager::getComponentStore<MotionComponent>().has(entity)});
-    
+
     return ECS::System::registerEntity(entity);
   }
 
   void updateEntity(float dt, ECS::Entity entity) override {
     const glm::vec2& pos = ECS::Manager::getComponent<TransformComponent>(entity).pos;
     for (ECS::Entity other : entities()) {
-      if (not _movable.at(entity) ||
-	  not _movable.at(other)) {
+      if (not _movable.at(entity) || not _movable.at(other)) {
         continue;
       }
 
@@ -307,7 +307,7 @@ public:
       } else if (dist < Unit::unit_size * 2) {
         float overlapDistance = Unit::unit_size * 2 - dist;
         glm::vec2 halfOverlap = glm::normalize(otherPos - pos) * overlapDistance / 2.f;
-        
+
         ECS::Manager::getComponent<TransformComponent>(entity).translate(-halfOverlap);
         ECS::Manager::getComponent<TransformComponent>(other).translate(halfOverlap);
       }

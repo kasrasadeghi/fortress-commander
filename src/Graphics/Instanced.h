@@ -60,7 +60,8 @@ public:
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO.id);
     glEnableVertexAttribArray(_position);
-    glVertexAttribPointer(_position, sizeof(T) / sizeof(float), GL_FLOAT, GL_FALSE, sizeof(T), (void*)0);
+    glVertexAttribPointer(_position, sizeof(T) / sizeof(float), GL_FLOAT, GL_FALSE, sizeof(T),
+                          (void*)0);
     if (instanced) glVertexAttribDivisor(_position, 1);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -208,7 +209,7 @@ public:
 
 class LineBatch : public RectangleBatch {
   constexpr static float _defaultInstanceWidth = 0.1f;
-  float _instanceWidth = _defaultInstanceWidth;  
+  float _instanceWidth = _defaultInstanceWidth;
   void _applyWidth() {
     size({instances.back().size.x, _instanceWidth});
   }

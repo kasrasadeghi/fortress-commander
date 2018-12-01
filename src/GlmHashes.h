@@ -5,7 +5,7 @@
 #include <functional>
 
 namespace std {
-  
+
 template <>
 struct hash<glm::ivec2> {
   size_t operator()(const glm::ivec2& k) const {

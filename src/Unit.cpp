@@ -1,8 +1,8 @@
 #include "Unit.h"
 #include "Game.h"
 
-#include "World.h"
 #include "Path.h"
+#include "World.h"
 
 Unit::Unit(glm::vec2 pos, World& world) : _target(pos), id(ECS::Manager::createEntity()) {
 

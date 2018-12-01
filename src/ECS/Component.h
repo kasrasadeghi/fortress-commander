@@ -30,7 +30,7 @@ struct AbstractComponentStore {
 };
 
 /**
- * @brief Mapping from each Entity that has a component C to 
+ * @brief Mapping from each Entity that has a component C to
  * its corresponding instance of C
  *
  * @tparam C The type of Component
@@ -87,7 +87,7 @@ public:
   bool has(Entity entity) const {
     return _store.find(entity) != _store.end();
   }
- 
+
   /**
    * @brief Get the instance of C that is associated with the Entity
    *

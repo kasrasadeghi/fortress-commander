@@ -1,12 +1,11 @@
 #include "Path.h"
 #include "GlmHashes.h"
-#include "World.h"
 #include "Grid.h"
+#include "World.h"
 
-#include <unordered_set>
 #include <deque>
+#include <unordered_set>
 #include <vector>
-
 
 Path findPath(Region& region, glm::ivec2 start, glm::ivec2 end) {
   using P = glm::ivec2;
@@ -16,7 +15,7 @@ Path findPath(Region& region, glm::ivec2 start, glm::ivec2 end) {
   for (auto& v : aliveSet) {
     v.fill(0);
   }
-  
+
   Grid<> dead;
   for (auto& v : dead) {
     v.fill(0);
@@ -30,13 +29,10 @@ Path findPath(Region& region, glm::ivec2 start, glm::ivec2 end) {
     return bounds && TileProperties::of(region[p.x][p.y]).walkable && (not region.structureAt(p));
   };
 
-  auto seen = [&](P p) -> bool {
-    return aliveSet[p.x][p.y] || dead[p.x][p.y];
-  };
-
+  auto seen = [&](P p) -> bool { return aliveSet[p.x][p.y] || dead[p.x][p.y]; };
 
   Grid<P> backtrace;
-  for (auto&v : backtrace) {
+  for (auto& v : backtrace) {
     v.fill(P(-1, -1));
   }
 
@@ -56,8 +52,9 @@ Path findPath(Region& region, glm::ivec2 start, glm::ivec2 end) {
       return trace;
     }
     dead[curr.x][curr.y] = 1;
-    
-    const std::array<P, 4> neighbors = {curr + P(0, 1), curr + P(0, -1), curr + P(1, 0), curr + P(-1, 0)};
+
+    const std::array<P, 4> neighbors = {curr + P(0, 1), curr + P(0, -1), curr + P(1, 0),
+                                        curr + P(-1, 0)};
 
     // get valid neighbors
     for (auto& n : neighbors) {

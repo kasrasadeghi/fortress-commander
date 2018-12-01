@@ -86,7 +86,7 @@ void MoveSystem::updateEntity(float dt, ECS::Entity entity) {
     if (valid(curr) && not seesPoint(t)) {
       return false;
     }
-    
+
     return true;
   };
   // TODO: investigate only iterating once target location is reached
@@ -113,6 +113,6 @@ void MoveSystem::updateEntity(float dt, ECS::Entity entity) {
       }
     }
   };
-  
+
   updatePosition(target);
 }

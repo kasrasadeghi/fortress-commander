@@ -1,13 +1,13 @@
 #pragma once
 
+#include "Config.h"
 #include "ECS/Component.h"
 #include "Graphics.h"
-#include "Config.h"
 
 #include "Path.h"
 
-#include <functional>
 #include <deque>
+#include <functional>
 
 class World;
 
@@ -21,7 +21,7 @@ struct TransformComponent : public ECS::Component {
 
   TransformComponent(World& world, glm::vec2 pos, float rot) : world(world), pos(pos), rot(rot) {}
 
-  void translate(glm::vec2 displacement); 
+  void translate(glm::vec2 displacement);
 };
 
 struct SelectableComponent : public ECS::Component {
@@ -35,7 +35,7 @@ struct SelectableComponent : public ECS::Component {
 
 struct MotionComponent : public ECS::Component {
   float movementSpeed = 2.f; // TODO: not hardcoded
-  
+
   Path::iterator currentTarget; // when path.empty, this iterator is invalid
   glm::vec2 target{0, 0};
   bool hasTarget = false;
@@ -86,7 +86,7 @@ struct AttackComponent : public ECS::Component {
   static constexpr ECS::ComponentTypeId type = 6;
 
   AttackComponent() : AttackComponent(0, 1.f) {}
-  AttackComponent(StrengthValue strength, float attackCooldown) : strength(strength),
-	target(ECS::InvalidEntityId), battling(false),
-	attackTimer(0.f), attackCooldown(attackCooldown) {}
+  AttackComponent(StrengthValue strength, float attackCooldown)
+      : strength(strength), target(ECS::InvalidEntityId), battling(false), attackTimer(0.f),
+        attackCooldown(attackCooldown) {}
 };

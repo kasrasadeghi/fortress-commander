@@ -1,8 +1,8 @@
 #include "Enemy.h"
 #include "Game.h"
 
-#include "World.h"
 #include "Path.h"
+#include "World.h"
 
 Enemy::Enemy(glm::vec2 pos, World& world) : _target(pos), id(ECS::Manager::createEntity()) {
   ECS::Manager::addComponent<TransformComponent>(id, TransformComponent(world, pos, 0.f));
@@ -30,5 +30,5 @@ void Enemy::pathTo(glm::vec2 v) {
 }
 
 void Enemy::repath() const {
-  return ECS::Manager::getComponent<MotionComponent>(id).repath();  
+  return ECS::Manager::getComponent<MotionComponent>(id).repath();
 }

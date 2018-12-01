@@ -110,7 +110,7 @@ class Manager {
 
   /**
    * @brief Creates an Entity
-   * 
+   *
    * @detail Linearly increments IDs for new entities until capacity is reached,
    *         then searches for empty slots.
    */
@@ -134,10 +134,9 @@ class Manager {
     return _lastEntity;
   }
 
-
   /**
    * @brief Deletes the given entity id and unregisters it from all relevant systems
-   * 
+   *
    * @param id The entity to delete
    */
   bool _deleteEntity(Entity id) {
@@ -171,9 +170,10 @@ class Manager {
   }
 
   /**
-   * @brief Register the provided Entity with the Systems for which it fulfills the required components
-   * @detail Checks each System contained in the SystemContainer to see if entity contains the required
-   * components. If it does, we register entity with the corresponding system.
+   * @brief Register the provided Entity with the Systems for which it fulfills the required
+   * components
+   * @detail Checks each System contained in the SystemContainer to see if entity contains the
+   * required components. If it does, we register entity with the corresponding system.
    *
    * @param entity The Entity to register
    *
@@ -186,7 +186,7 @@ class Manager {
    *
    * @param entity The Entity to unregister
    *
-   * @return The number of systems from which entity was removed 
+   * @return The number of systems from which entity was removed
    */
   std::size_t _unregisterEntity(const Entity entity);
 

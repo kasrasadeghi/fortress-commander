@@ -22,6 +22,6 @@ public:
     _id = o.id;
     return *this;
   }
-  
+
   glm::vec2 pos() const;
 };

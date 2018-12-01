@@ -36,7 +36,7 @@ protected:
    * @brief Derived Systems should set their required components here
    * @detail To set the required components for a derived System, one
    * should create a ComponentTypeSet in the constructor of the specialized System,
-   * add the Component::type for each required component, and call 
+   * add the Component::type for each required component, and call
    * this function using move semantics.
    *
    * @param requiredComponents The set of required components

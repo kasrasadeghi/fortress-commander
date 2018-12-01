@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Graphics.h"
-#include "Tile.h"
 #include "Config.h"
 #include "GlmHashes.h"
+#include "Graphics.h"
 #include "Grid.h"
+#include "Tile.h"
 
 #include <unordered_set>
 #include <vector>
@@ -14,15 +14,19 @@ class Region {
   Grid<> _structure_pos_set;
 
 public:
-  Region(std::vector<std::vector<Tile>> data): _data(data) {
+  Region(std::vector<std::vector<Tile>> data) : _data(data) {
     for (auto& v : _structure_pos_set) {
       v.fill(0);
     }
   }
 
-  std::vector<Tile>& operator[](size_t i) { return _data[i]; }
+  std::vector<Tile>& operator[](size_t i) {
+    return _data[i];
+  }
 
-  Tile& at(glm::ivec2 p) { return _data[p.x][p.y]; }
+  Tile& at(glm::ivec2 p) {
+    return _data[p.x][p.y];
+  }
 
   void draw(View& view) const {
     const glm::vec2 offset(-tile_size * 0.5, -tile_size * 0.5);
@@ -40,9 +44,9 @@ public:
         // clang-format on
 
         rects.add()
-          .color(TileProperties::of(_data[i][j]).color)
-          .size({tile_size, tile_size})
-          .position(glm::vec2(i * tile_size, j * tile_size) - offset);
+            .color(TileProperties::of(_data[i][j]).color)
+            .size({tile_size, tile_size})
+            .position(glm::vec2(i * tile_size, j * tile_size) - offset);
       }
     }
 

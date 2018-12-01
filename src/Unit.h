@@ -37,10 +37,11 @@ public:
   void repath() const;
 
   static void holo(View& view, glm::vec2 curr) {
-    CircleBatch().add()
-      .position(curr)
-      .size({tile_size, tile_size})
-      .color({1, 0.5, 0.5, 0.5})
-      .draw(view);
+    CircleBatch()
+        .add()
+        .position(curr)
+        .size({tile_size, tile_size})
+        .color({1, 0.5, 0.5, 0.5})
+        .draw(view);
   }
 };
