@@ -9,6 +9,7 @@
 #include "Graphics.h"
 #include "World.h"
 #include "Path.h"
+#include <iostream>
 
 // Game g; // sets up opengl
 
@@ -46,3 +47,11 @@ TEST(Pathing, findPathSpeed) {
     findPath(region, {0, 0}, {world_size - 1, world_size - 1});
   }
 }
+
+// TEST(Pathing, constructor) {
+//   std::array<int, 100> a;
+//   a.fill(7);
+  // for (int i = 0; i < 100; ++i) {
+  //   std::cout << a[i] << std::endl;
+  // }
+// }

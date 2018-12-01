@@ -13,9 +13,16 @@ Path findPath(Region& region, glm::ivec2 start, glm::ivec2 end) {
   using Grid = std::array<std::array<unsigned char, 100>, 100>;
 
   std::deque<P> alive;
-  Grid aliveSet = {0};
+  Grid aliveSet;
+  for (auto& v : aliveSet) {
+    v.fill(0);
+  }
   
-  Grid dead = {0};
+  Grid dead;
+  for (auto& v : dead) {
+    v.fill(0);
+  }
+
   alive.push_back(start);
   aliveSet[start.x][start.y] = 1;
 
@@ -30,7 +37,10 @@ Path findPath(Region& region, glm::ivec2 start, glm::ivec2 end) {
 
   constexpr auto ws = world_size;
 
-  std::vector<std::vector<P>> backtrace(ws, std::vector(ws, P(-1, -1)));
+  std::array<std::array<P, ws>, ws> backtrace;
+  for (auto&v : backtrace) {
+    v.fill(P(-1, -1));
+  }
 
   while (not alive.empty()) {
     auto curr = alive.front();
