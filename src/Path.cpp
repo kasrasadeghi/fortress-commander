@@ -1,6 +1,7 @@
 #include "Path.h"
 #include "GlmHashes.h"
 #include "World.h"
+#include "Grid.h"
 
 #include <unordered_set>
 #include <deque>
