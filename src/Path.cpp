@@ -98,8 +98,38 @@ Path findPath(Region& region, glm::ivec2 start, glm::ivec2 end) {
     return neighbors;
   };
 
-  auto jump = [&start, &end](const P& x, const P& dir){
-    return x;
+  // mutates x, returning whether it is a good jump point 
+  std::function<bool(P&, const P&)> jump = [&](P& x, const P& dir){
+    if (!valid(x)) {
+      return false;
+    }
+    if (x == end) { return true; }
+
+    if (diagonal(dir)) {
+      // check for forced neighbors
+      if ((valid(x + P{-dir.x, dir.y}) && !valid(x + P{-dir.x, 0})) ||
+          (valid(x + P{dir.x, -dir.y}) && !valid(x + P{0, -dir.y}))) {
+        return true;
+      }
+
+      // diagonal jump
+      for (P dx : {P{dir.x, 0}, P{0, dir.y}}) {
+        P candidate = x;
+        if (jump(candidate, dx)) {
+          x = candidate;
+          return true;
+        }
+      }
+    } else {
+      // check for forced neighbors
+      P offset = dir.x != 0 ? P{0, 1} : P{1, 0};
+      if ((valid(x + dir + offset) && !valid(x + offset)) || 
+          (valid(x + dir - offset) && !valid(x - offset))) {
+        return true;
+      }
+    }
+    x += dir;
+    return jump(x, dir);
   };
 
   fScore[start] = heuristic(start);
@@ -132,7 +162,10 @@ Path findPath(Region& region, glm::ivec2 start, glm::ivec2 end) {
         continue;
       }
 
-      neighbor = jump(neighbor, direction(current, neighbor));
+      if (!jump(neighbor, direction(current, neighbor))) {
+        // bad jump point, skip it
+        continue;
+      }
 
       gScore.try_emplace(neighbor, std::numeric_limits<float>::infinity()); // default to inf
 
