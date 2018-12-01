@@ -108,6 +108,12 @@ class Manager {
    */
   void _addSystem(const System::Ptr& systemPtr);
 
+  /**
+   * @brief Creates an Entity
+   * 
+   * @detail Linearly increments IDs for new entities until capacity is reached,
+   *         then searches for empty slots.
+   */
   Entity _createEntity() {
     if (_lastEntity == MaxEntityId) {
       _reachedCapacity = true;
