@@ -4,16 +4,21 @@
 #include "Tile.h"
 #include "Config.h"
 #include "GlmHashes.h"
+#include "Grid.h"
 
 #include <unordered_set>
 #include <vector>
 
 class Region {
   std::vector<std::vector<Tile>> _data;
-  std::unordered_set<glm::ivec2> _structure_pos_set;
+  Grid<> _structure_pos_set;
 
 public:
-  Region(std::vector<std::vector<Tile>> data): _data(data) {}
+  Region(std::vector<std::vector<Tile>> data): _data(data) {
+    for (auto& v : _structure_pos_set) {
+      v.fill(0);
+    }
+  }
 
   std::vector<Tile>& operator[](size_t i) { return _data[i]; }
 
