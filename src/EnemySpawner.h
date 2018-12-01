@@ -11,7 +11,7 @@
 
 
 class EnemySpawner {
-  constexpr static float world_bounds = World::world_size * tile_size;
+  constexpr static float world_bounds = world_size * tile_size;
   constexpr static float spawn_interval = 5; // seconds  
   constexpr static int spawn_group_count = 1; // number of groups
   constexpr static int spawn_group_size = 3; // max enemies per group

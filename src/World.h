@@ -46,8 +46,6 @@ class World {
   friend class Game;
 
 public:
-  constexpr static int world_size = 100;
-
   World(size_t size) : _region({size, std::vector<Tile>(size, Tile::GRASS)}) {}
 
   Region& region() { return _region; }

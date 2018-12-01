@@ -56,7 +56,7 @@ class Game : public ECS::EventSubscriber<KeyDownEvent>,
     auto bottomRight = _view.center() + _view.radius();
 
     const auto viewRadius = view_size / 2.f;
-    const auto worldBorder = World::world_size * tile_size;
+    const auto worldBorder = world_size * tile_size;
     const auto kw = _window.widthScalingFactor();
 
     if (topLeft.x < 0) {

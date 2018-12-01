@@ -56,7 +56,7 @@ void MoveSystem::updateEntity(float dt, ECS::Entity entity) {
   };
 
   auto valid = [](glm::ivec2 p) -> bool {
-    return 0 <= p.x && 0 <= p.y && p.x < World::world_size && p.y < World::world_size;
+    return 0 <= p.x && 0 <= p.y && p.x < world_size && p.y < world_size;
   };
 
   auto seesTile = [&seesPoint, &valid](glm::ivec2 target) -> bool {
