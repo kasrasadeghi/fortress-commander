@@ -233,6 +233,33 @@ class BattleSystem : public ECS::System {
     }
   }
 
+  void _scanForHostiles(const ECS::Entity entity) {
+    auto& pos = ECS::Manager::getComponent<TransformComponent>(entity).pos;
+    auto& attack = ECS::Manager::getComponent<AttackComponent>(entity);
+
+    if (ECS::Manager::hasComponent<CommandableComponent>(entity)) {
+      for (auto& hostile : _gameState.enemies) {
+        auto& hostilePos = ECS::Manager::getComponent<TransformComponent>(hostile.id).pos;
+        auto dist = glm::distance(pos, hostilePos);
+
+        if (dist < attack.attackRange) {
+          attack.target = hostile.id;
+          break;
+        }
+      }
+    } else {
+      for (auto& hostile : _gameState.units) {
+        auto& hostilePos = ECS::Manager::getComponent<TransformComponent>(hostile.id).pos;
+        auto dist = glm::distance(pos, hostilePos);
+
+        if (dist < attack.attackRange) {
+          attack.target = hostile.id;
+          break;
+        }
+      }
+    }
+  }
+
 public:
   BattleSystem(GameState& gameState) : ECS::System(gameState) {
     ECS::ComponentTypeSet requiredComponents;
@@ -251,11 +278,12 @@ public:
     auto target = ECS::Manager::getComponent<AttackComponent>(entity).target;
 
     if (target == ECS::InvalidEntityId) {
+      _scanForHostiles(entity);
       return;
     }
 
-    auto pos = ECS::Manager::getComponent<TransformComponent>(entity).pos;
-    auto targetPos = ECS::Manager::getComponent<TransformComponent>(target).pos;
+    auto& pos = ECS::Manager::getComponent<TransformComponent>(entity).pos;
+    auto& targetPos = ECS::Manager::getComponent<TransformComponent>(target).pos;
 
     auto dist = glm::distance(pos, targetPos);
 

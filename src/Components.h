@@ -77,6 +77,8 @@ struct HealthComponent : public ECS::Component {
 struct AttackComponent : public ECS::Component {
   StrengthValue strength;
 
+  float attackRange;
+
   ECS::Entity target;
   bool battling;
 
@@ -85,8 +87,7 @@ struct AttackComponent : public ECS::Component {
 
   static constexpr ECS::ComponentTypeId type = 6;
 
-  AttackComponent() : AttackComponent(0, 1.f) {}
-  AttackComponent(StrengthValue strength, float attackCooldown)
-      : strength(strength), target(ECS::InvalidEntityId), battling(false), attackTimer(0.f),
-        attackCooldown(attackCooldown) {}
+  AttackComponent(StrengthValue strength, float attackRange, float attackCooldown)
+      : strength(strength), attackRange(attackRange), target(ECS::InvalidEntityId), battling(false),
+        attackTimer(0.f), attackCooldown(attackCooldown) {}
 };

@@ -34,10 +34,9 @@
 - clean up tile coloring
 - it just crashes sometimes??
   - the cell flips were out of bounds
->- todo
 - extract region
-- extract tile ?
-  - put static holo in there
+- extract tile
+>- todo
 
 # units
 - draw a single unit
@@ -80,8 +79,11 @@
 # battle system
 - ranged attack
 - health
->- todo
 - melee attack
+- passive hostile detection
+>- todo
+- attack-move
+- health bar
 
 # structures and resources
 - build structures (MouseDown)
