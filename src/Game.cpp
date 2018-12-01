@@ -75,7 +75,7 @@ void Game::loop() {
     last_time = glfwGetTime();
 
     handleTick(dt);
-    _world.draw(_gameState._view);
+    _world.draw(_gameState._view, _debug);
 
     glm::vec4 modeColor(.9, .9, .1, 1);
     auto& _mode = _gameState._mode;
@@ -109,30 +109,33 @@ void Game::loop() {
 
 void Game::receive(const KeyDownEvent& e) {
   auto key = e.key;
-  auto action = e.action;
 
-  if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+  if (key == GLFW_KEY_ESCAPE) {
     _window.close();
   }
 
   auto& _mode = _gameState._mode;
 
   // TODO: temporary. normally left clicking on empty ground gets you out of a mode
-  if (key == GLFW_KEY_Q && action == GLFW_PRESS) {
+  if (key == GLFW_KEY_Q) {
     _mode = ControlMode::NONE;
   }
 
-  if (key == GLFW_KEY_B && action == GLFW_PRESS) {
+  if (key == GLFW_KEY_B) {
     _mode = ControlMode::BUILD;
   }
-  if (key == GLFW_KEY_X && action == GLFW_PRESS) {
+  if (key == GLFW_KEY_X) {
     _mode = ControlMode::SELL;
   }
-  if ((key == GLFW_KEY_U || key == GLFW_KEY_E) && action == GLFW_PRESS) {
+  if (key == GLFW_KEY_U || key == GLFW_KEY_E) {
     _mode = ControlMode::UNIT;
   }
-  if (key == GLFW_KEY_T && action == GLFW_PRESS) {
+  if (key == GLFW_KEY_T) {
     _mode = ControlMode::TERRAIN;
+  }
+
+  if (key == GLFW_KEY_SEMICOLON) {
+    _debug = not _debug;
   }
 }
 

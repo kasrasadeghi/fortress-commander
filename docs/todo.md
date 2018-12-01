@@ -15,11 +15,13 @@
 - clean up lock camera code
 - add framerate
 - start camera in middle of world
+- toggle debug mode
+  - doesn't render pathfinding or enemy line of sight
 >- todo
+- health bar
 - view.zoom for scroll wheel?
   - https://www.youtube.com/watch?v=FSoFJAmh96g
-- remove keyboard view controls
-- toggle debug mode
+- remove keyboard view controls ?
 
 # ecs and event manager
 - create
@@ -85,7 +87,6 @@
 - passive hostile detection
 >- todo
 - attack-move
-- health bar
 
 # structures and resources
 - build structures (MouseDown)

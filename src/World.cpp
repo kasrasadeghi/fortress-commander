@@ -17,7 +17,7 @@ void mat4_print(glm::mat4 m) {
 }
 // clang-format on
 
-void World::_drawUnits(View& view) const {
+void World::_drawUnits(View& view, bool debug) const {
   const glm::vec4 selectedCol{1, 1, 0, 1}, unselectedCol{1, 0, 0, 1};
   CircleBatch circles;
 
@@ -35,6 +35,8 @@ void World::_drawUnits(View& view) const {
       .size({tile_size, tile_size})
       .color(u.selected() ? selectedCol : unselectedCol);
     
+    if (not debug) continue;
+
     auto& path = u.path();
     for (auto p : path) {
       rectangles.add()
@@ -57,7 +59,7 @@ void World::_drawUnits(View& view) const {
   rectangles.draw(view);
 }
 
-void World::_drawEnemies(View& view) const {
+void World::_drawEnemies(View& view, bool debug) const {
   const glm::vec4 enemyCol{1, 0, 1, 1};
   CircleBatch circles;
 
@@ -75,6 +77,8 @@ void World::_drawEnemies(View& view) const {
       .size({tile_size, tile_size})
       .color(enemyCol);
     
+    if (not debug) continue;
+
     auto& path = e.path();
     for (auto p : path) {
       rectangles.add()

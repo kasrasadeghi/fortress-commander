@@ -18,6 +18,7 @@ class Game : public ECS::EventSubscriber<KeyDownEvent>,
   GameState _gameState;
   World _world;
   Tile _paint = Tile::GRASS;
+  bool _debug = false;
 
   UnitSelectSystem* _unitSelectSystem;
   UnitCommandSystem* _unitCommandSystem;

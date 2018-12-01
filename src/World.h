@@ -13,8 +13,8 @@ class World {
   std::vector<Enemy> _enemies;
   std::vector<Structure> _structures;
 
-  void _drawUnits(View& view) const;
-  void _drawEnemies(View& view) const;
+  void _drawUnits(View& view, bool debug) const;
+  void _drawEnemies(View& view, bool debug) const;
   void _drawStructures(View& view) const;
 
   // stuff to make out of bounds clicks snap back to bounds
@@ -85,11 +85,11 @@ public:
     _region[v.x][v.y] = t;
   }
 
-  virtual void draw(View& view) const {
+  virtual void draw(View& view, bool debug) const {
     _region.draw(view);
     _drawStructures(view);
-    _drawEnemies(view);
-    _drawUnits(view);
+    _drawEnemies(view, debug);
+    _drawUnits(view, debug);
   }
 
   void addUnit(glm::vec2 pos);
