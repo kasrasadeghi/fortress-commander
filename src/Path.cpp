@@ -49,7 +49,7 @@ Path findPath(Region& region, glm::ivec2 start, glm::ivec2 end) {
     }
     dead[curr.x][curr.y] = 1;
     
-    const std::vector<P> neighbors = {curr + P(0, 1), curr + P(0, -1), curr + P(1, 0), curr + P(-1, 0)};
+    const std::array<P, 4> neighbors = {curr + P(0, 1), curr + P(0, -1), curr + P(1, 0), curr + P(-1, 0)};
 
     // get valid neighbors
     for (auto& n : neighbors) {

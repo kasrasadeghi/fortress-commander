@@ -43,9 +43,7 @@
 TEST(Pathing, findPathSpeed) {
   size_t world_size = World::world_size;
   Region region {{world_size, std::vector<Tile>(world_size, Tile::GRASS)}};
-  findPath(region, {0, 0}, {world_size - 1, world_size - 1});
-  findPath(region, {0, 0}, {world_size - 1, world_size - 1});
-  findPath(region, {0, 0}, {world_size - 1, world_size - 1});
-  findPath(region, {0, 0}, {world_size - 1, world_size - 1});
-  findPath(region, {0, 0}, {world_size - 1, world_size - 1});
+  for (int i = 0; i < 100; ++i) {
+    findPath(region, {0, 0}, {world_size - 1, world_size - 1});
+  }
 }
