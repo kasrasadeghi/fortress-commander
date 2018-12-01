@@ -12,13 +12,14 @@
 class World;
 
 struct TransformComponent : public ECS::Component {
+  World& world;
+
   glm::vec2 pos;
   float rot;
 
   static constexpr ECS::ComponentTypeId type = 1;
 
-  TransformComponent() : TransformComponent({0.f, 0.f}, 0.f) {}
-  TransformComponent(glm::vec2 pos, float rot) : pos(pos), rot(rot) {}
+  TransformComponent(World& world, glm::vec2 pos, float rot) : world(world), pos(pos), rot(rot) {}
 
   void translate(glm::vec2 displacement); 
 };
@@ -34,7 +35,6 @@ struct SelectableComponent : public ECS::Component {
 
 struct MotionComponent : public ECS::Component {
   float movementSpeed = 2.f; // TODO: not hardcoded
-  World& world;
   
   Path::iterator currentTarget; // when path.empty, this iterator is invalid
   glm::vec2 target{0, 0};
@@ -43,7 +43,7 @@ struct MotionComponent : public ECS::Component {
 
   static constexpr ECS::ComponentTypeId type = 3;
 
-  MotionComponent(World& world) : world(world) {}
+  MotionComponent() {}
 
   void pathTo(glm::vec2 pos);
   void repath() {

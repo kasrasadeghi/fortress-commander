@@ -225,10 +225,10 @@ class BattleSystem : public ECS::System {
   void _die(const ECS::Entity entity) {
     std::cout << "Entity " << entity << " has died." << std::endl;
     
-    if (ECS::Manager::hasComponent<SpawnableComponent>(entity)) {
-      // delete enemy
-    } else {
+    if (ECS::Manager::hasComponent<CommandableComponent>(entity)) {
       // delete unit
+    } else {
+      // delete enemy
     }
   }
 

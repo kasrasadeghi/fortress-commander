@@ -10,10 +10,11 @@
 void MoveSystem::updateEntity(float dt, ECS::Entity entity) {
   auto& pos = ECS::Manager::getComponent<TransformComponent>(entity).pos;
   MotionComponent& motion = ECS::Manager::getComponent<MotionComponent>(entity);
+  auto& world = ECS::Manager::getComponent<TransformComponent>(entity).world;
 
   if (not motion.hasTarget) return;
 
-  auto& region = motion.world.region();
+  auto& region = world.region();
 
   if (motion.path.empty()) {
     glm::ivec2 curr_cell = Game::mapCoordsToTile(pos);
