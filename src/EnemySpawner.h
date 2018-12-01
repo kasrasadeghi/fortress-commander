@@ -13,7 +13,7 @@
 class EnemySpawner {
   constexpr static float world_bounds = world_size * tile_size;
   constexpr static float spawn_interval = 5; // seconds  
-  constexpr static int spawn_group_count = 1; // number of groups
+  constexpr static int spawn_group_count = 0; // number of groups
   constexpr static int spawn_group_size = 3; // max enemies per group
   constexpr static int spawn_tiles_from_edge = 4; // offset of group from edge of map
   constexpr static float spawn_group_radius = 3;

@@ -1,63 +1,96 @@
 #include "Path.h"
 #include "GlmHashes.h"
 #include "World.h"
+#include "Config.h"
 
 #include <unordered_set>
 #include <deque>
 #include <vector>
+#include <queue>
 
+struct FScoreComparator : public std::less<glm::ivec2> {
+  std::unordered_map<glm::ivec2, float>& fScore;
+
+  FScoreComparator(std::unordered_map<glm::ivec2, float>& fScore) : fScore(fScore) {}
+  
+  bool operator()(const glm::ivec2& lhs, const glm::ivec2& rhs) {
+    fScore.try_emplace(lhs, std::numeric_limits<float>::infinity()); // default to inf
+    fScore.try_emplace(rhs, std::numeric_limits<float>::infinity()); // default to inf
+    return fScore.at(lhs) > fScore.at(rhs);
+  }
+};
 
 Path findPath(Region& region, glm::ivec2 start, glm::ivec2 end) {
   using P = glm::ivec2;
 
-  using Grid = std::array<std::array<unsigned char, 100>, 100>;
-
-  std::deque<P> alive;
-  Grid aliveSet = {0};
-  
-  Grid dead = {0};
-  alive.push_back(start);
-  aliveSet[start.x][start.y] = 1;
+  auto heuristic = [&end](const P& p){
+    return glm::distance(glm::vec2(p), glm::vec2(end));
+  };
 
   auto valid = [&region](P p) -> bool {
-    auto bounds = p.x >= 0 && p.y >= 0 && p.x < world_size && p.y < world_size;
-    return bounds && TileProperties::of(region[p.x][p.y]).walkable;
+    auto inBounds = p.x >= 0 && p.y >= 0 && p.x < world_size && p.y < world_size;
+    return inBounds && TileProperties::of(region[p.x][p.y]).walkable;
   };
 
-  auto seen = [&](P p) -> bool {
-    return aliveSet[p.x][p.y] || dead[p.x][p.y];
-  };
+  std::unordered_map<P, float> fScore;
+  std::unordered_map<P, float> gScore;
+  fScore[start] = heuristic(start);
+  gScore[start] = 0;
 
-  constexpr auto ws = world_size;
+  FScoreComparator fComparator(fScore); 
 
-  std::vector<std::vector<P>> backtrace(ws, std::vector(ws, P(-1, -1)));
+  std::unordered_set<P> closed;
+  std::unordered_set<P> open;
+  open.insert(start);
 
-  while (not alive.empty()) {
-    auto curr = alive.front();
-    alive.pop_front();
-    aliveSet[curr.x][curr.y] = 0;
+  std::priority_queue<P, std::vector<P>, FScoreComparator> openQueue(fComparator);
+  openQueue.push(start);
 
-    if (curr == end) {
-      Path trace;
-      auto curr = end;
-      while (curr != start) {
-        trace.push_front(curr);
-        curr = backtrace[curr.x][curr.y];
-      }
+  std::unordered_map<P, P> cameFrom;
 
-      return trace;
+  auto backtrace = [&cameFrom, &start](P end){
+    Path path;
+    while (end != start) {
+      path.emplace_front(end);
+      end = cameFrom[end];
     }
-    dead[curr.x][curr.y] = 1;
-    
-    const std::array<P, 4> neighbors = {curr + P(0, 1), curr + P(0, -1), curr + P(1, 0), curr + P(-1, 0)};
+    return path;
+  };
 
-    // get valid neighbors
-    for (auto& n : neighbors) {
-      if (valid(n) && not seen(n)) {
-        backtrace[n.x][n.y] = curr;
-        alive.push_back(n);
-        aliveSet[n.x][n.y] = 1;
+  while (not openQueue.empty()) {
+    P current = openQueue.top();
+    gScore.try_emplace(current, std::numeric_limits<float>::infinity()); // default to inf
+    
+    if (current == end) {
+      return backtrace(current); 
+    }
+
+    openQueue.pop();
+    open.erase(current);
+    closed.insert(current);
+
+    const std::vector<P> neighbors = {current + P(0, 1), current + P(0, -1), current + P(1, 0), current + P(-1, 0)};
+    for (P neighbor : neighbors) { 
+      if (closed.count(neighbor) > 0) {
+        continue;
       }
+      if (not valid(neighbor)) {
+        continue;
+      }
+
+      gScore.try_emplace(neighbor, std::numeric_limits<float>::infinity()); // default to inf
+
+      float tentativeG = gScore.at(current) + 1;
+      if (open.count(neighbor) == 0) {
+        openQueue.push(neighbor);
+        open.insert(neighbor);
+      } else if (tentativeG >= gScore.at(neighbor)) {
+        continue;
+      }
+
+      cameFrom[neighbor] = current;
+      gScore[neighbor] = tentativeG;
+      fScore[neighbor] = gScore.at(neighbor) + heuristic(neighbor);
     }
   }
 

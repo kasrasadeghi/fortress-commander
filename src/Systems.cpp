@@ -5,7 +5,11 @@
 #include "GlmHashes.h"
 #include "Path.h"
 
+#include <queue>
 #include <unordered_set>
+#include <unordered_map>
+#include <functional>
+#include <algorithm>
 
 void MoveSystem::updateEntity(float dt, ECS::Entity entity) {
   auto& pos = ECS::Manager::getComponent<TransformComponent>(entity).pos;
