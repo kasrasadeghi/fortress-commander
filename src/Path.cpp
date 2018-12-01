@@ -23,30 +23,16 @@ struct FScoreComparator : public std::less<glm::ivec2> {
 Path findPath(Region& region, glm::ivec2 start, glm::ivec2 end) {
   using P = glm::ivec2;
 
-  auto heuristic = [&end](const P& p){
-    return glm::distance(glm::vec2(p), glm::vec2(end));
-  };
-
-  auto valid = [&region](P p) -> bool {
-    auto inBounds = p.x >= 0 && p.y >= 0 && p.x < world_size && p.y < world_size;
-    return inBounds && TileProperties::of(region[p.x][p.y]).walkable;
-  };
+  std::unordered_map<P, P> cameFrom;
 
   std::unordered_map<P, float> fScore;
   std::unordered_map<P, float> gScore;
-  fScore[start] = heuristic(start);
-  gScore[start] = 0;
-
-  FScoreComparator fComparator(fScore); 
 
   std::unordered_set<P> closed;
   std::unordered_set<P> open;
-  open.insert(start);
 
+  FScoreComparator fComparator(fScore); 
   std::priority_queue<P, std::vector<P>, FScoreComparator> openQueue(fComparator);
-  openQueue.push(start);
-
-  std::unordered_map<P, P> cameFrom;
 
   auto backtrace = [&cameFrom, &start](P end){
     Path path;
@@ -56,6 +42,21 @@ Path findPath(Region& region, glm::ivec2 start, glm::ivec2 end) {
     }
     return path;
   };
+
+  auto heuristic = [&end](const P& p){
+    return glm::distance(glm::vec2(p), glm::vec2(end));
+  };
+
+  auto valid = [&region](P p) -> bool {
+    auto inBounds = p.x >= 0 && p.y >= 0 && p.x < world_size && p.y < world_size;
+    return inBounds && TileProperties::of(region[p.x][p.y]).walkable;
+  };
+
+  fScore[start] = heuristic(start);
+  gScore[start] = 0;
+
+  open.insert(start);
+  openQueue.push(start);
 
   while (not openQueue.empty()) {
     P current = openQueue.top();
