@@ -92,6 +92,8 @@ public:
   void addEnemy(glm::vec2 pos);
   void addStructure(glm::ivec2 cell);
 
+  void removeUnit(ECS::Entity id);
+  void removeEnemy(ECS::Entity id);
   void sellStructure(glm::ivec2 cell);
   // bool unitAt(glm::ivec2 cell);
 };

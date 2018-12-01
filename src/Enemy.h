@@ -15,7 +15,7 @@ protected:
   glm::vec2 _target;
 
 public:
-  const ECS::Entity _id;
+  const ECS::Entity id;
 
   constexpr static float unit_size = 0.5f * tile_size;
   constexpr static float unit_speed = 2.f;
@@ -24,6 +24,12 @@ public:
   constexpr static float attackCooldown = 1.f;
 
   Enemy(glm::vec2 pos, World&);
+
+  Enemy& operator=(const Enemy& o) {
+    ECS::Entity& _id = const_cast<ECS::Entity&>(id);
+    _id = o.id;
+    return *this;
+  }
 
   glm::vec2 pos() const;
   bool selected() const;

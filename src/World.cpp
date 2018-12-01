@@ -142,11 +142,35 @@ void World::addStructure(glm::ivec2 cell) {
   }
 }
 
+void World::removeUnit(ECS::Entity id) {
+  for (auto iter = _units.begin(); iter < _units.end(); ++iter) {
+    if (iter->id == id) {
+      _units.erase(iter);
+      break;
+    }
+  }
+
+  ECS::Manager::deleteEntity(id);
+}
+
+void World::removeEnemy(ECS::Entity id) {
+  for (auto iter = _enemies.begin(); iter < _enemies.end(); ++iter) {
+    if (iter->id == id) {
+      _enemies.erase(iter);
+      break;
+    }
+  }
+
+  ECS::Manager::deleteEntity(id);
+}
+
 void World::sellStructure(glm::ivec2 cell) {
   for (auto iter = _structures.begin(); iter < _structures.end(); ++iter) {
     if (iter->pos() == glm::vec2{cell}) {
       ECS::Manager::deleteEntity(iter->id);
       iter = _structures.erase(iter);
+
+      break;
     }
   }
 

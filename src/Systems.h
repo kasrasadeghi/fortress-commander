@@ -143,7 +143,7 @@ class UnitCommandSystem : public ECS::System, ECS::EventSubscriber<MouseDownEven
   bool _attackClickedEnemy(glm::vec2 clickedPos) {
     ECS::Entity found = ECS::InvalidEntityId;
     for (auto enemy : _enemies) {
-      const ECS::Entity enemyId = enemy._id;
+      const ECS::Entity enemyId = enemy.id;
 
       glm::vec2 pos = ECS::Manager::getComponent<TransformComponent>(enemyId).pos;
       float dist = glm::distance(clickedPos, pos);
@@ -223,12 +223,12 @@ class BattleSystem : public ECS::System {
   }
 
   void _die(const ECS::Entity entity) {
-    std::cout << "Entity " << entity << " has died." << std::endl;
+    auto& world = ECS::Manager::getComponent<TransformComponent>(entity).world;
     
     if (ECS::Manager::hasComponent<CommandableComponent>(entity)) {
-      // delete unit
+      world.removeUnit(entity); // delete unit
     } else {
-      // delete enemy
+      world.removeEnemy(entity); // delete enemy
     }
   }
 

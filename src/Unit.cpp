@@ -4,39 +4,39 @@
 #include "World.h"
 #include "Path.h"
 
-Unit::Unit(glm::vec2 pos, World& world) : _target(pos), _id(ECS::Manager::createEntity()) {
+Unit::Unit(glm::vec2 pos, World& world) : _target(pos), id(ECS::Manager::createEntity()) {
 
-  ECS::Entity id = _id; // have to do this because this pointer gets moved around
+  ECS::Entity idCopy = id; // have to do this because this pointer gets moved around
 
-  ECS::Manager::addComponent<TransformComponent>(_id, TransformComponent(world, pos, 0.f));
-  ECS::Manager::addComponent<MotionComponent>(_id, MotionComponent());
-  ECS::Manager::addComponent<HealthComponent>(_id, HealthComponent(health));
-  ECS::Manager::addComponent<AttackComponent>(_id, AttackComponent(strength, attackCooldown));
+  ECS::Manager::addComponent<TransformComponent>(id, TransformComponent(world, pos, 0.f));
+  ECS::Manager::addComponent<MotionComponent>(id, MotionComponent());
+  ECS::Manager::addComponent<HealthComponent>(id, HealthComponent(health));
+  ECS::Manager::addComponent<AttackComponent>(id, AttackComponent(strength, attackCooldown));
 
-  ECS::Manager::addComponent<SelectableComponent>(_id, SelectableComponent());
+  ECS::Manager::addComponent<SelectableComponent>(id, SelectableComponent());
   ECS::Manager::addComponent<CommandableComponent>(
-      _id, CommandableComponent([id](glm::vec2 pos) {
-        ECS::Manager::getComponent<MotionComponent>(id).pathTo(pos);
+      id, CommandableComponent([idCopy](glm::vec2 pos) {
+        ECS::Manager::getComponent<MotionComponent>(idCopy).pathTo(pos);
       }));
-  ECS::Manager::registerEntity(_id);
+  ECS::Manager::registerEntity(id);
 }
 
 glm::vec2 Unit::pos() const {
-  return ECS::Manager::getComponent<TransformComponent>(_id).pos;
+  return ECS::Manager::getComponent<TransformComponent>(id).pos;
 }
 
 bool Unit::selected() const {
-  return ECS::Manager::getComponent<SelectableComponent>(_id).selected;
+  return ECS::Manager::getComponent<SelectableComponent>(id).selected;
 }
 
 Path& Unit::path() const {
-  return ECS::Manager::getComponent<MotionComponent>(_id).path;
+  return ECS::Manager::getComponent<MotionComponent>(id).path;
 }
 
 void Unit::repath() const {
-  return ECS::Manager::getComponent<MotionComponent>(_id).repath();
+  return ECS::Manager::getComponent<MotionComponent>(id).repath();
 }
 
 glm::ivec2 Unit::currentTarget() const {
-  return ECS::Manager::getComponent<MotionComponent>(_id).currentTarget.operator*();
+  return ECS::Manager::getComponent<MotionComponent>(id).currentTarget.operator*();
 }
