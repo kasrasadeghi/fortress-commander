@@ -22,6 +22,7 @@
 - view.zoom for scroll wheel?
   - https://www.youtube.com/watch?v=FSoFJAmh96g
 - remove keyboard view controls ?
+- fog of war ?
 
 # ecs and event manager
 - create
