@@ -110,15 +110,12 @@ class Manager {
 
   Entity _createEntity() {
     if (_lastEntity == MaxEntityId) {
-      _reachedCapacity = true;	    
+      _reachedCapacity = true;
     }
 
     if (_reachedCapacity) {
-      _lastEntity = InvalidEntityId + 1;
-      while (_lastEntity != MaxEntityId) {
-        if (_entities.find(_lastEntity) == _entities.end()) {
-          break;
-        }
+      _lastEntity = 1;
+      while (_lastEntity != MaxEntityId && _entities.find(_lastEntity) != _entities.end()) {
         ++_lastEntity;
       }
 
