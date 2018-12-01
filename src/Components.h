@@ -36,8 +36,8 @@ struct MotionComponent : public ECS::Component {
   float movementSpeed = 2.f; // TODO: not hardcoded
   World& world;
   
-  glm::vec2 target;
   Path::iterator currentTarget; // when path.empty, this iterator is invalid
+  glm::vec2 target{0, 0};
   bool hasTarget = false;
   Path path;
 
