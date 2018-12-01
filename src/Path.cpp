@@ -10,12 +10,14 @@
 Path findPath(Region& region, glm::ivec2 start, glm::ivec2 end) {
   using P = glm::ivec2;
 
+  using Grid = std::array<std::array<unsigned char, 100>, 100>;
+
   std::deque<P> alive;
-  std::unordered_set<P> aliveSet;
+  Grid aliveSet = {0};
   
-  std::unordered_set<P> dead;
+  Grid dead = {0};
   alive.push_back(start);
-  aliveSet.insert(start);
+  aliveSet[start.x][start.y] = 1;
 
   auto valid = [&region](P p) -> bool {
     auto bounds = p.x >= 0 && p.y >= 0 && p.x < World::world_size && p.y < World::world_size;
@@ -23,7 +25,7 @@ Path findPath(Region& region, glm::ivec2 start, glm::ivec2 end) {
   };
 
   auto seen = [&](P p) -> bool {
-    return aliveSet.count(p) > 0 || dead.count(p) > 0;
+    return aliveSet[p.x][p.y] || dead[p.x][p.y];
   };
 
   constexpr auto ws = World::world_size;
@@ -33,7 +35,7 @@ Path findPath(Region& region, glm::ivec2 start, glm::ivec2 end) {
   while (not alive.empty()) {
     auto curr = alive.front();
     alive.pop_front();
-    aliveSet.erase(curr);
+    aliveSet[curr.x][curr.y] = 0;
 
     if (curr == end) {
       Path trace;
@@ -45,7 +47,7 @@ Path findPath(Region& region, glm::ivec2 start, glm::ivec2 end) {
 
       return trace;
     }
-    dead.insert(curr);
+    dead[curr.x][curr.y] = 1;
     
     const std::vector<P> neighbors = {curr + P(0, 1), curr + P(0, -1), curr + P(1, 0), curr + P(-1, 0)};
 
@@ -54,7 +56,7 @@ Path findPath(Region& region, glm::ivec2 start, glm::ivec2 end) {
       if (valid(n) && not seen(n)) {
         backtrace[n.x][n.y] = curr;
         alive.push_back(n);
-        aliveSet.insert(n);
+        aliveSet[n.x][n.y] = 1;
       }
     }
   }
