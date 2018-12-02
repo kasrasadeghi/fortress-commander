@@ -124,9 +124,9 @@ public:
     return *this;
   }
 
-  BaseBatch& size(const glm::vec2& size) {
+  BaseBatch& size(const glm::vec2& s) {
     _vaoDirty = true;
-    instances.back().size = size;
+    instances.back().size = s;
     return *this;
   }
 

@@ -9,8 +9,7 @@ varying vec4 instance_color;
 
 uniform mat4 projection;
 
-void main()
-{
+void main() {
   mat4 scaleMatrix = mat4(1.0);
   mat4 rotateMatrix = mat4(1.0);
   mat4 translateMatrix = mat4(1.0);
