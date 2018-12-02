@@ -18,6 +18,8 @@
 #include <sstream>
 #include <stdio.h>
 #include <vector>
+ 
+int Game::tile_view_size = 25;
 
 Game::Game()
     : _window("Fortress Commander"), _gameState(_window, _world._units, _world._enemies),

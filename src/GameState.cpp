@@ -6,5 +6,5 @@ GameState::GameState(RenderWindow& window, std::vector<Unit>& units, std::vector
   _view
       // .center(Game::view_size / 2.f * _window.widthScalingFactor(), Game::view_size / 2.f)
       .center(world_size / 2.f, world_size / 2.f)
-      .radius(Game::view_size / 2.f * _window.widthScalingFactor(), Game::view_size / 2.f);
+      .radius(Game::tile_view_size * tile_size / 2.f * _window.widthScalingFactor(), Game::tile_view_size * tile_size / 2.f);
 }

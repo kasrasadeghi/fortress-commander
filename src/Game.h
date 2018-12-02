@@ -56,7 +56,7 @@ class Game : public ECS::EventSubscriber<KeyDownEvent>,
     auto topLeft = _view.center() - _view.radius();
     auto bottomRight = _view.center() + _view.radius();
 
-    const auto viewRadius = view_size / 2.f;
+    const auto viewRadius = world_size * tile_view_size / 2.f;
     const auto worldBorder = world_size * tile_size;
     const auto kw = _window.widthScalingFactor();
 
@@ -75,7 +75,7 @@ class Game : public ECS::EventSubscriber<KeyDownEvent>,
   }
 
 public:
-  constexpr static float view_size = 25 * tile_size;
+  static int tile_view_size; // Initialized to 25
 
   Game();
 
