@@ -92,12 +92,12 @@ public:
     _drawUnits(view, debug);
   }
 
-  void addUnit(glm::vec2 pos);
-  void addEnemy(glm::vec2 pos);
-  void addStructure(glm::ivec2 cell);
+  bool addUnit(glm::vec2 pos);
+  bool addEnemy(glm::vec2 pos);
+  bool addStructure(glm::ivec2 cell);
 
-  void removeUnit(ECS::Entity id);
-  void removeEnemy(ECS::Entity id);
-  void sellStructure(glm::ivec2 cell);
+  bool removeUnit(ECS::Entity id);
+  bool removeEnemy(ECS::Entity id);
+  bool sellStructure(glm::ivec2 cell);
   // bool unitAt(glm::ivec2 cell);
 };

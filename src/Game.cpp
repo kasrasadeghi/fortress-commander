@@ -150,7 +150,6 @@ void Game::receive(const MouseDownEvent& e) {
     _paint = _world.flipCell(getMouseTile());
   }
   if (_gameState._mode == ControlMode::UNIT) {
-    // TODO: check if the add unit is in bounds
     _world.addUnit(getMouseCoords());
   }
 }

@@ -11,3 +11,7 @@ void Region::addStructure(glm::ivec2 cell) {
 void Region::removeStructure(glm::ivec2 cell) {
   _structure_pos_set[cell.x][cell.y] = 0;
 }
+
+bool Region::inBounds(glm::vec2 p) const {
+  return p.x >= 0 && p.y >= 0 && p.x < world_size && p.y < world_size;
+}

@@ -132,16 +132,30 @@ void World::_drawStructures(View& view) const {
   rb.draw(view);
 }
 
-void World::addUnit(glm::vec2 pos) {
+bool World::addUnit(glm::vec2 pos) {
+  if (not _region.inBounds(pos)) {
+    return false;
+  }
+
   _units.emplace_back(pos, *this);
+  return true;
 }
 
-void World::addEnemy(glm::vec2 pos) {
+bool World::addEnemy(glm::vec2 pos) {
+  if (not _region.inBounds(pos)) {
+    return false;
+  }
+
   _enemies.emplace_back(pos, *this);
   _enemies.back().pathTo({world_size / 2.f, world_size / 2.f});
+  return true;
 }
 
-void World::addStructure(glm::ivec2 cell) {
+bool World::addStructure(glm::ivec2 cell) {
+  if (not _region.inBounds({cell.x, cell.y})) {
+    return false;
+  }
+
   _structures.emplace_back(cell, *this);
   _region.addStructure(cell);
 
@@ -152,35 +166,48 @@ void World::addStructure(glm::ivec2 cell) {
   for (auto& u : _enemies) {
     u.repath();
   }
+
+  return true;
 }
 
-void World::removeUnit(ECS::Entity id) {
+bool World::removeUnit(ECS::Entity id) {
+  bool found = false;
+
   for (auto iter = _units.begin(); iter < _units.end(); ++iter) {
     if (iter->id == id) {
       _units.erase(iter);
+      found = true;
+
       break;
     }
   }
 
-  ECS::Manager::deleteEntity(id);
+  return found && ECS::Manager::deleteEntity(id);
 }
 
-void World::removeEnemy(ECS::Entity id) {
+bool World::removeEnemy(ECS::Entity id) {
+  bool found = false;
+
   for (auto iter = _enemies.begin(); iter < _enemies.end(); ++iter) {
     if (iter->id == id) {
       _enemies.erase(iter);
+      found = true;
+
       break;
     }
   }
 
-  ECS::Manager::deleteEntity(id);
+  return found && ECS::Manager::deleteEntity(id);
 }
 
-void World::sellStructure(glm::ivec2 cell) {
+bool World::sellStructure(glm::ivec2 cell) {
+  bool found = false;
+
   for (auto iter = _structures.begin(); iter < _structures.end(); ++iter) {
     if (iter->pos() == glm::vec2{cell}) {
       ECS::Manager::deleteEntity(iter->id);
       iter = _structures.erase(iter);
+      found = true;
 
       break;
     }
@@ -195,4 +222,6 @@ void World::sellStructure(glm::ivec2 cell) {
   for (auto& u : _enemies) {
     u.repath();
   }
+
+  return found;
 }

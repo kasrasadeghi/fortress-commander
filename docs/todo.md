@@ -28,8 +28,8 @@
 # ecs and event manager
 - create
 - static
->- todo
 - entity delete
+>- todo
 
 # world
 - add a world that can be drawn
@@ -61,8 +61,8 @@
   - so we don't have cyclic dependencies and post-scaling
   - check radius of unit
 - extract holos
->- todo
 - check if unit construction is in bounds
+>- todo
 
 # enemies
 - make enemy spawn not bound to framerate, but a timer
@@ -99,10 +99,10 @@
 - structure holo
 - draw structures
 - make structures not build on other structures
+- check if structure construction is in bounds
 >- todo
 - sell blocks
 - special base structure
-- check if structure construction is in bounds
 - color illegal area for construction
 - multiblock structures?
 

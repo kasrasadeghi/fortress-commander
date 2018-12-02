@@ -57,4 +57,6 @@ public:
   void addStructure(glm::ivec2 cell);
 
   void removeStructure(glm::ivec2 cell);
+
+  bool inBounds(glm::vec2 pos) const;
 };
