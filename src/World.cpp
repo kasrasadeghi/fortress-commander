@@ -30,10 +30,14 @@ void World::_drawUnits(View& view, bool debug) const {
 
   // clang-format off
   for (auto& u : _units) {
+    float healthPercent = (float)u.health()/(float)u.max_health;
+    auto baseColor = u.selected() ? selectedCol : unselectedCol;
+    baseColor.a *= healthPercent;
+
     circles.add()
       .position(u.pos())
       .size({tile_size, tile_size})
-      .color(u.selected() ? selectedCol : unselectedCol);
+      .color(baseColor);
     
     if (not debug) continue;
 
@@ -72,10 +76,14 @@ void World::_drawEnemies(View& view, bool debug) const {
 
   // clang-format off
   for (auto& e : _enemies) {
+    float healthPercent = (float)e.health()/(float)e.max_health;
+    auto baseColor = enemyCol;
+    baseColor.a *= healthPercent;
+
     circles.add()
       .position(e.pos())
       .size({tile_size, tile_size})
-      .color(enemyCol);
+      .color(baseColor);
     
     if (not debug) continue;
 

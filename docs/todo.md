@@ -23,6 +23,7 @@
   - https://www.youtube.com/watch?v=FSoFJAmh96g
 - remove keyboard view controls ?
 - fog of war ?
+- extract debug draw from unit/enemy draw
 
 # ecs and event manager
 - create
@@ -88,6 +89,10 @@
 - passive hostile detection
 >- todo
 - attack-move
+- check walk until in attack range
+- should units attack while moving ?
+- should attack closest enemy, not first one found
+- should stop attacking target when moving out of range
 
 # structures and resources
 - build structures (MouseDown)

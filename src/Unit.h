@@ -18,7 +18,7 @@ public:
 
   constexpr static float unit_size = 0.5f * tile_size;
   constexpr static float unit_speed = 2.f;
-  constexpr static HealthValue health = 150;
+  constexpr static HealthValue max_health = 150;
   constexpr static StrengthValue strength = 25;
   constexpr static float attackCooldown = 1.f;
 
@@ -35,6 +35,7 @@ public:
   Path& path() const;
   glm::ivec2 currentTarget() const;
   void repath() const;
+  HealthValue health() const;
 
   static void holo(View& view, glm::vec2 curr) {
     CircleBatch()

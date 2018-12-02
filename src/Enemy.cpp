@@ -7,7 +7,7 @@
 Enemy::Enemy(glm::vec2 pos, World& world) : _target(pos), id(ECS::Manager::createEntity()) {
   ECS::Manager::addComponent<TransformComponent>(id, TransformComponent(world, pos, 0.f));
   ECS::Manager::addComponent<MotionComponent>(id, MotionComponent());
-  ECS::Manager::addComponent<HealthComponent>(id, HealthComponent(health));
+  ECS::Manager::addComponent<HealthComponent>(id, HealthComponent(max_health));
   ECS::Manager::addComponent<AttackComponent>(id, AttackComponent(strength, 1.f, attackCooldown));
 
   ECS::Manager::registerEntity(id);
@@ -31,4 +31,8 @@ void Enemy::pathTo(glm::vec2 v) {
 
 void Enemy::repath() const {
   return ECS::Manager::getComponent<MotionComponent>(id).repath();
+}
+
+HealthValue Enemy::health() const {
+  return ECS::Manager::getComponent<HealthComponent>(id).health;
 }

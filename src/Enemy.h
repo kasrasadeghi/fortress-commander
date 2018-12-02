@@ -19,7 +19,7 @@ public:
 
   constexpr static float unit_size = 0.5f * tile_size;
   constexpr static float unit_speed = 2.f;
-  constexpr static HealthValue health = 100;
+  constexpr static HealthValue max_health = 100;
   constexpr static StrengthValue strength = 25;
   constexpr static float attackCooldown = 1.f;
 
@@ -37,4 +37,5 @@ public:
   glm::ivec2 currentTarget() const;
   void pathTo(glm::vec2 v);
   void repath() const;
+  HealthValue health() const;
 };
