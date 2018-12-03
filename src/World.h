@@ -17,7 +17,7 @@ class World {
 
   void _drawUnits(View& view, bool debug) const;
   void _drawEnemies(View& view, bool debug) const;
-  void _drawStructures(View& view) const;
+  void _drawStructures(TextureBatch& view) const;
 
   // stuff to make out of bounds clicks snap back to bounds
   bool _snapToRegion(glm::ivec2& v) {
@@ -87,11 +87,11 @@ public:
     _region[v.x][v.y] = t;
   }
 
-  virtual void draw(View& view, bool debug) const {
-    _region.draw(view);
-    _drawStructures(view);
-    _drawEnemies(view, debug);
-    _drawUnits(view, debug);
+  virtual void draw(TextureBatch& batch, bool debug) {
+    _region.draw(batch);
+    _drawStructures(batch);
+    // _drawEnemies(batch.view(), debug);
+    // _drawUnits(batch.view(), debug);
   }
 
   bool addUnit(glm::vec2 pos);

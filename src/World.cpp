@@ -131,20 +131,18 @@ void World::_drawEnemies(View& view, bool debug) const {
   rectangles.draw(view);
 }
 
-void World::_drawStructures(View& view) const {
+void World::_drawStructures(TextureBatch& batch) const {
   const glm::vec4 color{0.5, 0.5, 0.5, 1};
 
   const glm::vec2 offset(-tile_size * 0.5, -tile_size * 0.5);
-  RectangleBatch rb;
 
   for (const auto& structure : _structures) {
-    rb.add()
-        .color(color)
-        .size({tile_size, tile_size})
-        .position(structure.pos() * tile_size - offset);
+    batch.add(TextureBatch::Instance{
+      .pos = structure.pos() * tile_size - offset,
+      .size = {tile_size, tile_size},
+      .texOffset = 2.f
+    });
   }
-
-  rb.draw(view);
 }
 
 bool World::addUnit(glm::vec2 pos) {

@@ -57,6 +57,7 @@ struct TextureBatch {
     float rotation = 0;
   };
 
+  View* _view = nullptr; //TODO: delete
   std::vector<Instance> instances;
   const Texture& texture;
   Shader& shader = ResourceManager::getShader(SHADER_INDEX::TEXTURE);
@@ -104,8 +105,13 @@ struct TextureBatch {
   }
 
   void view(View& view) {
+    _view = &view;
     shader.use();
     shader.setMat4("projection", view.proj());
+  }
+
+  View& view() {
+    return *_view;
   }
 
   void clear() {

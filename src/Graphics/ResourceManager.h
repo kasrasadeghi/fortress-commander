@@ -7,7 +7,7 @@
 enum class SHADER_INDEX { INSTANCED_ARRAY = 0, TEXT = 1 , TEXTURE = 2 };
 
 #include "Shader.h"
-#include "stb_image.h"
+#include "Texture.h"
 
 class ResourceManager {
   static std::array<Shader, 3> _shaders;
@@ -33,4 +33,9 @@ public:
   }
 
   static Shader& getShader(SHADER_INDEX);
+
+  static Texture& texture() {
+    static Texture tex;
+    return tex;
+  }
 };

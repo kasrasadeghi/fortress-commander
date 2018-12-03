@@ -73,6 +73,8 @@ void Game::loop() {
   float last_time = glfwGetTime();
   TextRenderer t(_window.defaultView());
   EnemySpawner spawner(_world);
+  TextureBatch batch(ResourceManager::texture());
+  batch.view(_gameState._view);
 
   while (_window.isOpen()) {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -82,7 +84,11 @@ void Game::loop() {
     last_time = glfwGetTime();
 
     handleTick(dt);
-    _world.draw(_gameState._view, _debug);
+    batch.clear();
+    _world.draw(batch, _debug);
+
+    batch.update();
+    batch.draw();
 
     glm::vec4 modeColor(.9, .9, .1, 1);
     auto& _mode = _gameState._mode;
