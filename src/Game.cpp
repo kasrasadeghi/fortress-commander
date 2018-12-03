@@ -85,7 +85,7 @@ void Game::loop() {
 
     handleTick(dt);
     batch.clear();
-    _world.draw(batch, _debug);
+    _world.draw(batch, _gameState._view, _debug);
 
     batch.update();
     batch.draw();

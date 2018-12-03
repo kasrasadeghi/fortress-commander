@@ -17,7 +17,7 @@ void mat4_print(glm::mat4 m) {
 }
 // clang-format on
 
-void World::_drawUnits(View& view, bool debug) const {
+void World::_drawUnits(View& view) const {
   const glm::vec4 selectedCol{1, 1, 0, 1}, unselectedCol{1, 0, 0, 1}, attackingColor{1, 1, 1, 1};
   CircleBatch circles;
 
@@ -49,23 +49,6 @@ void World::_drawUnits(View& view, bool debug) const {
       .size({tile_size, tile_size})
       .color(baseColor);
     
-    if (not debug) continue;
-
-    auto& path = u.path();
-    for (auto p : path) {
-      rectangles.add()
-        .position(Game::centerOfTile(p) - pathTileOffset)
-        .size(pathTileSize)
-        .color({1, 0, 0, 0.3});
-    }
-
-    if (not path.empty()) {
-      auto target = u.currentTarget();
-      rectangles.add()
-        .position(Game::centerOfTile(target) - pathTileOffset)
-        .size(pathTileSize)
-        .color({0, 0, 1, 0.3});
-    }
   }
   // clang-format on
 
@@ -73,17 +56,11 @@ void World::_drawUnits(View& view, bool debug) const {
   rectangles.draw(view);
 }
 
-void World::_drawEnemies(View& view, bool debug) const {
+void World::_drawEnemies(View view) const {
   const glm::vec4 enemyCol{1, 0, 1, 1}, attackingColor{1, 1, 1, 1};
   CircleBatch circles;
 
-  constexpr float pathMarkerSize = 0.8;
-  RectangleBatch rectangles;
-  glm::vec2 pathTileSize(tile_size * pathMarkerSize, tile_size * pathMarkerSize);
-
-  glm::vec2 pathTileOffset(0.5 * pathMarkerSize * tile_size, 0.5 * pathMarkerSize * tile_size);
-  pathTileOffset -= glm::vec2(0.5, 0.5) * (tile_size * pathMarkerSize);
-
+  
   // clang-format off
   for (auto& e : _enemies) {
     float healthPercent = (float)e.health()/(float)e.max_health;
@@ -99,9 +76,22 @@ void World::_drawEnemies(View& view, bool debug) const {
       .position(e.pos())
       .size({tile_size, tile_size})
       .color(baseColor);
-    
-    if (not debug) continue;
+  }
+  // clang-format on
 
+  circles.draw(view);
+}
+
+void World::_drawDebug(View& view) const {
+  RectangleBatch rectangles;
+
+  constexpr float pathMarkerSize = 0.8;
+  glm::vec2 pathTileSize(tile_size * pathMarkerSize, tile_size * pathMarkerSize);
+
+  glm::vec2 pathTileOffset(0.5 * pathMarkerSize * tile_size, 0.5 * pathMarkerSize * tile_size);
+  pathTileOffset -= glm::vec2(0.5, 0.5) * (tile_size * pathMarkerSize);
+
+  for (auto& e : _enemies) {
     auto& path = e.path();
     for (auto p : path) {
       rectangles.add()
@@ -125,9 +115,24 @@ void World::_drawEnemies(View& view, bool debug) const {
         .draw(view);
     }
   }
-  // clang-format on
 
-  circles.draw(view);
+  for (auto& u : _units) {
+    auto& path = u.path();
+    for (auto p : path) {
+      rectangles.add()
+        .position(Game::centerOfTile(p) - pathTileOffset)
+        .size(pathTileSize)
+        .color({1, 0, 0, 0.3});
+    }
+
+    if (not path.empty()) {
+      auto target = u.currentTarget();
+      rectangles.add()
+        .position(Game::centerOfTile(target) - pathTileOffset)
+        .size(pathTileSize)
+        .color({0, 0, 1, 0.3});
+    }
+  }
   rectangles.draw(view);
 }
 

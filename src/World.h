@@ -15,9 +15,10 @@ class World {
   std::vector<Enemy> _enemies;
   std::vector<Structure> _structures;
 
-  void _drawUnits(View& view, bool debug) const;
-  void _drawEnemies(View& view, bool debug) const;
+  void _drawUnits(View& view) const;
+  void _drawEnemies(View view) const;
   void _drawStructures(TextureBatch& view) const;
+  void _drawDebug(View& view) const;
 
   // stuff to make out of bounds clicks snap back to bounds
   bool _snapToRegion(glm::ivec2& v) {
@@ -87,11 +88,15 @@ public:
     _region[v.x][v.y] = t;
   }
 
-  virtual void draw(TextureBatch& batch, bool debug) {
+  virtual void draw(TextureBatch& batch, View& view, bool debug) {
     _region.draw(batch);
     _drawStructures(batch);
-    // _drawEnemies(batch.view(), debug);
-    // _drawUnits(batch.view(), debug);
+    
+    // _drawEnemies(view);
+    // _drawUnits(view);
+    // if (debug) {
+    //   _drawDebug(view);
+    // }
   }
 
   bool addUnit(glm::vec2 pos);
