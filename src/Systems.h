@@ -297,11 +297,11 @@ public:
 
     auto dist = glm::distance(pos, targetPos);
 
-    auto& attack = ECS::Manager::getComponent<AttackComponent>(entity).attackTimer;
+    auto& attack = ECS::Manager::getComponent<AttackComponent>(entity);
 
     attack.battling = dist < 5.f; // TODO: don't hardcode the RoI, perform raycast?
 
-    if (attack.attling) {
+    if (attack.battling) {
       attack.attackTimer += dt;
 
       if (attack.attackTimer > attack.attackCooldown) {
