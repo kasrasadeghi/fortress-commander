@@ -11,7 +11,7 @@ Unit::Unit(glm::vec2 pos, World& world) : _target(pos), id(ECS::Manager::createE
   ECS::Manager::addComponent<TransformComponent>(id, TransformComponent(world, pos, 0.f));
   ECS::Manager::addComponent<MotionComponent>(id, MotionComponent());
   ECS::Manager::addComponent<HealthComponent>(id, HealthComponent(max_health));
-  ECS::Manager::addComponent<AttackComponent>(id, AttackComponent(strength, 2.f, attackCooldown));
+  ECS::Manager::addComponent<AttackComponent>(id, AttackComponent(strength, 3.5f, attackCooldown));
 
   ECS::Manager::addComponent<SelectableComponent>(id, SelectableComponent());
   ECS::Manager::addComponent<CommandableComponent>(
