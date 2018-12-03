@@ -21,6 +21,4 @@ struct GameState {
   std::vector<Enemy>& enemies;
 
   GameState(RenderWindow& window, std::vector<Unit>& units, std::vector<Enemy>& enemies);
-
-  void setRadius(int tile_view_size);
 };

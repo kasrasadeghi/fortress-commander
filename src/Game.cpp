@@ -207,10 +207,12 @@ void Game::handleTick(float dt) {
 
 void Game::incrementZoom() {
   tile_view_size = std::min(100, tile_view_size + 5);
-  _gameState.setRadius(tile_view_size);
+  //_gameState.setRadius(tile_view_size);
+  _gameState._view.radius(tile_view_size * tile_size / 2.f * _window.widthScalingFactor(), tile_view_size * tile_size / 2.f);
 }
 
 void Game::decrementZoom() {
   tile_view_size = std::max(10, tile_view_size - 5);
-  _gameState.setRadius(tile_view_size);
+  //_gameState.setRadius(tile_view_size);
+  _gameState._view.radius(tile_view_size * tile_size / 2.f * _window.widthScalingFactor(), tile_view_size * tile_size / 2.f);
 }
