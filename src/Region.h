@@ -12,6 +12,7 @@
 class Region {
   std::vector<std::vector<Tile>> _data;
   Grid<> _structure_pos_set;
+  Texture _tex;
 
 public:
   Region(std::vector<std::vector<Tile>> data) : _data(data) {
@@ -35,6 +36,7 @@ public:
   void draw(View& view) const {
     const glm::vec2 offset(-tile_size * 0.5, -tile_size * 0.5);
     RectangleBatch rects;
+    TextureBatch b(_tex);
 
     for (uint i = 0; i < _data.size(); ++i) {
       for (uint j = 0; j < _data[i].size(); ++j) {
@@ -47,12 +49,16 @@ public:
         ) continue;
         // clang-format on
 
-        rects.add()
-            .color(TileProperties::of(_data[i][j]).color)
-            .size({tile_size, tile_size})
-            .position(glm::vec2(i * tile_size, j * tile_size) - offset);
+        float texi = _data[i][j] == Tile::GRASS ? 1 : 4;
+        auto pos = glm::vec2{i * tile_size, j * tile_size} - offset;
+
+        b.add(TextureBatch::Instance{.pos = pos, .size = {tile_size, tile_size}, .texOffset = texi});
       }
     }
+
+    b.update();
+    b.view(view);
+    b.draw();
 
     rects.draw(view);
   }
