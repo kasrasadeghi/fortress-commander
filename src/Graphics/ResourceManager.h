@@ -4,7 +4,7 @@
 #include <string>
 #include <unordered_map>
 
-enum class SHADER_INDEX { INSTANCED_ARRAY = 0, TEXT = 1 };
+enum class SHADER_INDEX { INSTANCED_ARRAY = 0, TEXT = 1 , TEXTURE = 2 };
 
 #include "Shader.h"
 #include "stb_image.h"
