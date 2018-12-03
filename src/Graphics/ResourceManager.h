@@ -10,9 +10,13 @@ enum class SHADER_INDEX { INSTANCED_ARRAY = 0, TEXT = 1 };
 #include "stb_image.h"
 
 class ResourceManager {
+<<<<<<< HEAD
 
   static std::array<Shader, 2> _shaders;
 
+=======
+  static std::array<Shader, 3> _shaders;
+>>>>>>> 1ad5d65... remove texture2D code from resourcemanager
 public:
   /// fast readfile compared with other methods
   /// from the insane coding blog
