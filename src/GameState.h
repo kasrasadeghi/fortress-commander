@@ -2,6 +2,7 @@
 
 #include "Graphics.h"
 
+#include "ParticleSystem.h"
 #include "Enemy.h"
 
 enum class ControlMode { NONE, BUILD, SELL, UNIT, TERRAIN };
@@ -19,6 +20,8 @@ struct GameState {
 
   std::vector<Unit>& units;
   std::vector<Enemy>& enemies;
+  
+  ParticleSystem _bulletParticles;
 
   GameState(RenderWindow& window, std::vector<Unit>& units, std::vector<Enemy>& enemies);
 };

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
 
-set(CMAKE_BUILD_TYPE Release)
-# set(CMAKE_BUILD_TYPE Debug)
+#set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_BUILD_TYPE Debug)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -36,6 +36,7 @@ set(SRC_FILES
   src/Components.cpp
   src/Systems.cpp
   src/Structure.cpp
+  src/Particles.cpp
   src/Graphics/Shader.cpp
   src/Graphics/ResourceManager.cpp
   src/ECS/Manager.cpp
