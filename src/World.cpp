@@ -32,6 +32,8 @@ void World::_drawUnits(View& view, bool debug) const {
   for (auto& u : _units) {
     float healthPercent = (float)u.health()/(float)u.max_health;
     float attackTimer = ECS::Manager::getComponent<AttackComponent>(u.id).attackTimer;
+    
+    //TODO: make bullets flash instead of selection
 
     auto baseColor = unselectedCol;
     if (u.selected()) {

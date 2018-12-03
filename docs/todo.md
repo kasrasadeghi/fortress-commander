@@ -25,6 +25,7 @@
 - remove keyboard view controls ?
 - fog of war ?
 - extract debug draw from unit/enemy draw
+- bullet flash
 
 # ecs and event manager
 - create
@@ -173,9 +174,8 @@
 >- todo
 
 # graphics optimization
->- todo
-- geometry shaders 
 - instanced colors too ?
-- instanced colors by sectioning ? 
+>- todo
 - sending more instances at once ? 
-- precomputation of noninstanced vertex rectangles ? 
+- instanced colors by sectioning ? 
+- geometry shaders 
