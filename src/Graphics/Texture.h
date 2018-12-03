@@ -8,6 +8,7 @@ struct Texture {
   uint id;
   int width;
   int height;
+  float textureCount;
 
   Texture() {
     // load and create a texture 
@@ -34,5 +35,7 @@ struct Texture {
       std::cout << "Failed to load texture" << std::endl;
     }
     stbi_image_free(data);
+
+    textureCount = (float)width / (float)height;
   }
 };
