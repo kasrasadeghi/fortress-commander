@@ -7,3 +7,7 @@ GameState::GameState(RenderWindow& window, std::vector<Unit>& units, std::vector
       .center(world_size / 2.f, world_size / 2.f)
       .radius(Game::tile_view_size * tile_size / 2.f * _window.widthScalingFactor(), Game::tile_view_size * tile_size / 2.f);
 }
+
+void GameState::setRadius(int tile_view_size) {
+  _view.radius(tile_view_size * tile_size / 2.f * _window.widthScalingFactor(), tile_view_size * tile_size / 2.f);
+}

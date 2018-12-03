@@ -136,6 +136,13 @@ void Game::receive(const KeyDownEvent& e) {
     _mode = ControlMode::TERRAIN;
   }
 
+  if (key == GLFW_KEY_PERIOD) {
+    decrementZoom();
+  }
+  if (key == GLFW_KEY_COMMA) {
+    incrementZoom();
+  }
+
   if (key == GLFW_KEY_SEMICOLON) {
     _debug = not _debug;
   }
@@ -195,4 +202,15 @@ void Game::handleTick(float dt) {
 
   // lock view to world by rebounding
   _reboundViewToWorld();
+}
+
+
+void Game::incrementZoom() {
+  tile_view_size = std::min(100, tile_view_size + 5);
+  _gameState.setRadius(tile_view_size);
+}
+
+void Game::decrementZoom() {
+  tile_view_size = std::max(10, tile_view_size - 5);
+  _gameState.setRadius(tile_view_size);
 }

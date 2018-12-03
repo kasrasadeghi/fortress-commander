@@ -120,4 +120,7 @@ public:
   void cursorCallback(double x, double y);
 
   void handleTick(float dt);
+
+  void incrementZoom();
+  void decrementZoom();
 };
