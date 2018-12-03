@@ -101,18 +101,14 @@ void MoveSystem::updateEntity(float dt, ECS::Entity entity) {
   }
   auto target = Game::centerOfTile(*motion.currentTarget);
 
-  auto updatePosition = [dt, &pos, &motion](glm::vec2 target) {
-    if (glm::distance(target, pos) > dt * motion.movementSpeed) {
-      auto dir = glm::normalize(target - pos);
-      pos += dir * dt * motion.movementSpeed;
-    } else {
-      pos = target;
-      if (target == motion.target) {
-        motion.hasTarget = false;
-        motion.path.clear();
-      }
+  if (glm::distance(target, pos) > dt * motion.movementSpeed) {
+    auto dir = glm::normalize(target - pos);
+    ECS::Manager::getComponent<TransformComponent>(entity).translate(dir * motion.movementSpeed * dt);
+  } else {
+    pos = target;
+    if (target == motion.target) {
+      motion.hasTarget = false;
+      motion.path.clear();
     }
-  };
-
-  updatePosition(target);
+  }
 }

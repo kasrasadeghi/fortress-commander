@@ -324,7 +324,9 @@ public:
   void updateEntity(float dt, ECS::Entity entity) override {
     const glm::vec2& pos = ECS::Manager::getComponent<TransformComponent>(entity).pos;
     for (ECS::Entity other : entities()) {
-      if (not _movable.at(entity) || not _movable.at(other)) {
+      bool eMovable = _movable.at(entity); 
+      bool oMovable = _movable.at(other); 
+      if (not eMovable && not oMovable) {
         continue;
       }
 
@@ -334,10 +336,11 @@ public:
         continue;
       } else if (dist < Unit::unit_size * 2) {
         float overlapDistance = Unit::unit_size * 2 - dist;
-        glm::vec2 halfOverlap = glm::normalize(otherPos - pos) * overlapDistance / 2.f;
-
-        ECS::Manager::getComponent<TransformComponent>(entity).translate(-halfOverlap);
-        ECS::Manager::getComponent<TransformComponent>(other).translate(halfOverlap);
+        glm::vec2 displacement = glm::normalize(otherPos - pos) * overlapDistance;
+        
+        if (eMovable && oMovable) { displacement *= 0.5f; }
+        if (eMovable) { ECS::Manager::getComponent<TransformComponent>(entity).translate(-displacement); }
+        if (oMovable) { ECS::Manager::getComponent<TransformComponent>(other).translate(displacement); }
       }
     }
   }
