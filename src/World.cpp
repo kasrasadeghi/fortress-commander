@@ -72,7 +72,7 @@ void World::_drawUnits(View& view, bool debug) const {
 }
 
 void World::_drawEnemies(View& view, bool debug) const {
-  const glm::vec4 enemyCol{1, 0, 1, 1};
+  const glm::vec4 enemyCol{1, 0, 1, 1}, attackingColor{1, 1, 1, 1};
   CircleBatch circles;
 
   constexpr float pathMarkerSize = 0.8;
@@ -85,7 +85,12 @@ void World::_drawEnemies(View& view, bool debug) const {
   // clang-format off
   for (auto& e : _enemies) {
     float healthPercent = (float)e.health()/(float)e.max_health;
+    float attackTimer = ECS::Manager::getComponent<AttackComponent>(e.id).attackTimer;
+
     auto baseColor = enemyCol;
+    if (attackTimer < 0.25f) {
+      baseColor = attackingColor;
+    }
     baseColor.a *= healthPercent;
 
     circles.add()

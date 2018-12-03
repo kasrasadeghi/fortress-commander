@@ -79,4 +79,8 @@ bool Manager::_clear() {
 
   return _entities.size() == 0;
 }
+
+bool Manager::_hasEntity(Entity entity) const {
+  return _entities.find(entity) != _entities.end();
+}
 } // namespace ECS

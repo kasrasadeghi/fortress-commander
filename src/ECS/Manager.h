@@ -206,6 +206,15 @@ class Manager {
    */
   bool _clear();
 
+  /**
+   * @brief Checks to see whether the given Entity exists
+   *
+   * @param entity The Entity to check for
+   *
+   * @return The presence of the given Entity
+   */
+  bool _hasEntity(Entity entity) const;
+
 public:
   template <typename C>
   static bool createComponentStore() {
@@ -238,15 +247,18 @@ public:
   static std::size_t update(float dt) {
     return _getInstance()._update(dt);
   }
-  static bool clear() {
-    return _getInstance()._clear();
-  }
   static bool deleteEntity(Entity id) {
     return _getInstance()._deleteEntity(id);
   }
   template <typename C>
   static bool hasComponent(Entity id) {
     return _getInstance()._getComponentStore<C>().has(id);
+  }
+  static bool clear() {
+    return _getInstance()._clear();
+  }
+  static bool hasEntity(Entity entity) {
+    return _getInstance()._hasEntity(entity);
   }
 };
 } // namespace ECS

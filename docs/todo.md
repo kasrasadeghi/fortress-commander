@@ -17,6 +17,7 @@
 - start camera in middle of world
 - toggle debug mode
   - doesn't render pathfinding or enemy line of sight
+- visualize unit/enemy attack
 >- todo
 - health bar
 - view.zoom for scroll wheel?
@@ -100,8 +101,8 @@
 - draw structures
 - make structures not build on other structures
 - check if structure construction is in bounds
->- todo
 - sell blocks
+>- todo
 - special base structure
 - color illegal area for construction
 - multiblock structures?

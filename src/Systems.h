@@ -244,7 +244,8 @@ class BattleSystem : public ECS::System {
 
         if (dist < attack.attackRange) {
           attack.target = hostile.id;
-          break;
+          attack.battling = true;
+          return;
         }
       }
     } else {
@@ -254,10 +255,14 @@ class BattleSystem : public ECS::System {
 
         if (dist < attack.attackRange) {
           attack.target = hostile.id;
-          break;
+          return;
         }
       }
     }
+
+    attack.target = ECS::InvalidEntityId;
+    attack.battling = false;
+    attack.attackTimer = attack.attackCooldown;
   }
 
 public:
@@ -277,6 +282,11 @@ public:
 
     auto target = ECS::Manager::getComponent<AttackComponent>(entity).target;
 
+    // Check to see if the target has died
+    if (not ECS::Manager::hasEntity(target)) {
+      target = ECS::InvalidEntityId;
+    }
+
     if (target == ECS::InvalidEntityId) {
       _scanForHostiles(entity);
       return;
@@ -287,19 +297,18 @@ public:
 
     auto dist = glm::distance(pos, targetPos);
 
-    auto& attackTimer = ECS::Manager::getComponent<AttackComponent>(entity).attackTimer;
-    auto& entityBattling = ECS::Manager::getComponent<AttackComponent>(entity).battling;
+    auto& attack = ECS::Manager::getComponent<AttackComponent>(entity).attackTimer;
 
-    entityBattling = dist < 5.f; // TODO: don't hardcode the RoI, perform raycast?
+    attack.battling = dist < 5.f; // TODO: don't hardcode the RoI, perform raycast?
 
-    if (entityBattling) {
-      attackTimer += dt;
+    if (attack.attling) {
+      attack.attackTimer += dt;
 
-      if (attackTimer > ECS::Manager::getComponent<AttackComponent>(entity).attackCooldown) {
+      if (attack.attackTimer > attack.attackCooldown) {
         _performAttack(entity, target);
       }
     } else { // Reset the timer so we attack immediately on engaging
-      attackTimer = ECS::Manager::getComponent<AttackComponent>(entity).attackCooldown;
+      attack.attackTimer = ECS::Manager::getComponent<AttackComponent>(entity).attackCooldown;
     }
   }
 };
