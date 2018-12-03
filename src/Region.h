@@ -25,6 +25,10 @@ public:
   }
 
   Tile& at(glm::ivec2 p) {
+    if (not inBounds({p.x, p.y})) {
+      return _data[0][0]; // What else could we return here?
+    }
+
     return _data[p.x][p.y];
   }
 
