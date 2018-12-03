@@ -73,4 +73,10 @@ std::size_t Manager::_update(float dt) {
 
   return updatedSystems;
 }
+
+bool Manager::clear() {
+  _entities.clear();
+
+  return _entities.size() == 0;
+}
 } // namespace ECS

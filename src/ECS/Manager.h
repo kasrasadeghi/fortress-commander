@@ -199,6 +199,13 @@ class Manager {
    */
   std::size_t _update(float dt);
 
+  /**
+   * @brief Clears every Entity from the Manager
+   *
+   * @return Success in clearing the underlying data structure
+   */
+  bool clear();
+
 public:
   template <typename C>
   static bool createComponentStore() {
