@@ -92,7 +92,7 @@ public:
     _region.draw(batch);
     _drawStructures(batch);
     
-    // _drawEnemies(view);
+    // _drawEnemies(view);`
     // _drawUnits(view);
     // if (debug) {
     //   _drawDebug(view);
