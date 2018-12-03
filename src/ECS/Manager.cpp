@@ -74,7 +74,7 @@ std::size_t Manager::_update(float dt) {
   return updatedSystems;
 }
 
-bool Manager::clear() {
+bool Manager::_clear() {
   _entities.clear();
 
   return _entities.size() == 0;

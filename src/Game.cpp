@@ -64,6 +64,11 @@ std::string str(T obj) {
   return ss.str();
 }
 
+void Game::restart() {
+  ECS::Manager::clear();
+  _world = World(world_size);
+}
+
 void Game::loop() {
   float last_time = glfwGetTime();
   TextRenderer t(_window.defaultView());
@@ -141,6 +146,10 @@ void Game::receive(const KeyDownEvent& e) {
   }
   if (key == GLFW_KEY_COMMA) {
     incrementZoom();
+  }
+
+  if (key == GLFW_KEY_F12) {
+    restart();
   }
 
   if (key == GLFW_KEY_SEMICOLON) {

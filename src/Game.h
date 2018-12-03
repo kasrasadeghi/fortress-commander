@@ -109,6 +109,7 @@ public:
     return mapCoordsToTile(getMouseCoords());
   }
 
+  void restart();
   void loop();
 
   void receive(const KeyDownEvent& e) override;

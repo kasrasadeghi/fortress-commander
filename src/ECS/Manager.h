@@ -204,7 +204,7 @@ class Manager {
    *
    * @return Success in clearing the underlying data structure
    */
-  bool clear();
+  bool _clear();
 
 public:
   template <typename C>
@@ -237,6 +237,9 @@ public:
   }
   static std::size_t update(float dt) {
     return _getInstance()._update(dt);
+  }
+  static bool clear() {
+    return _getInstance()._clear();
   }
   static bool deleteEntity(Entity id) {
     return _getInstance()._deleteEntity(id);
