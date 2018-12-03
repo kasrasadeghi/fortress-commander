@@ -36,8 +36,10 @@ void TransformComponent::translate(glm::vec2 displacement) {
   auto stepPosition = [&](glm::vec2 step) {
     const glm::vec2 newPos = pos + step;
     const glm::ivec2 tile = Game::mapCoordsToTile(newPos);
-    const std::array<glm::ivec2, 4> neighbors{glm::ivec2{tile.x - 1, tile.y}, glm::ivec2{tile.x + 1, tile.y}, 
-                                              glm::ivec2{tile.x, tile.y - 1}, glm::ivec2{tile.x, tile.y + 1}};
+    const std::array<glm::ivec2, 8> neighbors{glm::ivec2{tile.x - 1, tile.y}, glm::ivec2{tile.x + 1, tile.y}, 
+                                              glm::ivec2{tile.x, tile.y - 1}, glm::ivec2{tile.x, tile.y + 1},
+                                              glm::ivec2{tile.x + 1, tile.y + 1}, glm::ivec2{tile.x + 1, tile.y - 1}, 
+                                              glm::ivec2{tile.x - 1, tile.y + 1}, glm::ivec2{tile.x - 1, tile.y - 1}};
     for (const glm::ivec2& t : neighbors) {
       if (not validPosition(t) && intersectsTile(newPos, t)) {
         return false;
