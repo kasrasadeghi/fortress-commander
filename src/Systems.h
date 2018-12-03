@@ -221,6 +221,10 @@ class BattleSystem : public ECS::System {
 
     // Reset the attack timer so we will attack again after attackCooldown
     ECS::Manager::getComponent<AttackComponent>(entity).attackTimer = 0.f;
+
+    glm::vec2 pos = ECS::Manager::getComponent<TransformComponent>(entity).pos;
+    glm::vec2 tpos = ECS::Manager::getComponent<TransformComponent>(target).pos;
+    _gameState._bulletParticles.add(BulletParticle(pos, tpos, 20));
   }
 
   void _die(const ECS::Entity entity) {

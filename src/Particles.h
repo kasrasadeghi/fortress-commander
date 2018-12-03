@@ -18,7 +18,7 @@ struct BulletParticle : public BaseParticle {
   static LineBatch* lines;
 
   static void beforeUpdate(View& view) {
-    if (not lines) { lines = new LineBatch(); }
+    if (lines == nullptr) { lines = new LineBatch(); }
     lines->instances.clear();
   }
 
@@ -26,7 +26,7 @@ struct BulletParticle : public BaseParticle {
     lines->draw(view);
   }
 
-  BulletParticle(glm::vec2 position, glm::vec2 target, float speed) {
+  BulletParticle(glm::vec2 position, glm::vec2 target, float speed) : BaseParticle() {
     pos = position;
     vel = glm::normalize(target - pos) * speed;
     lifespan = glm::distance(pos, target) / speed;
@@ -34,7 +34,7 @@ struct BulletParticle : public BaseParticle {
 
   void draw(float dt) {
     lines->add()
-      .points(pos, pos - vel * dt)
+      .points(pos, pos - glm::normalize(vel) * 0.35f)
       .lineWidth(0.1)
       .color({1, 1, 1, 1});
   }

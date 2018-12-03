@@ -21,7 +21,7 @@ struct GameState {
   std::vector<Unit>& units;
   std::vector<Enemy>& enemies;
   
-  ParticleSystem _bulletParticles;
+  ParticleSystem<BulletParticle> _bulletParticles;
 
   GameState(RenderWindow& window, std::vector<Unit>& units, std::vector<Enemy>& enemies);
 };
