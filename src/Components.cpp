@@ -18,8 +18,8 @@ void TransformComponent::translate(glm::vec2 displacement) {
     if (pos.x < 0 || pos.y < 0 || pos.x >= world_size || pos.y > world_size) {
       return false;
     }
-    const Tile t = region.at(Game::mapCoordsToTile(pos));
-    return TileProperties::of(t).walkable;
+    const glm::ivec2 tilePos = Game::mapCoordsToTile(pos);
+    return TileProperties::of(region.at(tilePos)).walkable && not world.structureAt(tilePos).has_value();
   };
 
   auto intersectsTile = [&](const glm::vec2& pos, const glm::ivec2& tile) {

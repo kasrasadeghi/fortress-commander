@@ -238,3 +238,15 @@ bool World::sellStructure(glm::ivec2 cell) {
 
   return found;
 }
+
+std::optional<Structure> World::structureAt(glm::ivec2 cell) {
+  // TODO: Region::structureAt seemed to have stale data after Game::restart()
+  // also, why is structure data split across world and region?
+
+  for (Structure& s : _structures) {
+    if (Game::mapCoordsToTile(s.pos()) == cell) {
+      return s;
+    }
+  }
+  return {};
+}
