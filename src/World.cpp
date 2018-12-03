@@ -18,7 +18,7 @@ void mat4_print(glm::mat4 m) {
 // clang-format on
 
 void World::_drawUnits(View& view, bool debug) const {
-  const glm::vec4 selectedCol{1, 1, 0, 1}, unselectedCol{1, 0, 0, 1};
+  const glm::vec4 selectedCol{1, 1, 0, 1}, unselectedCol{1, 0, 0, 1}, attackingColor{1, 1, 1, 1};
   CircleBatch circles;
 
   constexpr float pathMarkerSize = 0.8;
@@ -31,7 +31,15 @@ void World::_drawUnits(View& view, bool debug) const {
   // clang-format off
   for (auto& u : _units) {
     float healthPercent = (float)u.health()/(float)u.max_health;
-    auto baseColor = u.selected() ? selectedCol : unselectedCol;
+    float attackTimer = ECS::Manager::getComponent<AttackComponent>(u.id).attackTimer;
+
+    auto baseColor = unselectedCol;
+    if (u.selected()) {
+      baseColor = selectedCol;
+    } else if (attackTimer < 0.25f) {
+      baseColor = attackingColor;
+    }
+
     baseColor.a *= healthPercent;
 
     circles.add()

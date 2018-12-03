@@ -89,5 +89,5 @@ struct AttackComponent : public ECS::Component {
 
   AttackComponent(StrengthValue strength, float attackRange, float attackCooldown)
       : strength(strength), attackRange(attackRange), target(ECS::InvalidEntityId), battling(false),
-        attackTimer(0.f), attackCooldown(attackCooldown) {}
+        attackTimer(attackCooldown), attackCooldown(attackCooldown) {}
 };
