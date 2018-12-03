@@ -48,22 +48,22 @@
  * 
  */
 
-struct Instance {
-  glm::vec2 pos;
-  glm::vec2 size;
-  glm::vec4 aColor = {1, 1, 1, 1};
-  float texOffset = 0;
-  float rotation = 0;
-};
-
 struct TextureBatch {
+  struct Instance {
+    glm::vec2 pos;
+    glm::vec2 size;
+    glm::vec4 aColor = {1, 1, 1, 1};
+    float texOffset = 0;
+    float rotation = 0;
+  };
+
   std::vector<Instance> instances;
-  Texture& texture;
+  const Texture& texture;
   Shader& shader = ResourceManager::getShader(SHADER_INDEX::TEXTURE);
 
   uint VAO, VBO, IBO;
 
-  TextureBatch(Texture& t) : texture(t) {
+  TextureBatch(const Texture& t) : texture(t) {
     glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

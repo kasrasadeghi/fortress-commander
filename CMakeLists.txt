@@ -56,4 +56,4 @@ setup_freetype(${PROJECT_NAME})
 
 
 # copy over resources
-copy_to_bin_dir(fonts shaders)
+copy_to_bin_dir(fonts shaders textures)
