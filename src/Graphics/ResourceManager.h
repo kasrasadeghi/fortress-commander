@@ -7,6 +7,8 @@
 enum class SHADER_INDEX { INSTANCED_ARRAY = 0, TEXT = 1 };
 
 #include "Shader.h"
+#include "stb_image.h"
+
 class ResourceManager {
 
   static std::array<Shader, 2> _shaders;
