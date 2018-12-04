@@ -51,8 +51,12 @@ public:
     glBindVertexArray(VAO);
   }
 
-  void unbind() {
+  static void unbind() {
     glBindVertexArray(0);
+  }
+
+  VertexBuffer& buffer(bool instanced = false) {
+    return instanced ? IB : VB;
   }
 
   /**
@@ -60,33 +64,28 @@ public:
    * 
    * @returns the vertex buffer that was created so that you can load data into it.
    */
-  VertexBuffer& addBuffer(std::initializer_list<uint> sizes, bool instanced = false) {
-    glBindVertexArray(VAO);
+  VertexBuffer& setAttributeLayout(std::initializer_list<uint> sizes, bool instanced = false) {
+    bind();
 
-    if (instanced) {
-      glBindBuffer(GL_ARRAY_BUFFER, IB.VBO);
-    } else {
-      glBindBuffer(GL_ARRAY_BUFFER, VB.VBO);
-    }
+    buffer(instanced).bind();
+
+    size_t stride = 0; // the stride should be the size of the elements of the vertex buffer == sum of sizes
+    for (uint size : sizes) { stride += size; }
 
     size_t dataOffset = 0;
 
     for (uint size : sizes) {
       glEnableVertexAttribArray(attribCounter);
-      glVertexAttribPointer(attribCounter, size, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)dataOffset);
+      glVertexAttribPointer(attribCounter, size, GL_FLOAT, GL_FALSE, stride * sizeof(float), (void*)dataOffset);
       if (instanced) { glVertexAttribDivisor(attribCounter, 1); }
       attribCounter++;
       dataOffset += size * sizeof(float);
     }
 
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+    VertexBuffer::unbind();
+    unbind();
 
-    if (instanced) {
-      return IB;
-    } else {
-      return VB;
-    }
+    return buffer(instanced);
   }
 };
 }
