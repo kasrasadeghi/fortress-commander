@@ -13,6 +13,14 @@ struct VertexBuffer {
     glDeleteBuffers(1, &VBO);
   }
 
+  void bind() {
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+  }
+
+  static void unbind() {
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+  }
+
   template <typename T>
   void bindData(const std::vector<T>& vertices) {
     // assert: sum(attribute sizes) * sizeof(float) == sizeof(T)
@@ -37,6 +45,14 @@ public:
 
   ~VertexArray() {
     glDeleteVertexArrays(1, &VAO);
+  }
+
+  void bind() {
+    glBindVertexArray(VAO);
+  }
+
+  void unbind() {
+    glBindVertexArray(0);
   }
 
   /**

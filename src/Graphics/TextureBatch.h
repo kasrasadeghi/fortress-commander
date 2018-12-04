@@ -82,9 +82,10 @@ struct TextureBatch {
       { 0.5f,  0.5f,    tx,   1.0f}, // top right
     };
 
-    glBindVertexArray(VA.VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VA.VB.VBO);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec4), vertices.data(), GL_STATIC_DRAW);
+    VA.bind();
+
+    VA.VB.bindData(vertices);
+    VA.VB.bind();
 
     int currentAttr = 0;
     size_t dataOffset = 0;
@@ -98,8 +99,8 @@ struct TextureBatch {
       dataOffset += size * sizeof(float);
     }
 
-    glBindVertexArray(VA.VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VA.IB.VBO);
+    VA.bind();
+    VA.IB.bind();
 
     sizes = {2, 2, 4, 1, 1};
 
@@ -111,8 +112,8 @@ struct TextureBatch {
       currentAttr++;
       dataOffset += size * sizeof(float);
     }
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+    VA.IB.unbind();
+    VA.unbind();
   }
 
   void view(View& view) {
