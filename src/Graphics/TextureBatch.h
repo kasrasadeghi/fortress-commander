@@ -86,26 +86,28 @@ struct TextureBatch {
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    {// global attributes
-      // position attribute
-      glEnableVertexAttribArray(0);
-      glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-      // texture coord attribute
-      glEnableVertexAttribArray(1);
-      glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+    int currentAttr = 0;
+    size_t dataOffset = 0;
+
+    std::initializer_list<uint> sizes = {2, 2};
+
+    for (uint size : sizes) {
+      glEnableVertexAttribArray(currentAttr);
+      glVertexAttribPointer(currentAttr, size, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)dataOffset);
+      currentAttr++;
+      dataOffset += size * sizeof(float);
     }
 
     glGenBuffers(1, &IBO);
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, IBO);
 
-    std::initializer_list<uint> sizes = {2, 2, 4, 1, 1};
+    sizes = {2, 2, 4, 1, 1};
 
-    int currentAttr = 2;
-    size_t dataOffset = 0;
+    dataOffset = 0;
     for (uint size : sizes) {
       glEnableVertexAttribArray(currentAttr);
-      glVertexAttribPointer(currentAttr, 2, GL_FLOAT, GL_FALSE, sizeof(Instance), (void*)dataOffset);
+      glVertexAttribPointer(currentAttr, size, GL_FLOAT, GL_FALSE, sizeof(Instance), (void*)dataOffset);
       glVertexAttribDivisor(currentAttr, 1);
       currentAttr++;
       dataOffset += size * sizeof(float);
