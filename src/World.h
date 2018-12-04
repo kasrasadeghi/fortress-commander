@@ -16,7 +16,7 @@ class World {
   std::vector<Structure> _structures;
 
   void _drawUnits(View& view) const;
-  void _drawEnemies(View view) const;
+  void _drawEnemies(View& view) const;
   void _drawStructures(TextureBatch& view) const;
   void _drawDebug(View& view) const;
 
@@ -89,11 +89,17 @@ public:
   }
 
   virtual void draw(TextureBatch& batch, View& view, bool debug) {
+    batch.clear();
+
     _region.draw(batch);
     _drawStructures(batch);
+
+    batch.update();
+    batch.view(view);
+    batch.draw();
     
-    // _drawEnemies(view);`
-    // _drawUnits(view);
+    _drawEnemies(view);
+    _drawUnits(view);
     // if (debug) {
     //   _drawDebug(view);
     // }

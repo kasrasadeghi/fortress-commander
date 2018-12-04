@@ -127,6 +127,7 @@ struct TextureBatch {
     glBindBuffer(GL_ARRAY_BUFFER, IBO);
     glBufferData(GL_ARRAY_BUFFER, instances.size() * sizeof(Instance), instances.data(), GL_STATIC_DRAW);
 
+    glBindVertexArray(VAO);
     int currentAttr = 2;
     size_t dataOffset = 0;
     auto addInstancedAttribute = [&](int size){
@@ -142,6 +143,7 @@ struct TextureBatch {
     addInstancedAttribute(1);
     addInstancedAttribute(1);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
   }
 
   void draw() {
@@ -152,5 +154,6 @@ struct TextureBatch {
     shader.use();
     glBindVertexArray(VAO);
     glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, instances.size());
+    glBindVertexArray(0);
   }
 };

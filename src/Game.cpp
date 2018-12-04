@@ -84,11 +84,8 @@ void Game::loop() {
     last_time = glfwGetTime();
 
     handleTick(dt);
-    batch.clear();
     _world.draw(batch, _gameState._view, _debug);
 
-    batch.update();
-    batch.draw();
 
     glm::vec4 modeColor(.9, .9, .1, 1);
     auto& _mode = _gameState._mode;

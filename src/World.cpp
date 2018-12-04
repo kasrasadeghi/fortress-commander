@@ -56,7 +56,7 @@ void World::_drawUnits(View& view) const {
   rectangles.draw(view);
 }
 
-void World::_drawEnemies(View view) const {
+void World::_drawEnemies(View& view) const {
   const glm::vec4 enemyCol{1, 0, 1, 1}, attackingColor{1, 1, 1, 1};
   CircleBatch circles;
 
