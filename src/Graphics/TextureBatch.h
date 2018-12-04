@@ -1,7 +1,3 @@
-#include <glad/glad.h>
-
-#include "Texture.h"
-
 /**
  * Usage example:
  * 
@@ -48,6 +44,13 @@
  * 
  */
 
+#pragma once
+#include <glad/glad.h>
+
+#include "Texture.h"
+
+#include "GL.h"
+
 struct TextureBatch {
   struct Instance {
     glm::vec2 pos;
@@ -62,7 +65,7 @@ struct TextureBatch {
   const Texture& texture;
   Shader& shader = ResourceManager::getShader(SHADER_INDEX::TEXTURE);
 
-  uint VAO, VBO, IBO;
+  GL::VertexArray VA;
 
   TextureBatch(const Texture& t) : texture(t) {
     glDisable(GL_DEPTH_TEST);
@@ -79,11 +82,8 @@ struct TextureBatch {
        0.5f,  0.5f,    tx,   1.0f, // top right
     };
 
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
-
-    glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBindVertexArray(VA.VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VA.VB.VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     int currentAttr = 0;
@@ -98,9 +98,8 @@ struct TextureBatch {
       dataOffset += size * sizeof(float);
     }
 
-    glGenBuffers(1, &IBO);
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, IBO);
+    glBindVertexArray(VA.VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VA.IB.VBO);
 
     sizes = {2, 2, 4, 1, 1};
 
@@ -114,12 +113,6 @@ struct TextureBatch {
     }
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
-  }
-
-  ~TextureBatch() {
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &IBO);
   }
 
   void view(View& view) {
@@ -142,7 +135,7 @@ struct TextureBatch {
   }
 
   void update() {
-    glBindBuffer(GL_ARRAY_BUFFER, IBO);
+    glBindBuffer(GL_ARRAY_BUFFER, VA.IB.VBO);
     glBufferData(GL_ARRAY_BUFFER, instances.size() * sizeof(Instance), instances.data(), GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
   }
@@ -153,7 +146,7 @@ struct TextureBatch {
 
     // render container
     shader.use();
-    glBindVertexArray(VAO);
+    glBindVertexArray(VA.VAO);
     glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, instances.size());
     glBindVertexArray(0);
   }

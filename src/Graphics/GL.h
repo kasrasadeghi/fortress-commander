@@ -5,16 +5,20 @@ namespace GL {
 struct VertexBuffer {
   uint VBO;
 
-  template <typename T>
-  explicit VertexBuffer(const std::vector<T>& vertices) {
-    glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(T), vertices.data(), GL_STATIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+  explicit VertexBuffer() {
+    glGenBuffers(1, &VBO); 
   }
 
   ~VertexBuffer() {
     glDeleteBuffers(1, &VBO);
+  }
+
+  template <typename T>
+  void bindData(const std::vector<T>& vertices) {
+    // assert: sum(attribute sizes) * sizeof(float) == sizeof(T)
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(T), vertices.data(), GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
   }
 };
 
@@ -23,7 +27,8 @@ private:
 public:
   uint attribCounter = 0;
 
-  std::vector<VertexBuffer> _buffers;
+  VertexBuffer VB; // vertex buffer
+  VertexBuffer IB; // instance buffer
   uint VAO;
 
   VertexArray() {
@@ -34,22 +39,38 @@ public:
     glDeleteVertexArrays(1, &VAO);
   }
 
-  template <typename T>
-  void addBuffer(const std::vector<T>& vertices, std::initializer_list<uint> sizes) {
-    // assert: sum(sizes) * sizeof(float) == sizeof(T)
-    _buffers.emplace_back(vertices);
-    glBindBuffer(GL_ARRAY_BUFFER, _buffers.back().VBO);
+  /**
+   * Takes a list of attribute sizes and creates a buffer with that layout.
+   * 
+   * @returns the vertex buffer that was created so that you can load data into it.
+   */
+  VertexBuffer& addBuffer(std::initializer_list<uint> sizes, bool instanced = false) {
+    glBindVertexArray(VAO);
+
+    if (instanced) {
+      glBindBuffer(GL_ARRAY_BUFFER, IB.VBO);
+    } else {
+      glBindBuffer(GL_ARRAY_BUFFER, VB.VBO);
+    }
 
     size_t dataOffset = 0;
 
-    glBindVertexArray(VAO);
     for (uint size : sizes) {
       glEnableVertexAttribArray(attribCounter);
-      glVertexAttribPointer(attribCounter, size, GL_FLOAT, GL_FALSE, sizeof(T), (void*)dataOffset);
+      glVertexAttribPointer(attribCounter, size, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)dataOffset);
+      if (instanced) { glVertexAttribDivisor(attribCounter, 1); }
+      attribCounter++;
       dataOffset += size * sizeof(float);
     }
+
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
+
+    if (instanced) {
+      return IB;
+    } else {
+      return VB;
+    }
   }
 };
 }
