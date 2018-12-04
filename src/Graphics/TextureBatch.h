@@ -82,27 +82,10 @@ struct TextureBatch {
       { 0.5f,  0.5f,    tx,   1.0f}, // top right
     };
 
-    VA.bind();
     VA.VB.bindData(vertices);
     
     VA.setAttributeLayout({2, 2});
-
-    VA.bind();
-    VA.IB.bind();
-
-    std::initializer_list<uint> sizes = {2, 2, 4, 1, 1};
-
-    size_t dataOffset = 0;
-    size_t currentAttr = VA.attribCounter;
-    for (uint size : sizes) {
-      glEnableVertexAttribArray(currentAttr);
-      glVertexAttribPointer(currentAttr, size, GL_FLOAT, GL_FALSE, sizeof(Instance), (void*)dataOffset);
-      glVertexAttribDivisor(currentAttr, 1);
-      currentAttr++;
-      dataOffset += size * sizeof(float);
-    }
-    VA.IB.unbind();
-    VA.unbind();
+    VA.setAttributeLayout({2, 2, 4, 1, 1}, true);
   }
 
   void view(View& view) {
@@ -125,9 +108,7 @@ struct TextureBatch {
   }
 
   void update() {
-    glBindBuffer(GL_ARRAY_BUFFER, VA.IB.VBO);
-    glBufferData(GL_ARRAY_BUFFER, instances.size() * sizeof(Instance), instances.data(), GL_STATIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    VA.IB.bindData(instances);
   }
 
   void draw() {

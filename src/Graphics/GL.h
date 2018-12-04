@@ -64,7 +64,7 @@ public:
    * 
    * @returns the vertex buffer that was created so that you can load data into it.
    */
-  VertexBuffer& setAttributeLayout(std::initializer_list<uint> sizes, bool instanced = false) {
+  void setAttributeLayout(std::initializer_list<uint> sizes, bool instanced = false) {
     bind();
 
     buffer(instanced).bind();
@@ -84,8 +84,6 @@ public:
 
     VertexBuffer::unbind();
     unbind();
-
-    return buffer(instanced);
   }
 };
 }
