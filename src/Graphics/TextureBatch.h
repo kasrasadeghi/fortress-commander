@@ -96,6 +96,22 @@ struct TextureBatch {
     }
 
     glGenBuffers(1, &IBO);
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, IBO);
+
+    std::initializer_list<uint> sizes = {2, 2, 4, 1, 1};
+
+    int currentAttr = 2;
+    size_t dataOffset = 0;
+    for (uint size : sizes) {
+      glEnableVertexAttribArray(currentAttr);
+      glVertexAttribPointer(currentAttr, 2, GL_FLOAT, GL_FALSE, sizeof(Instance), (void*)dataOffset);
+      glVertexAttribDivisor(currentAttr, 1);
+      currentAttr++;
+      dataOffset += size * sizeof(float);
+    }
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
   }
 
   ~TextureBatch() {
@@ -126,23 +142,6 @@ struct TextureBatch {
   void update() {
     glBindBuffer(GL_ARRAY_BUFFER, IBO);
     glBufferData(GL_ARRAY_BUFFER, instances.size() * sizeof(Instance), instances.data(), GL_STATIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, IBO);
-    glBindVertexArray(VAO);
-
-    std::initializer_list<uint> sizes = {2, 2, 4, 1, 1};
-
-    int currentAttr = 2;
-    size_t dataOffset = 0;
-    for (uint size : sizes) {
-      glEnableVertexAttribArray(currentAttr);
-      glVertexAttribPointer(currentAttr, 2, GL_FLOAT, GL_FALSE, sizeof(Instance), (void*)dataOffset);
-      glVertexAttribDivisor(currentAttr, 1);
-      currentAttr++;
-      dataOffset += size * sizeof(float);
-    }
-    glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
   }
 
