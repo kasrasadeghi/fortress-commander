@@ -15,9 +15,9 @@ class World {
   std::vector<Enemy> _enemies;
   std::vector<Structure> _structures;
 
-  void _drawUnits(View& view) const;
-  void _drawEnemies(View& view) const;
-  void _drawStructures(TextureBatch& view) const;
+  void _drawUnits(TextureBatch& batch) const;
+  void _drawEnemies(TextureBatch& batch) const;
+  void _drawStructures(TextureBatch& batch) const;
   void _drawDebug(View& view) const;
 
   // stuff to make out of bounds clicks snap back to bounds
@@ -93,13 +93,13 @@ public:
 
     _region.draw(batch);
     _drawStructures(batch);
+    _drawEnemies(batch);
+    _drawUnits(batch);
 
     batch.update();
     batch.view(view);
     batch.draw();
     
-    _drawEnemies(view);
-    _drawUnits(view);
     if (debug) {
       _drawDebug(view);
     }

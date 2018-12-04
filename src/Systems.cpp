@@ -11,6 +11,7 @@ void MoveSystem::updateEntity(float dt, ECS::Entity entity) {
   auto& pos = ECS::Manager::getComponent<TransformComponent>(entity).pos;
   MotionComponent& motion = ECS::Manager::getComponent<MotionComponent>(entity);
   auto& world = ECS::Manager::getComponent<TransformComponent>(entity).world;
+  auto& rot = ECS::Manager::getComponent<TransformComponent>(entity).rot;
 
   if (not motion.hasTarget) return;
 
@@ -103,6 +104,9 @@ void MoveSystem::updateEntity(float dt, ECS::Entity entity) {
 
   if (glm::distance(target, pos) > dt * motion.movementSpeed) {
     auto dir = glm::normalize(target - pos);
+
+    rot = -glm::atan(dir.y, dir.x) - glm::half_pi<float>();
+
     ECS::Manager::getComponent<TransformComponent>(entity).translate(dir * motion.movementSpeed * dt);
   } else {
     pos = target;

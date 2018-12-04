@@ -6,6 +6,8 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/string_cast.hpp>
 
+#include <glm/trigonometric.hpp>
+
 // clang-format off
 void mat4_print(glm::mat4 m) {
   for (int i = 0; i < 4; ++i) {
@@ -17,16 +19,8 @@ void mat4_print(glm::mat4 m) {
 }
 // clang-format on
 
-void World::_drawUnits(View& view) const {
+void World::_drawUnits(TextureBatch& batch) const {
   const glm::vec4 selectedCol{1, 1, 0, 1}, unselectedCol{1, 0, 0, 1}, attackingColor{1, 1, 1, 1};
-  CircleBatch circles;
-
-  constexpr float pathMarkerSize = 0.8;
-  RectangleBatch rectangles;
-  glm::vec2 pathTileSize(tile_size * pathMarkerSize, tile_size * pathMarkerSize);
-
-  glm::vec2 pathTileOffset(0.5 * pathMarkerSize * tile_size, 0.5 * pathMarkerSize * tile_size);
-  pathTileOffset -= glm::vec2(0.5, 0.5) * (tile_size * pathMarkerSize);
 
   // clang-format off
   for (auto& u : _units) {
@@ -34,6 +28,8 @@ void World::_drawUnits(View& view) const {
     float attackTimer = ECS::Manager::getComponent<AttackComponent>(u.id).attackTimer;
     
     //TODO: make bullets flash instead of selection
+
+    float angle = ECS::Manager::getComponent<TransformComponent>(u.id).rot;
 
     auto baseColor = unselectedCol;
     if (u.selected()) {
@@ -44,27 +40,26 @@ void World::_drawUnits(View& view) const {
 
     baseColor.a *= healthPercent;
 
-    circles.add()
-      .position(u.pos())
-      .size({tile_size, tile_size})
-      .color(baseColor);
+    batch.add(TextureBatch::Instance{
+      .pos = u.pos(),
+      .size = {tile_size, tile_size},
+      .aColor = baseColor,
+      .rotation = angle,
+    });
     
   }
   // clang-format on
-
-  circles.draw(view);
-  rectangles.draw(view);
 }
 
-void World::_drawEnemies(View& view) const {
+void World::_drawEnemies(TextureBatch& batch) const {
   const glm::vec4 enemyCol{1, 0, 1, 1}, attackingColor{1, 1, 1, 1};
-  CircleBatch circles;
 
-  
   // clang-format off
   for (auto& e : _enemies) {
     float healthPercent = (float)e.health()/(float)e.max_health;
     float attackTimer = ECS::Manager::getComponent<AttackComponent>(e.id).attackTimer;
+
+    float angle = ECS::Manager::getComponent<TransformComponent>(e.id).rot;
 
     auto baseColor = enemyCol;
     if (attackTimer < 0.25f) {
@@ -72,14 +67,14 @@ void World::_drawEnemies(View& view) const {
     }
     baseColor.a *= healthPercent;
 
-    circles.add()
-      .position(e.pos())
-      .size({tile_size, tile_size})
-      .color(baseColor);
+    batch.add(TextureBatch::Instance{
+      .pos = e.pos(),
+      .size = {tile_size, tile_size},
+      .aColor = baseColor,
+      .rotation = angle,
+    });
   }
   // clang-format on
-
-  circles.draw(view);
 }
 
 void World::_drawDebug(View& view) const {
