@@ -128,20 +128,18 @@ struct TextureBatch {
     glBufferData(GL_ARRAY_BUFFER, instances.size() * sizeof(Instance), instances.data(), GL_STATIC_DRAW);
 
     glBindVertexArray(VAO);
+
+    std::initializer_list<uint> sizes = {2, 2, 4, 1, 1};
+
     int currentAttr = 2;
     size_t dataOffset = 0;
-    auto addInstancedAttribute = [&](int size){
+    for (uint size : sizes) {
       glEnableVertexAttribArray(currentAttr);
       glVertexAttribPointer(currentAttr, 2, GL_FLOAT, GL_FALSE, sizeof(Instance), (void*)dataOffset);
       glVertexAttribDivisor(currentAttr, 1);
       currentAttr++;
       dataOffset += size * sizeof(float);
-    };
-    addInstancedAttribute(2);
-    addInstancedAttribute(2);
-    addInstancedAttribute(4);
-    addInstancedAttribute(1);
-    addInstancedAttribute(1);
+    }
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
   }
