@@ -126,7 +126,9 @@ struct TextureBatch {
   void update() {
     glBindBuffer(GL_ARRAY_BUFFER, IBO);
     glBufferData(GL_ARRAY_BUFFER, instances.size() * sizeof(Instance), instances.data(), GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+    glBindBuffer(GL_ARRAY_BUFFER, IBO);
     glBindVertexArray(VAO);
 
     std::initializer_list<uint> sizes = {2, 2, 4, 1, 1};
@@ -140,8 +142,8 @@ struct TextureBatch {
       currentAttr++;
       dataOffset += size * sizeof(float);
     }
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
   }
 
   void draw() {
