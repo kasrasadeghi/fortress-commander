@@ -100,9 +100,9 @@ public:
     
     _drawEnemies(view);
     _drawUnits(view);
-    // if (debug) {
-    //   _drawDebug(view);
-    // }
+    if (debug) {
+      _drawDebug(view);
+    }
   }
 
   bool addUnit(glm::vec2 pos);
