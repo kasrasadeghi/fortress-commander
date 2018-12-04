@@ -83,28 +83,17 @@ struct TextureBatch {
     };
 
     VA.bind();
-
     VA.VB.bindData(vertices);
-    VA.VB.bind();
-
-    int currentAttr = 0;
-    size_t dataOffset = 0;
-
-    std::initializer_list<uint> sizes = {2, 2};
-
-    for (uint size : sizes) {
-      glEnableVertexAttribArray(currentAttr);
-      glVertexAttribPointer(currentAttr, size, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)dataOffset);
-      currentAttr++;
-      dataOffset += size * sizeof(float);
-    }
+    
+    VA.setAttributeLayout({2, 2});
 
     VA.bind();
     VA.IB.bind();
 
-    sizes = {2, 2, 4, 1, 1};
+    std::initializer_list<uint> sizes = {2, 2, 4, 1, 1};
 
-    dataOffset = 0;
+    size_t dataOffset = 0;
+    size_t currentAttr = VA.attribCounter;
     for (uint size : sizes) {
       glEnableVertexAttribArray(currentAttr);
       glVertexAttribPointer(currentAttr, size, GL_FLOAT, GL_FALSE, sizeof(Instance), (void*)dataOffset);
