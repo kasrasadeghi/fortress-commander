@@ -34,7 +34,7 @@ void World::_drawUnits(TextureBatch& batch) const {
     auto baseColor = unselectedCol;
     if (u.selected()) {
       baseColor = selectedCol;
-    } else if (attackTimer < 0.25f) {
+    } else if (attackTimer < muzzleFlashTime) {
       baseColor = attackingColor;
     }
 
@@ -62,7 +62,7 @@ void World::_drawEnemies(TextureBatch& batch) const {
     float angle = ECS::Manager::getComponent<TransformComponent>(e.id).rot;
 
     auto baseColor = enemyCol;
-    if (attackTimer < 0.25f) {
+    if (attackTimer < muzzleFlashTime) {
       baseColor = attackingColor;
     }
     baseColor.a *= healthPercent;
