@@ -74,17 +74,17 @@ struct TextureBatch {
 
     float tx = 1.0f / texture.textureCount;
 
-    float vertices[] = {
-      // positions     // texture coords
-      -0.5f, -0.5f,    0.0f, 0.0f, // bottom left
-      -0.5f,  0.5f,    0.0f, 1.0f, // top left 
-       0.5f, -0.5f,    tx,   0.0f, // bottom right
-       0.5f,  0.5f,    tx,   1.0f, // top right
+    std::vector<glm::vec4> vertices = {
+       // positions     // texture coords
+      {-0.5f, -0.5f,    0.0f, 0.0f}, // bottom left
+      {-0.5f,  0.5f,    0.0f, 1.0f}, // top left 
+      { 0.5f, -0.5f,    tx,   0.0f}, // bottom right
+      { 0.5f,  0.5f,    tx,   1.0f}, // top right
     };
 
     glBindVertexArray(VA.VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VA.VB.VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec4), vertices.data(), GL_STATIC_DRAW);
 
     int currentAttr = 0;
     size_t dataOffset = 0;
