@@ -43,3 +43,7 @@ profile: build\:true
 	valgrind --tool=callgrind build/fortress-commander_TEST
 	kcachegrind callgrind.out.*
 	rm -f callgrind.out.*
+
+.PHONY: todo
+todo:
+	@python3 todo.py
