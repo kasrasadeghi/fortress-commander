@@ -303,7 +303,7 @@ public:
 
     auto& attack = ECS::Manager::getComponent<AttackComponent>(entity);
 
-    attack.battling = dist < 5.f; // TODO: don't hardcode the RoI, perform raycast?
+    attack.battling = dist < 5.f; // TODO: don't hardcode the attack range, perform raycast?
 
     if (attack.battling) {
       attack.attackTimer += dt;
