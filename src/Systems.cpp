@@ -123,6 +123,9 @@ void MoveSystem::updateEntity(float dt, ECS::Entity entity) {
   if (dist < Unit::unit_size) {
     // advance to next waypoint
     motion.path.pop_front();
+    if (motion.path.empty()) {
+      motion.hasTarget = false;
+    }
   } else {
     // move toward current waypoint
     auto dir = glm::normalize(targetPos - pos);
