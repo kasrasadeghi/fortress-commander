@@ -204,7 +204,7 @@ public:
 };
 
 /**
- * @brief Facilitates battle between Units and Enemies
+ * @brief Handles units attacking enemies
  *
  */
 class BattleSystem : public ECS::System {
@@ -229,41 +229,24 @@ class BattleSystem : public ECS::System {
 
   void _die(const ECS::Entity entity) {
     auto& world = ECS::Manager::getComponent<TransformComponent>(entity).world;
-
-    if (ECS::Manager::hasComponent<CommandableComponent>(entity)) {
-      world.removeUnit(entity); // delete unit
-    } else {
-      world.removeEnemy(entity); // delete enemy
-    }
+    world.removeEnemy(entity); // delete enemy
   }
 
   void _scanForHostiles(const ECS::Entity entity) {
     auto& pos = ECS::Manager::getComponent<TransformComponent>(entity).pos;
     auto& attack = ECS::Manager::getComponent<AttackComponent>(entity);
 
-    if (ECS::Manager::hasComponent<CommandableComponent>(entity)) {
-      for (auto& hostile : _gameState.enemies) {
-        auto& hostilePos = ECS::Manager::getComponent<TransformComponent>(hostile.id).pos;
-        auto dist = glm::distance(pos, hostilePos);
+    for (auto& enemy : _gameState.enemies) {
+      auto& hostilePos = ECS::Manager::getComponent<TransformComponent>(enemy.id).pos;
+      auto dist = glm::distance(pos, hostilePos);
 
-        if (dist < attack.attackRange) {
-          attack.target = hostile.id;
-          attack.battling = true;
-          return;
-        }
-      }
-    } else {
-      for (auto& hostile : _gameState.units) {
-        auto& hostilePos = ECS::Manager::getComponent<TransformComponent>(hostile.id).pos;
-        auto dist = glm::distance(pos, hostilePos);
-
-        if (dist < attack.attackRange) {
-          attack.target = hostile.id;
-          return;
-        }
+      if (dist < attack.attackRange) {
+        attack.target = enemy.id;
+        attack.battling = true;
+        return;
       }
     }
-
+ 
     attack.target = ECS::InvalidEntityId;
     attack.battling = false;
     attack.attackTimer = attack.attackCooldown;
@@ -275,6 +258,7 @@ public:
     requiredComponents.insert(TransformComponent::type);
     requiredComponents.insert(HealthComponent::type);
     requiredComponents.insert(AttackComponent::type);
+    requiredComponents.insert(CommandableComponent::type);
 
     setRequiredComponents(std::move(requiredComponents));
   }
