@@ -33,9 +33,10 @@ struct BulletParticle : public BaseParticle {
   }
 
   void draw(float dt) {
+    float f = std::min(1.f, 3 - age / lifespan * 3.f);
     lines->add()
       .points(pos, pos - glm::normalize(vel) * 0.35f)
       .lineWidth(0.1)
-      .color({1, 1, 1, 1});
+      .color({1, 1, 1, f});
   }
 };
