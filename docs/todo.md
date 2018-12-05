@@ -114,7 +114,7 @@
 - instanced colors by sectioning ? 
 - geometry shaders 
 
-# project meta
+# project meta > done
 - clang-format
 >- todo
 
