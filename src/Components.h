@@ -39,6 +39,8 @@ struct MotionComponent : public ECS::Component {
   Path::iterator currentTarget; // when path.empty, this iterator is invalid
   glm::vec2 target{0, 0};
   bool hasTarget = false;
+
+  glm::vec2 oldPosition; // where it was before moving to current path waypoint
   Path path;
 
   static constexpr ECS::ComponentTypeId type = 3;

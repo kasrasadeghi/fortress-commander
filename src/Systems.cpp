@@ -103,6 +103,7 @@ void MoveSystem::recomputePath(ECS::Entity entity) {
     return simplifiedPath;
   }; 
   motion.path = simplifyPath(motion.path);
+  motion.oldPosition = pos;
 }
 
 void MoveSystem::updateEntity(float dt, ECS::Entity entity) {
@@ -120,13 +121,18 @@ void MoveSystem::updateEntity(float dt, ECS::Entity entity) {
 
   glm::vec2 targetPos = Game::centerOfTile(motion.path.front());
   float dist = glm::distance(pos, targetPos);
-  if (dist < Unit::unit_size) {
+
+  glm::vec2 pathDir = targetPos - motion.oldPosition;
+  float dot = glm::dot(pathDir, targetPos - pos);
+  if (dist < Unit::unit_size || dot < 0) {
     // advance to next waypoint
+    motion.oldPosition = pos;
     motion.path.pop_front();
     if (motion.path.empty()) {
       motion.hasTarget = false;
     }
   } else {
+    // TODO: raycast to next waypoint to ensure that path is still valid, else path to it and prepend to existing path
     // move toward current waypoint
     auto dir = glm::normalize(targetPos - pos);
     rot = -glm::atan(dir.y, dir.x) - glm::half_pi<float>();
