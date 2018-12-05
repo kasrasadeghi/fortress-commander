@@ -49,6 +49,9 @@ class UnitSelectSystem : public ECS::System,
   glm::vec2 _boxTopLeft, _boxBottomRight;
   bool _selectionChanged = false;
 
+  std::size_t _selectionCount;
+  glm::vec2 _selectionCentroid;
+
   void _selectClicked(glm::vec2 clickedPos) {
     ECS::Entity found = ECS::InvalidEntityId;
     for (ECS::Entity entity : entities()) {
@@ -64,6 +67,8 @@ class UnitSelectSystem : public ECS::System,
 
     if (found != ECS::InvalidEntityId) {
       ECS::Manager::getComponent<SelectableComponent>(found).selected = true;
+      _selectionCount = 1;
+      _selectionCentroid = ECS::Manager::getComponent<TransformComponent>(found).pos;
     }
   }
 
@@ -91,7 +96,30 @@ public:
           .color({0.8, 0.8, 1, 0.4})
           .draw(_gameState._view);
     }
-    return ECS::System::update(dt);
+
+    _selectionCount = 0;
+    _selectionCentroid = {0, 0};
+    auto result = ECS::System::update(dt);
+    
+    if (_selectionCount > 0) {
+      _selectionCentroid /= static_cast<float>(_selectionCount);
+    
+      for (ECS::Entity e : entities()) {
+        auto& selectable = ECS::Manager::getComponent<SelectableComponent>(e);
+        if (selectable.selected) {
+          selectable.selectionCentroid = _selectionCentroid;
+        }
+      }
+
+      RectangleBatch()
+          .add()
+          .position(_selectionCentroid)
+          .size({0.1, 0.1})
+          .color({0.5, 1.0, 0.0, 0.5})
+          .draw(_gameState._view);
+    }
+
+    return result;
   }
 
   void updateEntity(float dt, ECS::Entity entity) override {
@@ -100,6 +128,11 @@ public:
     const glm::vec2 pos = ECS::Manager::getComponent<TransformComponent>(entity).pos;
     bool inBox = pos.x >= _boxTopLeft.x && pos.x <= _boxBottomRight.x && pos.y >= _boxTopLeft.y &&
                  pos.y <= _boxBottomRight.y;
+
+    if (inBox) {
+      _selectionCount += 1;
+      _selectionCentroid += ECS::Manager::getComponent<TransformComponent>(entity).pos;
+    }
 
     ECS::Manager::getComponent<SelectableComponent>(entity).selected = inBox;
   }

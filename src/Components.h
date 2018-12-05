@@ -26,6 +26,7 @@ struct TransformComponent : public ECS::Component {
 
 struct SelectableComponent : public ECS::Component {
   bool selected;
+  glm::vec2 selectionCentroid;
 
   static constexpr ECS::ComponentTypeId type = 2;
 
