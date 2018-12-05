@@ -42,6 +42,8 @@ void TransformComponent::translate(glm::vec2 displacement) {
                                               glm::ivec2{tile.x - 1, tile.y + 1}, glm::ivec2{tile.x - 1, tile.y - 1}};
     for (const glm::ivec2& t : neighbors) {
       if (not validPosition(t) && intersectsTile(newPos, t)) {
+        glm::vec2 oppositeDir = newPos - Game::centerOfTile(t);
+        pos += glm::normalize(oppositeDir) * glm::length(step) * 2.f;
         return false;
       }
     } 
@@ -51,15 +53,13 @@ void TransformComponent::translate(glm::vec2 displacement) {
 
   // big steps
   while (steps >= 1) {
-    stepPosition({step.x, 0});
-    stepPosition({0, step.y});
+    stepPosition(step);
     steps -= 1;
   }
 
   // final partial step
   step *= steps;
-  stepPosition({step.x, 0});
-  stepPosition({0, step.y});
+  stepPosition(step);
 }
 
 void MotionComponent::pathTo(glm::vec2 pos) {
