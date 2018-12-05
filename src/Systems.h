@@ -29,6 +29,8 @@ public:
   }
 
   virtual void updateEntity(float dt, ECS::Entity entity) override;
+  bool tileVisible(Region& region, glm::ivec2 tileCoord, glm::vec2 from);
+  void recomputePath(ECS::Entity entity);
 };
 
 /**

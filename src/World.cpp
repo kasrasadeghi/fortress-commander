@@ -96,7 +96,7 @@ void World::_drawDebug(View& view) const {
     }
 
     if (not path.empty()) {
-      auto target = e.currentTarget();
+      auto target = path.front();
       rectangles.add()
         .position(Game::centerOfTile(target) - pathTileOffset)
         .size(pathTileSize)
@@ -121,7 +121,7 @@ void World::_drawDebug(View& view) const {
     }
 
     if (not path.empty()) {
-      auto target = u.currentTarget();
+      auto target = path.front();
       rectangles.add()
         .position(Game::centerOfTile(target) - pathTileOffset)
         .size(pathTileSize)

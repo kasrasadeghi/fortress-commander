@@ -7,30 +7,7 @@
 
 #include <unordered_set>
 
-void MoveSystem::updateEntity(float dt, ECS::Entity entity) {
-  auto& pos = ECS::Manager::getComponent<TransformComponent>(entity).pos;
-  MotionComponent& motion = ECS::Manager::getComponent<MotionComponent>(entity);
-  auto& world = ECS::Manager::getComponent<TransformComponent>(entity).world;
-  auto& rot = ECS::Manager::getComponent<TransformComponent>(entity).rot;
-
-  if (not motion.hasTarget) return;
-
-  auto& region = world.region();
-
-  if (motion.path.empty()) {
-    glm::ivec2 curr_cell = Game::mapCoordsToTile(pos);
-    glm::ivec2 target_cell = Game::mapCoordsToTile(motion.target);
-
-    auto path = findPath(region, curr_cell, target_cell);
-    if (path.empty()) { // pathfinding failed
-      motion.hasTarget = false;
-      return;
-    }
-    motion.path = std::move(path);
-
-    motion.currentTarget = motion.path.begin();
-  }
-
+bool MoveSystem::tileVisible(Region& region, glm::ivec2 tileCoord, glm::vec2 from) {
   auto raycast = [&region](glm::vec2 source, glm::vec2 target) -> bool {
     auto path = target - source;
     auto l = glm::length(path);
@@ -44,75 +21,112 @@ void MoveSystem::updateEntity(float dt, ECS::Entity entity) {
     return true;
   };
 
-  auto seesPoint = [&raycast, &region, pos](glm::vec2 target) -> bool {
-    auto dir = glm::normalize(target - pos);
-    auto y = dir.y;
-    auto x = dir.x;
-
-    // get the two points on the perpendicular diameter
-    auto left = glm::vec2(-y, x) * Unit::unit_size;
-    auto right = glm::vec2(y, -x) * Unit::unit_size;
-
-    return raycast(pos, target) && raycast(pos + left, target) && raycast(pos + right, target);
+  auto seesPoint = [&raycast, &region, &from](glm::vec2 target) -> bool {
+    using V = glm::vec2;
+    const float u = Unit::unit_size;
+    const std::array<glm::vec2, 5> offsets{V{0, 0}, V{-u, 0}, V{u, 0}, V{0, -u}, V{0, u}};
+    return std::all_of(offsets.begin(), offsets.end(), [&](glm::vec2 offset) {
+      return raycast(from + offset, target);
+    });
   };
 
   auto valid = [](glm::ivec2 p) -> bool {
     return 0 <= p.x && 0 <= p.y && p.x < world_size && p.y < world_size;
   };
 
-  auto seesTile = [&seesPoint, &valid](glm::ivec2 target) -> bool {
-    glm::vec2 t;
-    glm::ivec2 curr;
+  glm::vec2 t;
+  glm::ivec2 curr;
 
-    curr = target;
-    t = {curr.x, curr.y};
-    if (valid(curr) && not seesPoint(t)) {
-      return false;
-    }
-
-    curr = target + glm::ivec2(0, 1);
-    t = {curr.x, curr.y};
-    if (valid(curr) && not seesPoint(t)) {
-      return false;
-    }
-
-    curr = target + glm::ivec2(1, 0);
-    t = {curr.x, curr.y};
-    if (valid(curr) && not seesPoint(t)) {
-      return false;
-    }
-
-    curr = target + glm::ivec2(0, 1);
-    t = {curr.x, curr.y};
-    if (valid(curr) && not seesPoint(t)) {
-      return false;
-    }
-
-    return true;
-  };
-  // TODO: investigate only iterating once target location is reached
-
-  // iterate from current target until the last one possible to be seen
-  // set the current target to that last one
-  for (auto iter = motion.currentTarget; iter < motion.path.end(); ++iter) {
-    glm::ivec2 p = *iter;
-    if (seesTile(p)) {
-      motion.currentTarget = iter;
-    }
+  curr = tileCoord;
+  t = {curr.x, curr.y};
+  if (valid(curr) && not seesPoint(t)) {
+    return false;
   }
-  auto target = Game::centerOfTile(*motion.currentTarget);
 
-  if (glm::distance(target, pos) > dt * motion.movementSpeed) {
-    auto dir = glm::normalize(target - pos);
+  curr = tileCoord + glm::ivec2(0, 1);
+  t = {curr.x, curr.y};
+  if (valid(curr) && not seesPoint(t)) {
+    return false;
+  }
 
-    rot = -glm::atan(dir.y, dir.x) - glm::half_pi<float>();
+  curr = tileCoord + glm::ivec2(1, 0);
+  t = {curr.x, curr.y};
+  if (valid(curr) && not seesPoint(t)) {
+    return false;
+  }
 
-    ECS::Manager::getComponent<TransformComponent>(entity).translate(dir * motion.movementSpeed * dt);
-  } else {
-    pos = target;
-    if (target == motion.target) {
-      motion.hasTarget = false;
-      motion.path.clear();
+  curr = tileCoord + glm::ivec2(0, 1);
+  t = {curr.x, curr.y};
+  if (valid(curr) && not seesPoint(t)) {
+    return false;
+  }
+
+  return true;
+}
+
+void MoveSystem::recomputePath(ECS::Entity entity) {
+  auto& pos = ECS::Manager::getComponent<TransformComponent>(entity).pos;
+  auto& region = ECS::Manager::getComponent<TransformComponent>(entity).world.region();
+  auto& motion = ECS::Manager::getComponent<MotionComponent>(entity);
+
+  glm::ivec2 curr_cell = Game::mapCoordsToTile(pos);
+  glm::ivec2 target_cell = Game::mapCoordsToTile(motion.target);
+
+  auto path = findPath(region, curr_cell, target_cell);
+  if (path.empty()) { // pathfinding failed
+    motion.hasTarget = false;
+    return;
+  }
+
+  motion.path = std::move(path);
+
+  auto simplifyPath = [&](Path& path) {
+    if (path.size() == 0)
+      return Path();
+
+    Path simplifiedPath;
+    simplifiedPath.push_back(path[0]);
+
+    uint last = 0;
+    uint index = 1;
+    while (index < path.size()) {
+      if (tileVisible(region, path[index], path[last])) {
+        ++index;
+      } else {
+        last = index - 1; // update last visible point
+        simplifiedPath.push_back(path[last]); // emit the point
+        ++index; // TODO: remove; ensures algorithm progression but produces extra steps
+                 // might need to adjust tileVisible to avoid infinite loop here.
+      }
     }
+    simplifiedPath.push_back(path.back());
+    return simplifiedPath;
+  }; 
+  motion.path = simplifyPath(motion.path);
+}
+
+void MoveSystem::updateEntity(float dt, ECS::Entity entity) {
+  auto& pos = ECS::Manager::getComponent<TransformComponent>(entity).pos;
+  auto& rot = ECS::Manager::getComponent<TransformComponent>(entity).rot;
+  auto& motion = ECS::Manager::getComponent<MotionComponent>(entity);
+
+  if (not motion.hasTarget) {
+    return;
+  }
+
+  if (motion.path.empty()) {
+    recomputePath(entity);
+  }
+
+  glm::vec2 targetPos = Game::centerOfTile(motion.path.front());
+  float dist = glm::distance(pos, targetPos);
+  if (dist < Unit::unit_size) {
+    // advance to next waypoint
+    motion.path.pop_front();
+  } else {
+    // move toward current waypoint
+    auto dir = glm::normalize(targetPos - pos);
+    rot = -glm::atan(dir.y, dir.x) - glm::half_pi<float>();
+    ECS::Manager::getComponent<TransformComponent>(entity).translate(dir * motion.movementSpeed * dt);
   }
 }
