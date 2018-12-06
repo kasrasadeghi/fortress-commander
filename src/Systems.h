@@ -207,52 +207,34 @@ public:
  * @brief Handles units attacking enemies
  */
 class BattleSystem : public ECS::System {
-  void _performAttack(const ECS::Entity entity, const ECS::Entity target) {
-    if (entity == ECS::InvalidEntityId || target == ECS::InvalidEntityId) {
-      return;
-    }
 
-    auto& targetHealth = ECS::Manager::getComponent<HealthComponent>(target).health;
-    auto entityStrength = ECS::Manager::getComponent<AttackComponent>(entity).strength;
-
-    // Augment the target's health according to the attack strength
-    targetHealth -= entityStrength;
-
-    if (targetHealth < 0) {
-      _die(target);
-    }
-
-    // Reset the attack timer so we will attack again after attackCooldown
-    ECS::Manager::getComponent<AttackComponent>(entity).attackTimer = 0.f;
-
-    glm::vec2 pos = ECS::Manager::getComponent<TransformComponent>(entity).pos;
-    glm::vec2 tpos = ECS::Manager::getComponent<TransformComponent>(target).pos;
-    _gameState._bulletParticles.add(BulletParticle(pos, tpos, 20));
-  }
-
-  void _die(const ECS::Entity entity) {
-    auto& world = ECS::Manager::getComponent<TransformComponent>(entity).world;
-    world.removeEnemy(entity); // delete enemy
-  }
-
-  void _scanForHostiles(const ECS::Entity entity) {
-    auto& pos = ECS::Manager::getComponent<TransformComponent>(entity).pos;
+  bool _findTarget(const ECS::Entity entity) {
     auto& attack = ECS::Manager::getComponent<AttackComponent>(entity);
+    auto pos = ECS::Manager::getComponent<TransformComponent>(entity).pos;
 
-    for (auto& enemy : _gameState.enemies) {
-      auto& hostilePos = ECS::Manager::getComponent<TransformComponent>(enemy.id).pos;
-      auto dist = glm::distance(pos, hostilePos);
+    ECS::Entity currTarget = ECS::InvalidEntityId;
+    float currDistance = attack.range + 1;
 
-      if (dist < attack.attackRange) {
-        attack.target = enemy.id;
-        attack.battling = true;
-        return;
+    // prioritize proximity
+    for (auto& u : _gameState.enemies) {
+      auto distance = glm::distance(pos, u.pos());
+      if (distance < attack.range && distance < currDistance) {
+        currDistance = distance;
+        currTarget = u.id;
       }
     }
- 
-    attack.target = ECS::InvalidEntityId;
-    attack.battling = false;
-    attack.attackTimer = attack.attackCooldown;
+
+    if (currDistance < attack.range) {
+      attack.setTarget(currTarget);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  void _removeEntity(const ECS::Entity entity) {
+    // units can only kill enemies
+    ECS::Manager::getComponent<TransformComponent>(entity).world.removeEnemy(entity);
   }
 
 public:
@@ -267,39 +249,151 @@ public:
   }
 
   void updateEntity(float dt, ECS::Entity entity) override {
-    if (ECS::Manager::getComponent<HealthComponent>(entity).health <= 0) {
-      _die(entity);
-    }
-
-    auto target = ECS::Manager::getComponent<AttackComponent>(entity).target;
-
-    // Check to see if the target has died
-    if (not ECS::Manager::hasEntity(target)) {
-      target = ECS::InvalidEntityId;
-    }
-
-    if (target == ECS::InvalidEntityId) {
-      _scanForHostiles(entity);
-      return;
-    }
-
-    auto& pos = ECS::Manager::getComponent<TransformComponent>(entity).pos;
-    auto& targetPos = ECS::Manager::getComponent<TransformComponent>(target).pos;
-
-    auto dist = glm::distance(pos, targetPos);
+    auto pos = ECS::Manager::getComponent<TransformComponent>(entity).pos;
+    auto& motion = ECS::Manager::getComponent<MotionComponent>(entity);
 
     auto& attack = ECS::Manager::getComponent<AttackComponent>(entity);
 
-    attack.battling = dist < 5.f; // TODO: don't hardcode the attack range, perform raycast?
+    attack.tick(dt);
 
-    if (attack.battling) {
-      attack.attackTimer += dt;
+    //TODO make attacker set and reset attacker targets on death
+    // reset target if it has been removed by other sources
+    if (attack.hasTarget() && not ECS::Manager::hasEntity(attack.target)) {
+      attack.resetTarget();
+    }
 
-      if (attack.attackTimer > attack.attackCooldown) {
-        _performAttack(entity, target);
+    if (not attack.hasTarget()) {
+      auto foundTarget = _findTarget(entity);
+      if (not foundTarget) {
+        // we don't have a target, we tried looking for one and got nothing
+        return;
       }
-    } else { // Reset the timer so we attack immediately on engaging
-      attack.attackTimer = ECS::Manager::getComponent<AttackComponent>(entity).attackCooldown;
+    }
+
+    // assert: target is in view Range
+    auto targetPos = ECS::Manager::getComponent<TransformComponent>(attack.target).pos;
+
+    // we have a target and it is not in attack range
+    if (glm::distance(pos, targetPos) > attack.range) {
+      motion.pathTo(targetPos);
+      return;
+    }
+
+    // we have a target and it is in attack range
+    if (attack.shouldAttack()) {
+      _gameState._bulletParticles.add(BulletParticle(pos, targetPos, 20));
+      auto entityKilled = attack.attack();
+      if (entityKilled) {
+        _removeEntity(entityKilled);
+      }
+    }
+  }
+};
+
+/**
+ * @brief Handles Enemies attacking units or structures
+ */
+class EnemyAttackSystem : public ECS::System {
+  bool _findTarget(ECS::Entity entity) {
+    auto& attack = ECS::Manager::getComponent<AttackComponent>(entity);
+    const auto& structures = ECS::Manager::getComponent<TransformComponent>(entity).world.structures();
+    auto pos = ECS::Manager::getComponent<TransformComponent>(entity).pos;
+    auto viewRange = ECS::Manager::getComponent<SpawnableComponent>(entity).viewRange;
+
+    ECS::Entity currTarget = ECS::InvalidEntityId;
+    float currDistance = viewRange + 1;
+
+    // prioritize proximity
+    for (auto& u : _gameState.units) {
+      auto distance = glm::distance(pos, u.pos());
+      if (distance < viewRange && distance < currDistance) {
+        currDistance = distance;
+        currTarget = u.id;
+      }
+    }
+
+    for (auto& s : structures) {
+      auto distance = glm::distance(pos, s.pos());
+      if (distance < viewRange && distance < currDistance) {
+        currDistance = distance;
+        currTarget = s.id;
+      }
+    }
+
+    if (currDistance < viewRange) {
+      attack.setTarget(currTarget);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  void _removeEntity(ECS::Entity entity) {
+    // enemies can kill either units or structures
+    if (ECS::Manager::hasComponent<CommandableComponent>(entity)) {
+      ECS::Manager::getComponent<TransformComponent>(entity).world.removeUnit(entity);
+    } else {
+      ECS::Manager::getComponent<TransformComponent>(entity).world.removeStructure(entity);
+    }
+  }
+
+public:
+  EnemyAttackSystem(GameState& gameState) : ECS::System(gameState) {
+    ECS::ComponentTypeSet requiredComponents;
+    requiredComponents.insert(TransformComponent::type);
+    requiredComponents.insert(HealthComponent::type);
+    requiredComponents.insert(AttackComponent::type);
+    requiredComponents.insert(MotionComponent::type);    
+    requiredComponents.insert(SpawnableComponent::type);
+
+    setRequiredComponents(std::move(requiredComponents));
+  }
+
+  void updateEntity(float dt, ECS::Entity entity) override {
+    auto pos = ECS::Manager::getComponent<TransformComponent>(entity).pos;
+    auto viewRange = ECS::Manager::getComponent<SpawnableComponent>(entity).viewRange;
+    auto& motion = ECS::Manager::getComponent<MotionComponent>(entity);
+
+    auto& attack = ECS::Manager::getComponent<AttackComponent>(entity);
+
+    attack.tick(dt);
+
+    // reset target if it has been removed by other sources
+    if (attack.hasTarget() && not ECS::Manager::hasEntity(attack.target)) {
+      attack.resetTarget();
+    }
+
+    if (attack.hasTarget()) {
+      auto targetPos = ECS::Manager::getComponent<TransformComponent>(attack.target).pos;
+      if (glm::distance(pos, targetPos) > viewRange) {
+        attack.resetTarget();
+      }
+    }
+    
+    if (not attack.hasTarget()) {
+      auto foundTarget = _findTarget(entity);
+      if (not foundTarget) {
+        // we don't have a target, we tried looking for one and got nothing
+        return;
+      }
+    }
+
+    // assert: target is in view Range
+    auto targetPos = ECS::Manager::getComponent<TransformComponent>(attack.target).pos;
+
+    // we have a target and it is in viewRange but not attack range
+    if (glm::distance(pos, targetPos) > attack.range) {
+      motion.pathTo(targetPos);
+      return;
+    }
+
+    // we have a target and it is in attack range
+    if (attack.shouldAttack()) {
+      _gameState._bulletParticles.add(BulletParticle(pos, targetPos, 20));
+      auto entityKilled = attack.attack();
+      if (entityKilled) {
+        _removeEntity(entityKilled);
+      }
     }
   }
 };

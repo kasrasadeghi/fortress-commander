@@ -25,7 +25,7 @@ void World::_drawUnits(TextureBatch& batch) const {
   // clang-format off
   for (auto& u : _units) {
     float healthPercent = (float)u.health()/(float)u.max_health;
-    float attackTimer = ECS::Manager::getComponent<AttackComponent>(u.id).attackTimer;
+    auto& attack = ECS::Manager::getComponent<AttackComponent>(u.id);
     
     //TODO: make bullets flash instead of selection
 
@@ -34,7 +34,7 @@ void World::_drawUnits(TextureBatch& batch) const {
     auto baseColor = unselectedCol;
     if (u.selected()) {
       baseColor = selectedCol;
-    } else if (attackTimer < muzzleFlashTime) {
+    } else if (attack.timer > attack.cooldown - muzzleFlashTime) {
       baseColor = attackingColor;
     }
 
@@ -57,12 +57,12 @@ void World::_drawEnemies(TextureBatch& batch) const {
   // clang-format off
   for (auto& e : _enemies) {
     float healthPercent = (float)e.health()/(float)e.max_health;
-    float attackTimer = ECS::Manager::getComponent<AttackComponent>(e.id).attackTimer;
+    auto& attack = ECS::Manager::getComponent<AttackComponent>(e.id);
 
     float angle = ECS::Manager::getComponent<TransformComponent>(e.id).rot;
 
     auto baseColor = enemyCol;
-    if (attackTimer < muzzleFlashTime) {
+    if (attack.timer > attack.cooldown - muzzleFlashTime) {
       baseColor = attackingColor;
     }
     baseColor.a *= healthPercent;
@@ -138,7 +138,8 @@ void World::_drawStructures(TextureBatch& batch) const {
     batch.add(TextureBatch::Instance{
       .pos = structure.pos() * tile_size - offset,
       .size = {tile_size, tile_size},
-      .texOffset = 2.f
+      .aColor = {1, structure.percentHealth(), structure.percentHealth(), 1},
+      .texOffset = 2.f,
     });
   }
 }
@@ -212,11 +213,14 @@ bool World::removeEnemy(ECS::Entity id) {
 }
 
 bool World::sellStructure(glm::ivec2 cell) {
+  // TODO: get money somehow # resources
+
   bool found = false;
 
+  ECS::Entity entity = ECS::InvalidEntityId;
   for (auto iter = _structures.begin(); iter < _structures.end(); ++iter) {
     if (iter->pos() == glm::vec2{cell}) {
-      ECS::Manager::deleteEntity(iter->id);
+      entity = iter->id;
       iter = _structures.erase(iter);
       found = true;
 
@@ -224,17 +228,41 @@ bool World::sellStructure(glm::ivec2 cell) {
     }
   }
 
+  return found && removeStructure(entity, cell);
+}
+
+bool World::removeStructure(ECS::Entity id) {
+  glm::ivec2 cell {-1, -1};
+  bool found = false;
+
+  for (auto iter = _structures.begin(); iter < _structures.end(); ++iter) {
+    if (iter->id == id) {
+      cell = Game::mapCoordsToTile(iter->pos());
+      iter = _structures.erase(iter);
+      found = true;
+
+      break;
+    }
+  }
+
+  return found && removeStructure(id, cell);
+}
+
+bool World::removeStructure(ECS::Entity id, glm::ivec2 cell) {
+  
+  bool result = ECS::Manager::deleteEntity(id);
+
   _region.removeStructure(cell);
 
   for (auto& u : _units) {
     u.repath();
   }
 
-  for (auto& u : _enemies) {
-    u.repath();
+  for (auto& e : _enemies) {
+    e.repath();
   }
 
-  return found;
+  return result;
 }
 
 std::optional<Structure> World::structureAt(glm::ivec2 cell) {

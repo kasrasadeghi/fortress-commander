@@ -2,6 +2,7 @@
 
 #include "Config.h"
 #include "ECS/Component.h"
+#include "ECS/Manager.h"
 #include "Graphics.h"
 
 #include "Path.h"
@@ -77,17 +78,66 @@ struct HealthComponent : public ECS::Component {
 struct AttackComponent : public ECS::Component {
   StrengthValue strength;
 
-  float attackRange;
+  float range;
 
   ECS::Entity target;
-  bool battling;
 
-  float attackTimer;
-  float attackCooldown;
+  float timer;
+  const float cooldown;
+
+  void setTarget(ECS::Entity target) { 
+    this->target = target; 
+  }
+
+  bool hasTarget() { return target != ECS::InvalidEntityId; }
+
+  void resetTarget() {
+    target = ECS::InvalidEntityId;
+  }
+
+  // returns something if it has killed it
+  ECS::Entity attack() {
+    auto& targetHealth = ECS::Manager::getComponent<HealthComponent>(target).health;
+
+    // Augment the target's health according to the attack strength
+    targetHealth -= strength;
+
+    // start the cooldown
+    timer = cooldown;
+
+    if (targetHealth < 0) {
+      auto result = kill();
+      if (result) return result;
+    }
+    return ECS::InvalidEntityId;
+  }
+
+  ECS::Entity kill() {
+    auto t = target;
+    resetTarget();
+    return t;
+  }
+
+  void tick(float dt) {
+    timer -= dt;
+    if (timer < 0) {
+      timer = 0;
+    }
+  }
+
+  bool shouldAttack() { return hasTarget() && timer == 0; }
 
   static constexpr ECS::ComponentTypeId type = 6;
 
   AttackComponent(StrengthValue strength, float attackRange, float attackCooldown)
-      : strength(strength), attackRange(attackRange), target(ECS::InvalidEntityId), battling(false),
-        attackTimer(attackCooldown), attackCooldown(attackCooldown) {}
+      : strength(strength), range(attackRange), target(ECS::InvalidEntityId),
+        timer(0), cooldown(attackCooldown) {}
+};
+
+struct SpawnableComponent : public ECS::Component {
+  float viewRange; // has to be less than max float - 1 because of EnemySystem::updateEntity currDistance
+
+  SpawnableComponent(float viewRange): viewRange(viewRange) {}
+
+  static constexpr ECS::ComponentTypeId type = 7;
 };

@@ -26,14 +26,24 @@
 - view edge lock bug
   - moving to far to the edge freaks out the display
 - enemy incoming indicator
+- death animation
 
 # enemy AI > active
 - make enemy spawn not bound to framerate, but a timer
   - waves
+- attack units
+- attack structures
+- follow unit if in view range
+- attack structures in view range
+- bug: units keep attacking for a bit afterwords
 >- todo
+- wander towards center even if blocked
 - hordes
 - potential field AI
 - light for units
+- constexpr movement speed for types
+- variable movement speed for movement calculation
+- random movement speed for zombies?
 
 # selection, commands > active
 - select a unit
@@ -60,6 +70,7 @@
 - should units attack while moving ?
 - should attack closest enemy, not first one found
 - should stop attacking target when moving out of range
+- unit veterancy ? 
 
 # structures and resources > active
 - build structures (MouseDown)
@@ -114,9 +125,12 @@
 - instanced colors by sectioning ? 
 - geometry shaders 
 
-# project meta > done
+# project meta > active
 - clang-format
 >- todo
+- make GameState members not have underscores because they're not private
+- maybe not take a const ref to a shared ptr in addSystem ?
+- move _performAttack to AttackComponent
 
 # graphics: ergonomics and refactoring > done
 - terrain paint

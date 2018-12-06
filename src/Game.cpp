@@ -36,6 +36,7 @@ Game::Game()
   ECS::Manager::createComponentStore<CommandableComponent>();
   ECS::Manager::createComponentStore<HealthComponent>();
   ECS::Manager::createComponentStore<AttackComponent>();
+  ECS::Manager::createComponentStore<SpawnableComponent>();  
 
   _moveSystem = new MoveSystem(_gameState);
   ECS::Manager::addSystem(ECS::System::Ptr(_moveSystem));
@@ -51,6 +52,9 @@ Game::Game()
 
   _battleSystem = new BattleSystem(_gameState);
   ECS::Manager::addSystem(ECS::System::Ptr(_battleSystem));
+
+  _enemyAttackSystem = new EnemyAttackSystem(_gameState);
+  ECS::Manager::addSystem(ECS::System::Ptr(_enemyAttackSystem));
 
   ECS::EventManager::connect<KeyDownEvent>(this);
   ECS::EventManager::connect<MouseDownEvent>(this);

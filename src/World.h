@@ -51,6 +51,8 @@ public:
     return _region;
   }
 
+  const std::vector<Structure>& structures() { return _structures; }
+
   static void tileHolo(View& view, glm::ivec2 tile_index) {
     glm::vec2 offset(-0.5, -0.5);
 
@@ -111,6 +113,8 @@ public:
 
   bool removeUnit(ECS::Entity id);
   bool removeEnemy(ECS::Entity id);
+  bool removeStructure(ECS::Entity id);
+  bool removeStructure(ECS::Entity id, glm::ivec2 cell);
   bool sellStructure(glm::ivec2 cell);
 
   std::optional<Structure> structureAt(glm::ivec2 cell);

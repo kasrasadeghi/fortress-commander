@@ -22,6 +22,7 @@ public:
   constexpr static HealthValue max_health = 100;
   constexpr static StrengthValue strength = 25;
   constexpr static float attackCooldown = 1.f;
+  constexpr static float viewRange = 5.f;
 
   Enemy(glm::vec2 pos, World&);
 
