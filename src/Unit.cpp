@@ -15,8 +15,11 @@ Unit::Unit(glm::vec2 pos, World& world) : _target(pos), id(ECS::Manager::createE
 
   ECS::Manager::addComponent<SelectableComponent>(id, SelectableComponent());
   ECS::Manager::addComponent<CommandableComponent>(
-      id, CommandableComponent([idCopy](glm::vec2 pos) {
-        ECS::Manager::getComponent<MotionComponent>(idCopy).pathTo(pos);
+      id, CommandableComponent([idCopy](glm::vec2 targetPos) {
+        auto& pos = ECS::Manager::getComponent<TransformComponent>(idCopy).pos;
+        auto& centroid = ECS::Manager::getComponent<SelectableComponent>(idCopy).selectionCentroid;
+        glm::vec2 offset = pos - centroid;
+        ECS::Manager::getComponent<MotionComponent>(idCopy).pathTo(targetPos + offset);
       }));
   ECS::Manager::registerEntity(id);
 }
