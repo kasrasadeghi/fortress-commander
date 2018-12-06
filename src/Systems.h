@@ -123,18 +123,20 @@ public:
   }
 
   void updateEntity(float dt, ECS::Entity entity) override {
-    if (!_selectionChanged) return;
+    auto& selected = ECS::Manager::getComponent<SelectableComponent>(entity).selected;
 
-    const glm::vec2 pos = ECS::Manager::getComponent<TransformComponent>(entity).pos;
-    bool inBox = pos.x >= _boxTopLeft.x && pos.x <= _boxBottomRight.x && pos.y >= _boxTopLeft.y &&
-                 pos.y <= _boxBottomRight.y;
+    if (_selectionChanged) {
+      const glm::vec2 pos = ECS::Manager::getComponent<TransformComponent>(entity).pos;
+      bool inBox = pos.x >= _boxTopLeft.x && pos.x <= _boxBottomRight.x && pos.y >= _boxTopLeft.y &&
+                   pos.y <= _boxBottomRight.y;
 
-    if (inBox) {
+      selected = inBox;
+    }
+    
+    if (selected) {
       _selectionCount += 1;
       _selectionCentroid += ECS::Manager::getComponent<TransformComponent>(entity).pos;
     }
-
-    ECS::Manager::getComponent<SelectableComponent>(entity).selected = inBox;
   }
 
   void receive(const MouseDownEvent& e) {
