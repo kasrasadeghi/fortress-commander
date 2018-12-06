@@ -22,12 +22,7 @@ bool MoveSystem::tileVisible(Region& region, glm::ivec2 tileCoord, glm::vec2 fro
   };
 
   auto seesPoint = [&raycast, &region, &from](glm::vec2 target) -> bool {
-    using V = glm::vec2;
-    const float u = Unit::unit_size;
-    const std::array<glm::vec2, 5> offsets{V{0, 0}, V{-u, 0}, V{u, 0}, V{0, -u}, V{0, u}};
-    return std::all_of(offsets.begin(), offsets.end(), [&](glm::vec2 offset) {
-      return raycast(from + offset, target);
-    });
+    return raycast(from, target);
   };
 
   auto valid = [](glm::ivec2 p) -> bool {
@@ -95,7 +90,7 @@ void MoveSystem::recomputePath(ECS::Entity entity) {
       } else {
         last = index - 1; // update last visible point
         simplifiedPath.push_back(path[last]); // emit the point
-        ++index; // TODO: remove; ensures algorithm progression but produces extra steps
+        // ++index; // TODO: remove; ensures algorithm progression but produces extra steps
                  // might need to adjust tileVisible to avoid infinite loop here.
       }
     }
