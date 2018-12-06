@@ -85,7 +85,7 @@ void MoveSystem::recomputePath(ECS::Entity entity) {
       return Path();
 
     Path simplifiedPath;
-    simplifiedPath.push_back(path[0]);
+    // simplifiedPath.push_back(path[0]);
 
     uint last = 0;
     uint index = 1;
