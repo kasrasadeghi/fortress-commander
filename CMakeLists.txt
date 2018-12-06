@@ -34,7 +34,7 @@ set(SRC_FILES
   src/Region.cpp
   src/GameState.cpp
   src/Components.cpp
-  src/Systems.cpp
+  src/Systems/MoveSystem.cpp
   src/Structure.cpp
   src/Particles.cpp
   src/Graphics/Shader.cpp

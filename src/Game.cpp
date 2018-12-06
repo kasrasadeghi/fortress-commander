@@ -6,7 +6,6 @@
 
 #include "ECS/Manager.h"
 #include "Events.h"
-#include "Systems.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 

@@ -1,9 +1,10 @@
-#include "Systems.h"
-#include "Game.h"
-#include "Tile.h"
+#include "MoveSystem.h"
 
-#include "GlmHashes.h"
-#include "Path.h"
+#include "../Game.h"
+#include "../Tile.h"
+
+#include "../GlmHashes.h"
+#include "../Path.h"
 
 #include <unordered_set>
 
