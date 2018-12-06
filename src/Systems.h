@@ -380,6 +380,13 @@ public:
         continue;
       }
 
+      // make entities that are just standing around easy to push
+      if (ECS::Manager::hasComponent<MotionComponent>(entity) && ECS::Manager::getComponent<MotionComponent>(entity).hasTarget) {
+        if (ECS::Manager::hasComponent<MotionComponent>(other) && not ECS::Manager::getComponent<MotionComponent>(other).hasTarget) {
+          eMovable = false;
+        }
+      }
+
       const glm::vec2& otherPos = ECS::Manager::getComponent<TransformComponent>(other).pos;
       const float dist = glm::distance(pos, otherPos);
       if (dist == 0) {
