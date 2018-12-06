@@ -13,7 +13,7 @@ class Structure {
 public:
   const ECS::Entity id;
 
-  constexpr static HealthValue health = 500;
+  constexpr static HealthValue max_health = 500;
 
   Structure(glm::vec2 pos, World&);
 
@@ -24,4 +24,6 @@ public:
   }
 
   glm::vec2 pos() const;
+  HealthValue health() const;
+  float percentHealth() const;
 };
