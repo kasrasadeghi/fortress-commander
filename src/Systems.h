@@ -205,7 +205,6 @@ public:
 
 /**
  * @brief Handles units attacking enemies
- *
  */
 class BattleSystem : public ECS::System {
   void _performAttack(const ECS::Entity entity, const ECS::Entity target) {
@@ -218,6 +217,10 @@ class BattleSystem : public ECS::System {
 
     // Augment the target's health according to the attack strength
     targetHealth -= entityStrength;
+
+    if (targetHealth < 0) {
+      _die(target);
+    }
 
     // Reset the attack timer so we will attack again after attackCooldown
     ECS::Manager::getComponent<AttackComponent>(entity).attackTimer = 0.f;
