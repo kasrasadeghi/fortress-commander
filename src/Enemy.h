@@ -12,7 +12,6 @@ class World;
 
 class Enemy {
 protected:
-  glm::vec2 _target;
 
 public:
   const ECS::Entity id;

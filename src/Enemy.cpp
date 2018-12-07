@@ -4,7 +4,7 @@
 #include "Path.h"
 #include "World.h"
 
-Enemy::Enemy(glm::vec2 pos, World& world) : _target(pos), id(ECS::Manager::createEntity()) {
+Enemy::Enemy(glm::vec2 pos, World& world) : id(ECS::Manager::createEntity()) {
   ECS::Manager::addComponent<TransformComponent>(id, TransformComponent(world, pos, 0.f));
   ECS::Manager::addComponent<MotionComponent>(id, MotionComponent());
   ECS::Manager::addComponent<HealthComponent>(id, HealthComponent(max_health));
