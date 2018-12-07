@@ -148,6 +148,13 @@ bool World::addUnit(glm::vec2 pos) {
     return false;
   }
 
+  if (_resources < Unit::cost) {
+    return false;
+  }
+
+  // Subtract the cost from the player's resource account
+  _resources -= Unit::cost;
+
   _units.emplace_back(pos, *this);
   return true;
 }
@@ -166,6 +173,13 @@ bool World::addStructure(glm::ivec2 cell) {
   if (not _region.inBounds({cell.x, cell.y})) {
     return false;
   }
+
+  if (_resources < Structure::cost) {
+    return false;
+  }
+
+  // Subtract the cost from the player's resource account
+  _resources -= Structure::cost;
 
   _structures.emplace_back(cell, *this);
   _region.addStructure(cell);
@@ -222,6 +236,10 @@ bool World::sellStructure(glm::ivec2 cell) {
 
       break;
     }
+  }
+
+  if (found) {
+    _resources += Structure::cost / sell_ratio;
   }
 
   _region.removeStructure(cell);

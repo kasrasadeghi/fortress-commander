@@ -21,6 +21,7 @@ public:
   constexpr static HealthValue max_health = 150;
   constexpr static StrengthValue strength = 25;
   constexpr static float attackCooldown = 1.f;
+  constexpr static ResourceType cost = 25;
 
   Unit(glm::vec2 pos, World&);
 

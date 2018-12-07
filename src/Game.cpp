@@ -35,6 +35,7 @@ Game::Game()
   ECS::Manager::createComponentStore<CommandableComponent>();
   ECS::Manager::createComponentStore<HealthComponent>();
   ECS::Manager::createComponentStore<AttackComponent>();
+  ECS::Manager::createComponentStore<ResourceComponent>();
 
   _moveSystem = new MoveSystem(_gameState);
   ECS::Manager::addSystem(ECS::System::Ptr(_moveSystem));
@@ -50,6 +51,9 @@ Game::Game()
 
   _battleSystem = new BattleSystem(_gameState);
   ECS::Manager::addSystem(ECS::System::Ptr(_battleSystem));
+
+  _resourceSystem = new ResourceSystem(_gameState, _world._resources);
+  ECS::Manager::addSystem(ECS::System::Ptr(_resourceSystem));
 
   ECS::EventManager::connect<KeyDownEvent>(this);
   ECS::EventManager::connect<MouseDownEvent>(this);
@@ -114,6 +118,8 @@ void Game::loop() {
 
     _window.swapBuffers();
     glfwPollEvents();
+
+    std::cout << "Resources: " << _world._resources << std::endl;
   }
 }
 

@@ -14,6 +14,8 @@ public:
   const ECS::Entity id;
 
   constexpr static HealthValue health = 500;
+  constexpr static ResourceType resourceAccumulationSpeed = 10;
+  constexpr static ResourceType cost = 100.f;
 
   Structure(glm::vec2 pos, World&);
 

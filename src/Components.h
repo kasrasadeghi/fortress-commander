@@ -94,3 +94,12 @@ struct AttackComponent : public ECS::Component {
       : strength(strength), attackRange(attackRange), target(ECS::InvalidEntityId), battling(false),
         attackTimer(attackCooldown), attackCooldown(attackCooldown) {}
 };
+
+struct ResourceComponent : public ECS::Component {
+  ResourceType speed;
+
+  static constexpr ECS::ComponentTypeId type = 7;
+
+  ResourceComponent(ResourceType accumulationSpeed)
+      : speed(accumulationSpeed) {}
+};

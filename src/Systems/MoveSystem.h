@@ -10,7 +10,6 @@
  * @detail Supports simple velocity and also path planning.
  */
 class MoveSystem : public ECS::System {
-
 public:
   MoveSystem(GameState& gameState) : ECS::System(gameState) {
     ECS::ComponentTypeSet requiredComponents;

@@ -25,6 +25,7 @@ class Game : public ECS::EventSubscriber<KeyDownEvent>,
   UnitCollisionSystem* _unitCollisionSystem;
   MoveSystem* _moveSystem;
   BattleSystem* _battleSystem;
+  ResourceSystem* _resourceSystem;
 
   void _mouseViewMove(float d) {
     auto& _view = _gameState._view;

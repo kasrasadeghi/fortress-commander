@@ -15,6 +15,8 @@ class World {
   std::vector<Enemy> _enemies;
   std::vector<Structure> _structures;
 
+  ResourceType _resources;
+
   void _drawUnits(TextureBatch& batch) const;
   void _drawEnemies(TextureBatch& batch) const;
   void _drawStructures(TextureBatch& batch) const;
@@ -45,7 +47,7 @@ class World {
   friend class Game;
 
 public:
-  World(size_t size) : _region({size, std::vector<Tile>(size, Tile::GRASS)}) {}
+  World(size_t size) : _region({size, std::vector<Tile>(size, Tile::GRASS)}), _resources(init_resource_bal) {}
 
   Region& region() {
     return _region;
