@@ -219,7 +219,7 @@ void Game::handleTick(float dt) {
   _keyboardViewMove(d);
 
   // lock view to world by rebounding
-  _reboundViewToWorld();
+  // _reboundViewToWorld();
 }
 
 
