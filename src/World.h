@@ -90,6 +90,7 @@ public:
 
   virtual void draw(TextureBatch& batch, View& view, bool debug) {
     batch.clear();
+    batch.view(view);
 
     _region.draw(batch);
     _drawStructures(batch);
@@ -97,7 +98,6 @@ public:
     _drawUnits(batch);
 
     batch.update();
-    batch.view(view);
     batch.draw();
     
     if (debug) {
