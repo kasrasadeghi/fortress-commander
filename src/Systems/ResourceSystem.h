@@ -10,11 +10,10 @@
  */
 class ResourceSystem : public ECS::System {
   ResourceType& _resources;
-  float _internalResources;
 
 public:
   ResourceSystem(GameState& gameState, ResourceType& resources)
-      : ECS::System(gameState), _resources(resources), _internalResources(_resources) {
+      : ECS::System(gameState), _resources(resources) {
     ECS::ComponentTypeSet requiredComponents;
     requiredComponents.insert(ResourceComponent::type);
 
@@ -26,8 +25,6 @@ public:
       return;
     }
 
-    _internalResources += ECS::Manager::getComponent<ResourceComponent>(entity).speed * dt;
-
-    _resources = static_cast<ResourceType>(_internalResources);
+    _resources += ECS::Manager::getComponent<ResourceComponent>(entity).speed * dt;
   }
 };
