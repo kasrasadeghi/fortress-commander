@@ -118,8 +118,6 @@ void Game::loop() {
 
     _window.swapBuffers();
     glfwPollEvents();
-
-    std::cout << "Resources: " << _world._resources << std::endl;
   }
 }
 

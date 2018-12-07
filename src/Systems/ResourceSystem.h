@@ -29,6 +29,5 @@ public:
     _internalResources += ECS::Manager::getComponent<ResourceComponent>(entity).speed * dt;
 
     _resources = static_cast<ResourceType>(_internalResources);
-    std::cout << _resources << std::endl;
   }
 };
