@@ -21,8 +21,8 @@
 int Game::tile_view_size = 25;
 
 Game::Game()
-    : _window("Fortress Commander"), _gameState(_window, _world._units, _world._enemies),
-      _world(world_size) {
+    : _resources(init_resource_bal), _window("Fortress Commander"), _gameState(_window, _world._units, _world._enemies, _resources),
+      _world(world_size, _resources) {
   _window.setKeyCallback([this](auto&&... args) { keyCallback(args...); });
   _window.setMouseCallback([this](auto&&... args) { mouseCallback(args...); });
   _window.setCursorCallback([this](auto&&... args) { cursorCallback(args...); });
@@ -69,7 +69,7 @@ std::string str(T obj) {
 
 void Game::restart() {
   ECS::Manager::clear();
-  _world = World(world_size);
+  _world = World(world_size, _resources);
 }
 
 void Game::loop() {

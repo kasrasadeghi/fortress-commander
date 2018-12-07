@@ -14,6 +14,8 @@
 class Game : public ECS::EventSubscriber<KeyDownEvent>,
              ECS::EventSubscriber<MouseDownEvent>,
              ECS::EventSubscriber<MouseMoveEvent> {
+  ResourceType _resources;
+
   RenderWindow _window;
   GameState _gameState;
   World _world;

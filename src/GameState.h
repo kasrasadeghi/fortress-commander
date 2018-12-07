@@ -23,5 +23,7 @@ struct GameState {
   
   ParticleSystem<BulletParticle> _bulletParticles;
 
-  GameState(RenderWindow& window, std::vector<Unit>& units, std::vector<Enemy>& enemies);
+  ResourceType& _resources;
+
+  GameState(RenderWindow& window, std::vector<Unit>& units, std::vector<Enemy>& enemies, ResourceType& resources);
 };
