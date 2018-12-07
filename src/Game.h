@@ -7,6 +7,7 @@
 #include "ECS/Event.h"
 #include "ECS/Manager.h"
 
+#include "EnemySpawner.h"
 #include "Components.h"
 #include "Systems.h"
 #include "World.h"
@@ -21,6 +22,8 @@ class Game : public ECS::EventSubscriber<KeyDownEvent>,
   World _world;
   Tile _paint = Tile::GRASS;
   bool _debug = false;
+
+  EnemySpawner _spawner;
 
   UnitSelectSystem* _unitSelectSystem;
   UnitCommandSystem* _unitCommandSystem;

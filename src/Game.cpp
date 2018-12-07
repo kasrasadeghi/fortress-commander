@@ -2,8 +2,6 @@
 #include "Config.h"
 #include "Graphics.h"
 
-#include "EnemySpawner.h"
-
 #include "ECS/Manager.h"
 #include "Events.h"
 
@@ -22,7 +20,7 @@ int Game::tile_view_size = 25;
 
 Game::Game()
     : _resources(init_resource_bal), _window("Fortress Commander"), _gameState(_window, _world._units, _world._enemies, _resources),
-      _world(world_size, _resources) {
+      _world(world_size, _resources), _spawner(_world) {
   _window.setKeyCallback([this](auto&&... args) { keyCallback(args...); });
   _window.setMouseCallback([this](auto&&... args) { mouseCallback(args...); });
   _window.setCursorCallback([this](auto&&... args) { cursorCallback(args...); });
@@ -69,13 +67,18 @@ std::string str(T obj) {
 
 void Game::restart() {
   ECS::Manager::clear();
+
+  _resources = init_resource_bal;
+
+  _spawner.reset();
+
   _world = World(world_size, _resources);
 }
 
 void Game::loop() {
   float last_time = glfwGetTime();
   TextRenderer t(_window.defaultView());
-  EnemySpawner spawner(_world);
+
   TextureBatch batch(ResourceManager::texture());
   batch.view(_gameState._view);
 
@@ -116,7 +119,7 @@ void Game::loop() {
     ECS::EventManager::update();
     ECS::Manager::update(dt);
     _gameState._bulletParticles.update(dt);
-    spawner.update(dt);
+    _spawner.update(dt);
 
     _window.swapBuffers();
     glfwPollEvents();

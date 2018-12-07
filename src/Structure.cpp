@@ -6,7 +6,7 @@
 Structure::Structure(glm::vec2 pos, World& world) : id(ECS::Manager::createEntity()) {
   ECS::Manager::addComponent<TransformComponent>(id, TransformComponent(world, pos, 0.f));
   ECS::Manager::addComponent<HealthComponent>(id, HealthComponent(health));
-  ECS::Manager::addComponent<ResourceComponent>(id, ResourceComponent(resourceAccumulationSpeed));
+  ECS::Manager::addComponent<ResourceComponent>(id, ResourceComponent(resourceSpeed));
 
   ECS::Manager::registerEntity(id);
 }

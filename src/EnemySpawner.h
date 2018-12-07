@@ -19,7 +19,7 @@ class EnemySpawner {
 
   std::mt19937 _mt;
   World& _world;
-  float timer = spawn_interval;
+  float _timer = spawn_interval;
 
   std::uniform_int_distribution<int> _sideDist{0, 3};
   std::uniform_real_distribution<float> _fdist{tile_size / 2.f, world_bounds - tile_size / 2.f};
@@ -41,10 +41,10 @@ public: // seed with random device
   EnemySpawner(World& world) : _mt((std::random_device{})()), _world(world) {}
 
   void update(float dt) {
-    timer -= dt;
-    if (timer <= 0) {
+    _timer -= dt;
+    if (_timer <= 0) {
       spawn();
-      timer = spawn_interval;
+      _timer = spawn_interval;
     }
   }
 
@@ -75,5 +75,9 @@ public: // seed with random device
         _world.addEnemy(offsetPos);
       }
     }
+  }
+
+  void reset() {
+    _timer = spawn_interval;
   }
 };
