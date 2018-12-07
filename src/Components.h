@@ -80,6 +80,7 @@ struct AttackComponent : public ECS::Component {
 
   float range;
 
+  ECS::Entity me;
   ECS::Entity target;
 
   float timer;
@@ -129,8 +130,8 @@ struct AttackComponent : public ECS::Component {
 
   static constexpr ECS::ComponentTypeId type = 6;
 
-  AttackComponent(StrengthValue strength, float attackRange, float attackCooldown)
-      : strength(strength), range(attackRange), target(ECS::InvalidEntityId),
+  AttackComponent(ECS::Entity me, StrengthValue strength, float attackRange, float attackCooldown)
+      : strength(strength), range(attackRange), me(me), target(ECS::InvalidEntityId),
         timer(0), cooldown(attackCooldown) {}
 };
 
