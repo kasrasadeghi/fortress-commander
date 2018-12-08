@@ -30,7 +30,7 @@ void TransformComponent::translate(glm::vec2 displacement) {
       clamp(pos.x, tileCenter.x - half_size, tileCenter.x + half_size),
       clamp(pos.y, tileCenter.y - half_size, tileCenter.y + half_size));
     float dist = glm::distance(pos, nearest);
-    return dist < Unit::unit_size;
+    return dist < Unit::unit_size * 0.9f;
   };
 
   auto stepPosition = [&](glm::vec2 step) {
@@ -43,7 +43,7 @@ void TransformComponent::translate(glm::vec2 displacement) {
     for (const glm::ivec2& t : neighbors) {
       if (not validPosition(t) && intersectsTile(newPos, t)) {
         glm::vec2 oppositeDir = newPos - Game::centerOfTile(t);
-        pos += glm::normalize(oppositeDir) * glm::length(step) * 2.f;
+        pos += glm::normalize(oppositeDir) * glm::length(step);
         return false;
       }
     } 
