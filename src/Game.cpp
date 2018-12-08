@@ -92,7 +92,6 @@ void Game::loop() {
     handleTick(dt);
     _world.draw(batch, _gameState._view, _debug);
 
-
     glm::vec4 modeColor(0.76, 0.27, 0.19, 1);
     auto& _mode = _gameState._mode;
     if (_mode == ControlMode::BUILD) {
@@ -112,7 +111,9 @@ void Game::loop() {
       Unit::holo(_gameState._view, getMouseCoords());
     }
 
-    t.renderText(str(1.f / dt), 100, 50, 1, glm::vec4(0, 0, 0, 1));
+    if (_debug) {
+      t.renderText(str(1.f / dt), 100, 50, 1, glm::vec4(0, 0, 0, 1));
+    }
 
     t.renderText("RESOURCES: " + str(static_cast<int>(_resources)), _window.width() - 500, _window.height() - 20, 1, modeColor);
 
