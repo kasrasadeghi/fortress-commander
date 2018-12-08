@@ -9,9 +9,14 @@
 #include <unordered_set>
 #include <vector>
 
+// Forward declaration
+class RegionGenerator;
+
 class Region {
   std::vector<std::vector<Tile>> _data;
   Grid<> _structure_pos_set;
+
+  friend RegionGenerator;
 
 public:
   Region(std::vector<std::vector<Tile>> data) : _data(data) {

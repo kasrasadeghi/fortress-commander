@@ -3,6 +3,7 @@
 #include "Enemy.h"
 #include "Graphics.h"
 #include "Region.h"
+#include "RegionGenerator.h"
 #include "Structure.h"
 #include "Unit.h"
 
@@ -47,7 +48,9 @@ class World {
   friend class Game;
 
 public:
-  World(size_t size, ResourceType& resources) : _region({size, std::vector<Tile>(size, Tile::GRASS)}), _resources(resources) {}
+  World(size_t size, ResourceType& resources) : _region({size, std::vector<Tile>(size, Tile::GRASS)}), _resources(resources) {
+    RegionGenerator::generate(_region);
+  }
 
   World& operator=(World&& other) {
     _units = other._units;
