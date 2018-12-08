@@ -20,7 +20,7 @@ void mat4_print(glm::mat4 m) {
 // clang-format on
 
 void World::_drawUnits(TextureBatch& batch) const {
-  const glm::vec4 selectedCol{1, 1, 0, 1}, unselectedCol{1, 0, 0, 1}, attackingColor{1, 1, 1, 1};
+  const glm::vec4 selectedCol{.53, .53, .82, 1}, unselectedCol{.2, .4, .6, 1}, attackingColor{1, 1, 1, 1};
 
   // clang-format off
   for (auto& u : _units) {
@@ -52,7 +52,7 @@ void World::_drawUnits(TextureBatch& batch) const {
 }
 
 void World::_drawEnemies(TextureBatch& batch) const {
-  const glm::vec4 enemyCol{1, 0, 1, 1}, attackingColor{1, 1, 1, 1};
+  const glm::vec4 enemyCol{.85, .36, .22, 1}, attackingColor{1, 1, 1, 1};
 
   // clang-format off
   for (auto& e : _enemies) {
