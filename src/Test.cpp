@@ -9,6 +9,7 @@
 #include "Graphics.h"
 #include "Path.h"
 #include "World.h"
+#include "RegionGenerator.h"
 #include <iostream>
 
 // Game g; // sets up opengl
@@ -46,6 +47,22 @@ TEST(Pathing, findPathSpeed) {
   for (int i = 0; i < 100; ++i) {
     findPath(region, {0, 0}, {world_size - 1, world_size - 1});
   }
+}
+
+TEST(Perlin, rangeTest) {
+  PerlinNoise p(0);
+  double min = std::numeric_limits<double>::max();
+  double max = std::numeric_limits<double>::lowest();
+
+  std::mt19937 mt(0);
+  std::uniform_real_distribution<double> dist{-10, 10};
+  for (int i = 0; i < 100000; ++i) {
+    double f = p(dist(mt), dist(mt));
+    min = std::min(min, f);
+    max = std::max(max, f);
+  }
+
+  std::cout << min << ", " << max << std::endl;
 }
 
 // TEST(Pathing, constructor) {

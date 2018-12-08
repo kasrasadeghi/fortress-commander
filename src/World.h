@@ -49,7 +49,7 @@ class World {
 
 public:
   World(size_t size, ResourceType& resources) : _region({size, std::vector<Tile>(size, Tile::GRASS)}), _resources(resources) {
-    RegionGenerator::generate(_region);
+    RegionGenerator().generate(_region);
   }
 
   World& operator=(World&& other) {
