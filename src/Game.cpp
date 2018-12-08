@@ -82,6 +82,8 @@ void Game::loop() {
   TextureBatch batch(ResourceManager::texture());
   batch.view(_gameState._view);
 
+  RectangleBatch ui;
+
   while (_window.isOpen()) {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -91,6 +93,17 @@ void Game::loop() {
 
     handleTick(dt);
     _world.draw(batch, _gameState._view, _debug);
+    
+    ui.add()
+      .position({_window.width() - 150, 0})
+      .size({300, 150})
+      .color({.3, .3, .3, 1});
+
+    ui.add()
+      .position({_window.width() - 300, _window.height() - 30})
+      .size({600, 60})
+      .color({.3, .3, .3, 1});
+    ui.draw(_window._default);
 
     glm::vec4 modeColor(0.76, 0.27, 0.19, 1);
     auto& _mode = _gameState._mode;
