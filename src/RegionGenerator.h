@@ -8,17 +8,20 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <random>
+#include <algorithm>
 
 class PerlinNoise {
-  int _seed;
+  const int _seed;
   double _frequency = 1.0;
   double _persistence = 0.5;
   double _lacunarity = 2.0;
-  std::uniform_int_distribution<int> _hashDist{0, 255};
+  std::vector<int> _randomData;
 
-  int _hash(int x) {
-    std::mt19937 twister(_seed + x);
-    return _hashDist(twister);
+  int _hash(uint x) {
+    if (x >= _randomData.size()) {
+      throw std::runtime_error("input to PerlinNoise::_hash out of bounds.");
+  }
+    return _randomData[x];
   }
 
   static double _fade(double t) { return t * t * t * (t * (t * 6 - 15) + 10); }
@@ -31,7 +34,19 @@ class PerlinNoise {
   }
 
 public:
-  PerlinNoise(int seed) : _seed(seed) {}
+  PerlinNoise(int seed) : _seed(seed) {
+    // construct vector of [0..255] and append it to itself
+    for (int i = 0; i < 256; ++i) {
+      _randomData.push_back(i);
+    }
+    _randomData.insert(_randomData.end(), _randomData.begin(), _randomData.end());
+
+    std::mt19937 mt(seed);
+    auto randfunc = [&mt](int i){
+      return std::uniform_int_distribution{0, i}(mt);
+    };
+    std::random_shuffle(_randomData.begin(), _randomData.end(), randfunc);
+  }
 
   /**
    * @brief set frequency of the first octave
