@@ -11,7 +11,7 @@ test: build\:true
 
 .PHONY: build
 build\:%: cmake\:%
-	cd build; make -j2
+	cd build; make -j8
 
 # usage cmake:true for testing, cmake:false otherwise
 .PHONY: cmake\:%
