@@ -143,8 +143,8 @@ class RegionGenerator {
   PerlinNoise _noise;
 
 public:
-  RegionGenerator(int seed = 0) : _noise(seed) {
-    _noise.frequency(1/20.);
+  RegionGenerator(int seed = 80085) : _noise(seed) {
+    _noise.frequency(1/30.).lacunarity(2.5);
   }
 
   void generate(Region& region) {
@@ -156,7 +156,7 @@ public:
 
     for (size_t x = 0; x < data.size(); ++x) {
       for (size_t y = 0; y < data[0].size(); ++y) {
-        double f = _noise.generate(x, y); 
+        double f = _noise.generate<3>(x, y); 
 
         if (f < 0.3) {
           data[x][y] = Tile::WATER;
