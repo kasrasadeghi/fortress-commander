@@ -92,17 +92,17 @@ public:
    * @return a value in the range [0, 1]
    */
   template <int octaves = 1>
-  double generate(double x, double y = 0, double z = 0) {
+  double generate(double noiseX, double noiseY = 0, double noiseZ = 0) {
     static_assert(octaves > 0);
 
-    x *= _frequency;
-    y *= _frequency;
-    z *= _frequency;
-    
+    double currentFreq = _frequency;
     double currentAmp = 1;
     double result = 0;
 
     for (auto o = 0; o < octaves; ++o) {
+      double x = noiseX * currentFreq;
+      double y = noiseY * currentFreq;
+      double z = noiseZ * currentFreq;
       const int X = static_cast<int>(floor(x)) & 255; // FIND UNIT CUBE THAT
       const int Y = static_cast<int>(floor(y)) & 255; // CONTAINS POINT.
       const int Z = static_cast<int>(floor(z)) & 255;
@@ -128,9 +128,7 @@ public:
 
       // update parameters for next octave
       currentAmp *= currentAmp * _persistence;
-      x *= _lacunarity;
-      y *= _lacunarity;
-      z *= _lacunarity;
+      currentFreq *= _lacunarity;
     }
 
     // map from [-sqrt(n)/2, sqrt(n)/2] to [0, 1] where n is dimensionality
