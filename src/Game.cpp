@@ -93,42 +93,8 @@ void Game::loop() {
 
     handleTick(dt);
     _world.draw(batch, _gameState._view, _debug);
-    
-    ui.add()
-      .position({_window.width() - 150, 0})
-      .size({300, 150})
-      .color({.3, .3, .3, 1});
 
-    ui.add()
-      .position({_window.width() - 300, _window.height() - 30})
-      .size({600, 60})
-      .color({.3, .3, .3, 1});
-    ui.draw(_window._default);
-
-    glm::vec4 modeColor(0.76, 0.27, 0.19, 1);
-    auto& _mode = _gameState._mode;
-    if (_mode == ControlMode::BUILD) {
-      t.renderText("BUILD", _window.width() - 250, 50, 1, modeColor);
-      _world.structHolo(_gameState._view, getMouseTile());
-    }
-    if (_mode == ControlMode::SELL) {
-      t.renderText("SELL", _window.width() - 250, 50, 1, modeColor);
-      _world.structHolo(_gameState._view, getMouseTile());
-    }
-    if (_mode == ControlMode::TERRAIN) {
-      t.renderText("TERRAIN", _window.width() - 250, 50, 1, modeColor);
-      World::tileHolo(_gameState._view, getMouseTile());
-    }
-    if (_mode == ControlMode::UNIT) {
-      t.renderText("UNIT", _window.width() - 250, 50, 1, modeColor);
-      Unit::holo(_gameState._view, getMouseCoords());
-    }
-
-    if (_debug) {
-      t.renderText(str(1.f / dt), 100, 50, 1, glm::vec4(0, 0, 0, 1));
-    }
-
-    t.renderText("RESOURCES: " + str(static_cast<int>(_resources)), _window.width() - 500, _window.height() - 20, 1, modeColor);
+    _drawUI(ui, t, dt);
 
     ECS::EventManager::update();
     ECS::Manager::update(dt);
@@ -138,6 +104,65 @@ void Game::loop() {
     _window.swapBuffers();
     glfwPollEvents();
   }
+}
+
+void Game::_drawUI(RectangleBatch& ui, TextRenderer& t, float dt) {
+  ui.add()
+    .position({_window.width() - 150, 0})
+    .size({315, 165})
+    .color({.1, .1, .1, 1});
+
+  ui.add()
+    .position({_window.width() - 150, 0})
+    .size({300, 150})
+    .color({.3, .3, .3, 1});
+
+  ui.add()
+    .position({_window.width() - 300, _window.height() - 30})
+    .size({615, 75})
+    .color({.1, .1, .1, 1});
+
+  ui.add()
+    .position({_window.width() - 300, _window.height() - 30})
+    .size({600, 60})
+    .color({.3, .3, .3, 1});
+
+  ui.draw(_window._default);
+
+  glm::vec4 modeColor(0.76, 0.27, 0.19, 1);
+  auto& _mode = _gameState._mode;
+  if (_mode == ControlMode::BUILD) {
+    t.renderText("BUILD", _window.width() - 250, 50, 1, modeColor);
+    _world.structHolo(_gameState._view, getMouseTile());
+  }
+  if (_mode == ControlMode::SELL) {
+    t.renderText("SELL", _window.width() - 250, 50, 1, modeColor);
+    _world.structHolo(_gameState._view, getMouseTile());
+  }
+  if (_mode == ControlMode::TERRAIN) {
+    t.renderText("TERRAIN", _window.width() - 250, 50, 1, modeColor);
+    World::tileHolo(_gameState._view, getMouseTile());
+  }
+  if (_mode == ControlMode::UNIT) {
+    t.renderText("UNIT", _window.width() - 250, 50, 1, modeColor);
+    Unit::holo(_gameState._view, getMouseCoords());
+  }
+
+  if (_debug) {
+    ui.add()
+      .position({75, 30})
+      .size({165, 75})
+      .color({.1, .1, .1, 1});
+
+    ui.add()
+      .position({75, 30})
+      .size({150, 60})
+      .color({.3, .3, .3, 1});
+
+    t.renderText(str(static_cast<int>(1.f / dt)), 25, 50, 1, glm::vec4(0, 0, 0, 1));
+  }
+
+  t.renderText("RESOURCES: " + str(static_cast<int>(_resources)), _window.width() - 500, _window.height() - 20, 1, modeColor);
 }
 
 void Game::receive(const KeyDownEvent& e) {
