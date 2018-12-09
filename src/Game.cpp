@@ -82,8 +82,6 @@ void Game::loop() {
   TextureBatch batch(ResourceManager::texture());
   batch.view(_gameState._view);
 
-  RectangleBatch ui;
-
   while (_window.isOpen()) {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -94,7 +92,7 @@ void Game::loop() {
     handleTick(dt);
     _world.draw(batch, _gameState._view, _debug);
 
-    _drawUI(ui, t, dt);
+    _drawUI(t, dt);
 
     ECS::EventManager::update();
     ECS::Manager::update(dt);
@@ -106,7 +104,9 @@ void Game::loop() {
   }
 }
 
-void Game::_drawUI(RectangleBatch& ui, TextRenderer& t, float dt) {
+void Game::_drawUI(TextRenderer& t, float dt) {
+  RectangleBatch ui;
+
   ui.add()
     .position({_window.width() - 150, 0})
     .size({315, 165})
@@ -168,8 +168,6 @@ void Game::_drawUI(RectangleBatch& ui, TextRenderer& t, float dt) {
   }
 
   t.renderText("RESOURCES: " + str(static_cast<int>(_resources)), _window.width() - 500, _window.height() - 20, 1, modeColor);
-
-  ui.clear();
 }
 
 void Game::receive(const KeyDownEvent& e) {

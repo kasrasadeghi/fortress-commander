@@ -83,11 +83,10 @@ class Game : public ECS::EventSubscriber<KeyDownEvent>,
   /**
    * @brief Performs all UI-related draw calls
    *
-   * @param ui The RectangleBatch of UI boxes/rectangles/backgrounds
    * @param t  The TextRenderer for all UI text
    * @param dt The time since last draw call
    */
-  void _drawUI(RectangleBatch& ui, TextRenderer& t, float dt);
+  void _drawUI(TextRenderer& t, float dt);
 
 public:
   static int tile_view_size; // Initialized to 25
