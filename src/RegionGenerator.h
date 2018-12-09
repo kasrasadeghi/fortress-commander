@@ -35,17 +35,18 @@ class PerlinNoise {
 
 public:
   PerlinNoise(int seed) : _seed(seed) {
-    // construct vector of [0..255] and append it to itself
+    // construct vector of [0..255]
     for (int i = 0; i < 256; ++i) {
       _randomData.push_back(i);
     }
-    _randomData.insert(_randomData.end(), _randomData.begin(), _randomData.end());
 
     std::mt19937 mt(seed);
     auto randfunc = [&mt](int i){
       return std::uniform_int_distribution{0, i}(mt);
     };
     std::random_shuffle(_randomData.begin(), _randomData.end(), randfunc);
+
+    _randomData.insert(_randomData.end(), _randomData.begin(), _randomData.end());
   }
 
   /**
