@@ -28,6 +28,11 @@ class BattleSystem : public ECS::System {
     glm::vec2 pos = ECS::Manager::getComponent<TransformComponent>(entity).pos;
     glm::vec2 tpos = ECS::Manager::getComponent<TransformComponent>(target).pos;
     _gameState._bulletParticles.add(BulletParticle(pos, tpos, 20));
+
+    if (ECS::Manager::hasComponent<ResourceComponent>(target)) {
+      auto& world = ECS::Manager::getComponent<TransformComponent>(target).world;
+      world.removeStructure(target); // delete structure
+    }
   }
 
   void _die(const ECS::Entity entity) {
@@ -35,7 +40,7 @@ class BattleSystem : public ECS::System {
 
     if (ECS::Manager::hasComponent<CommandableComponent>(entity)) {
       world.removeUnit(entity); // delete unit
-    } else {
+    } else if (ECS::Manager::hasComponent<MotionComponent>(entity)) {
       world.removeEnemy(entity); // delete enemy
     }
   }
@@ -110,10 +115,9 @@ public:
 
     auto& pos = ECS::Manager::getComponent<TransformComponent>(entity).pos;
     auto& targetPos = ECS::Manager::getComponent<TransformComponent>(target).pos;
+    auto& attack = ECS::Manager::getComponent<AttackComponent>(entity);
 
     auto dist = glm::distance(pos, targetPos);
-
-    auto& attack = ECS::Manager::getComponent<AttackComponent>(entity);
 
     attack.battling = dist < 5.f; // TODO: don't hardcode the attack range, perform raycast?
 

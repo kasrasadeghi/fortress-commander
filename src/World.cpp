@@ -225,24 +225,43 @@ bool World::removeEnemy(ECS::Entity id) {
   return found && ECS::Manager::deleteEntity(id);
 }
 
-bool World::sellStructure(glm::ivec2 cell) {
+bool World::removeStructure(ECS::Entity id) {
   bool found = false;
 
   for (auto iter = _structures.begin(); iter < _structures.end(); ++iter) {
-    if (iter->pos() == glm::vec2{cell}) {
-      ECS::Manager::deleteEntity(iter->id);
-      iter = _structures.erase(iter);
+    if (iter->id == id) {
+      _region.removeStructure(iter->pos());
+      _structures.erase(iter);
       found = true;
 
       break;
     }
   }
 
+  return found && ECS::Manager::deleteEntity(id);
+}
+
+bool World::sellStructure(glm::ivec2 cell) {
+  bool found = false;
+
+  ECS::Entity id = ECS::InvalidEntityId;
+  for (auto iter = _structures.begin(); iter < _structures.end(); ++iter) {
+    if (iter->pos() == glm::vec2{cell}) {
+      id = iter->id;
+
+      break;
+    }
+  }
+
+  if (id == ECS::InvalidEntityId) {
+    return found;
+  }
+
+  found = removeStructure(id);
+
   if (found) {
     _resources += Structure::cost / sell_ratio;
   }
-
-  _region.removeStructure(cell);
 
   for (auto& u : _units) {
     u.repath();

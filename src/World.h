@@ -125,6 +125,8 @@ public:
 
   bool removeUnit(ECS::Entity id);
   bool removeEnemy(ECS::Entity id);
+  bool removeStructure(ECS::Entity id);
+
   bool sellStructure(glm::ivec2 cell);
 
   std::optional<Structure> structureAt(glm::ivec2 cell);
