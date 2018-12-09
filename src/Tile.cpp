@@ -23,5 +23,10 @@ const std::unordered_map<Tile, const TileType> TileProperties::_data{
         .walkable = false,
         .texOffset = 4,
         }},
+    {Tile::MOUNTAIN, TileType{
+        .color = {0.55f, 0.275f, 0.08f, 1.f},
+        .walkable = false,
+        .texOffset = 5,
+    }}
     };
 // clang-format on

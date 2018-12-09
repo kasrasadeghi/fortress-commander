@@ -163,7 +163,14 @@ public:
         else if (f < 0.4) {
           data[x][y] = Tile::SAND;
         }
+        else if (f > 0.88) {
+          data[x][y] = Tile::MOUNTAIN;
+        }
       }
     }
+
+    // Ensure that the tile in the middle of the screen (the one that
+    // enemies are pathfinding toward) is walkable
+    data[data.size() / 2][data.size() / 2] = Tile::GRASS;
   }
 };

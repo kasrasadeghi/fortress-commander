@@ -3,7 +3,7 @@
 #include <glm/glm.hpp>
 #include <unordered_map>
 
-enum class Tile { NONE, GRASS, SAND, WATER };
+enum class Tile { NONE, GRASS, SAND, WATER, MOUNTAIN };
 
 struct TileType {
   glm::vec4 color;
