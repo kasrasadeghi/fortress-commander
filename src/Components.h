@@ -70,11 +70,12 @@ struct CommandableComponent : public ECS::Component {
 
 struct HealthComponent : public ECS::Component {
   HealthValue health;
+  HealthValue maxHealth;
 
   static constexpr ECS::ComponentTypeId type = 5;
 
   HealthComponent() : health(0) {}
-  HealthComponent(HealthValue health) : health(health) {}
+  HealthComponent(HealthValue health) : health(health), maxHealth(health) {}
 };
 
 struct AttackComponent : public ECS::Component {

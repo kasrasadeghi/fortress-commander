@@ -31,6 +31,7 @@ class Game : public ECS::EventSubscriber<KeyDownEvent>,
   MoveSystem* _moveSystem;
   BattleSystem* _battleSystem;
   ResourceSystem* _resourceSystem;
+  HealthBarSystem* _healthBarSystem;
 
   void _mouseViewMove(float d) {
     auto& _view = _gameState._view;

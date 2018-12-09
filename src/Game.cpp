@@ -53,6 +53,9 @@ Game::Game()
   _resourceSystem = new ResourceSystem(_gameState, _world._resources);
   ECS::Manager::addSystem(ECS::System::Ptr(_resourceSystem));
 
+  _healthBarSystem = new HealthBarSystem(_gameState);
+  ECS::Manager::addSystem(ECS::System::Ptr(_healthBarSystem));
+
   ECS::EventManager::connect<KeyDownEvent>(this);
   ECS::EventManager::connect<MouseDownEvent>(this);
   ECS::EventManager::connect<MouseMoveEvent>(this);

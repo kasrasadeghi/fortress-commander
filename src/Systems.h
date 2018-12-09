@@ -6,3 +6,4 @@
 #include "Systems/UnitCommandSystem.h"
 #include "Systems/UnitSelectionSystem.h"
 #include "Systems/ResourceSystem.h"
+#include "Systems/HealthBarSystem.h"
