@@ -106,6 +106,10 @@ public:
     return add(Instance());
   }
 
+  void clear() {
+    instances.clear();
+  }
+
   BaseBatch& position(const glm::vec2& pos) {
     _vaoDirty = true;
     instances.back().position = pos;
