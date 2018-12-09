@@ -19,7 +19,7 @@
 int Game::tile_view_size = 25;
 
 Game::Game()
-    : _resources(init_resource_bal), _window("Fortress Commander"), _gameState(_window, _world._units, _world._enemies, _resources),
+    : _resources(init_resource_bal), _window("Fortress Commander"), _gameState(_window, _world._units, _world._enemies, _world._structures, _resources),
       _world(world_size, _resources), _spawner(_world) {
   _window.setKeyCallback([this](auto&&... args) { keyCallback(args...); });
   _window.setMouseCallback([this](auto&&... args) { mouseCallback(args...); });

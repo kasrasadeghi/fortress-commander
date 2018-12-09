@@ -65,6 +65,15 @@ class BattleSystem : public ECS::System {
           return;
         }
       }
+      for (auto& structure : _gameState.structures) {
+        auto& structurePos = ECS::Manager::getComponent<TransformComponent>(structure.id).pos;
+        auto dist = glm::distance(pos, structurePos);
+
+        if (dist < attack.attackRange) {
+          attack.target = structure.id;
+          return;
+        }
+      }
     }
 
     attack.target = ECS::InvalidEntityId;
