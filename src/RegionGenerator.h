@@ -160,6 +160,9 @@ public:
         if (f < 0.3) {
           data[x][y] = Tile::WATER;
         }
+        else if (f < 0.4) {
+          data[x][y] = Tile::SAND;
+        }
       }
     }
   }

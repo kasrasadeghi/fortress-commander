@@ -3,11 +3,12 @@
 #include <glm/glm.hpp>
 #include <unordered_map>
 
-enum class Tile { NONE, GRASS, WATER };
+enum class Tile { NONE, GRASS, SAND, WATER };
 
 struct TileType {
   glm::vec4 color;
   bool walkable;
+  int texOffset;
 };
 
 class TileProperties {
