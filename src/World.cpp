@@ -133,7 +133,7 @@ void World::_drawStructures(TextureBatch& batch) const {
     batch.add(TextureBatch::Instance{
       .pos = structure.pos() * tile_size - offset,
       .size = {tile_size, tile_size},
-      .texOffset = 2.f
+      .texOffset = static_cast<float>(structure.texOffset)
     });
   }
 }
@@ -164,19 +164,20 @@ bool World::addEnemy(glm::vec2 pos) {
   return true;
 }
 
-bool World::addStructure(glm::ivec2 cell) {
+bool World::addStructure(glm::ivec2 cell, StructureType t) {
   if (not _region.inBounds({cell.x, cell.y})) {
     return false;
   }
 
-  if (_resources < Structure::cost) {
+  auto cost = StructureProperties::of(t).cost;
+  if (_resources < cost) {
     return false;
   }
 
   // Subtract the cost from the player's resource account
-  _resources -= Structure::cost;
+  _resources -= cost;
 
-  _structures.emplace_back(cell, *this);
+  _structures.emplace_back(cell, *this, t);
   _region.addStructure(cell);
 
   for (auto& u : _units) {
@@ -240,9 +241,11 @@ bool World::sellStructure(glm::ivec2 cell) {
   bool found = false;
 
   ECS::Entity id = ECS::InvalidEntityId;
+  ResourceType cost;
   for (auto iter = _structures.begin(); iter < _structures.end(); ++iter) {
     if (iter->pos() == glm::vec2{cell}) {
       id = iter->id;
+      cost = iter->cost;
 
       break;
     }
@@ -255,7 +258,7 @@ bool World::sellStructure(glm::ivec2 cell) {
   found = removeStructure(id);
 
   if (found) {
-    _resources += Structure::cost / sell_ratio;
+    _resources += cost / sell_ratio;
   }
 
   for (auto& u : _units) {

@@ -3,7 +3,41 @@
 
 #include "World.h"
 
-Structure::Structure(glm::vec2 pos, World& world) : id(ECS::Manager::createEntity()) {
+const std::unordered_map<StructureType, const StructureData> StructureProperties::_data{
+    {StructureType::NONE, StructureData{
+        .health = 0,
+        .resourceSpeed = 0,
+        .cost = 0,
+        .texOffset = 0
+    }},
+    {StructureType::DEFAULT, StructureData{
+        .health = 500,
+        .resourceSpeed = 0.3f,
+        .cost = 100.f,
+        .texOffset = 2
+    }},
+    {StructureType::BASE, StructureData{
+        .health = 1000,
+        .resourceSpeed = 0.5f,
+        .cost = 0.f,
+        .texOffset = 6
+    }},
+    {StructureType::WALL, StructureData{
+        .health = 500,
+        .resourceSpeed = 0.f,
+        .cost = 25.f,
+        .texOffset = 7
+    }}
+};
+
+Structure::Structure(glm::vec2 pos, World& world, StructureType t) : id(ECS::Manager::createEntity()) {
+  auto& prop = StructureProperties::of(t);
+
+  health = prop.health;
+  resourceSpeed = prop.resourceSpeed;
+  cost = prop.cost;
+  texOffset = prop.texOffset;
+
   ECS::Manager::addComponent<TransformComponent>(id, TransformComponent(world, pos, 0.f));
   ECS::Manager::addComponent<HealthComponent>(id, HealthComponent(health));
   ECS::Manager::addComponent<ResourceComponent>(id, ResourceComponent(resourceSpeed));

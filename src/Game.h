@@ -33,6 +33,8 @@ class Game : public ECS::EventSubscriber<KeyDownEvent>,
   ResourceSystem* _resourceSystem;
   HealthBarSystem* _healthBarSystem;
 
+  StructureType _structureType = StructureType::DEFAULT;
+
   void _mouseViewMove(float d) {
     auto& _view = _gameState._view;
     constexpr int margin = 20;

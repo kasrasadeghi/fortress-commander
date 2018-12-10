@@ -169,8 +169,14 @@ public:
       }
     }
 
-    // Ensure that the tile in the middle of the screen (the one that
+    // Ensure that the tiles in the middle of the screen (the one that
     // enemies are pathfinding toward) is walkable
-    data[data.size() / 2][data.size() / 2] = Tile::GRASS;
+    constexpr int xdir[] = {-1, 0, 1};
+    constexpr int ydir[] = {-1, 0, 1};
+    for (int x : xdir) {
+      for (int y : ydir) {
+        data[x + (data.size() / 2)][y + (data.size() / 2)] = Tile::GRASS;
+      }
+    }
   }
 };

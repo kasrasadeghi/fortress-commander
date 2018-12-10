@@ -9,15 +9,33 @@
 
 class World;
 
+enum class StructureType { NONE, DEFAULT, BASE, WALL };
+
+struct StructureData {
+    HealthValue health;
+    ResourceType resourceSpeed;
+    ResourceType cost;
+    int texOffset;
+};
+
+class StructureProperties {
+  static const std::unordered_map<StructureType, const StructureData> _data;
+public:
+  static const StructureData& of(StructureType t) {
+    return _data.at(t);
+  }
+};
+
 class Structure {
 public:
   const ECS::Entity id;
 
-  constexpr static HealthValue health = 500;
-  constexpr static ResourceType resourceSpeed = 0.3f;
-  constexpr static ResourceType cost = 100.f;
+  HealthValue health;
+  ResourceType resourceSpeed;
+  ResourceType cost;
+  int texOffset;
 
-  Structure(glm::vec2 pos, World&);
+  Structure(glm::vec2 pos, World&, StructureType t = StructureType::DEFAULT);
 
   Structure& operator=(const Structure& o) {
     ECS::Entity& _id = const_cast<ECS::Entity&>(id);

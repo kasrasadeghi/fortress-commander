@@ -121,7 +121,7 @@ public:
 
   bool addUnit(glm::vec2 pos);
   bool addEnemy(glm::vec2 pos);
-  bool addStructure(glm::ivec2 cell);
+  bool addStructure(glm::ivec2 cell, StructureType t = StructureType::DEFAULT);
 
   bool removeUnit(ECS::Entity id);
   bool removeEnemy(ECS::Entity id);

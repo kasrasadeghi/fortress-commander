@@ -59,6 +59,8 @@ Game::Game()
   ECS::EventManager::connect<KeyDownEvent>(this);
   ECS::EventManager::connect<MouseDownEvent>(this);
   ECS::EventManager::connect<MouseMoveEvent>(this);
+
+  _world.addStructure({world_size / 2, world_size / 2 + 1}, StructureType::BASE);
 }
 
 template <typename T>
@@ -163,7 +165,13 @@ void Game::_drawUI(TextRenderer& t, float dt) {
   if (_mode == ControlMode::BUILD) {
     modeStr = "BUILD";
     _world.structHolo(_gameState._view, getMouseTile());
-    t.renderText("STRUCTURE", _window.width() - 275, 142.5, 1, modeColor);
+
+    std::string buildStr = "STRUCTURE";
+    if (_structureType == StructureType::WALL) {
+      buildStr = "WALL";
+    }
+
+    t.renderText(buildStr, _window.width() - 275, 142.5, 1, modeColor);
   }
   if (_mode == ControlMode::SELL) {
     modeStr = "SELL";
@@ -200,6 +208,18 @@ void Game::receive(const KeyDownEvent& e) {
     _mode = ControlMode::NONE;
   }
 
+  if (_mode == ControlMode::BUILD) {
+    switch (key) {
+      case GLFW_KEY_1:
+        _structureType = StructureType::DEFAULT;
+        break;
+
+      case GLFW_KEY_2:
+        _structureType = StructureType::WALL;
+        break;
+    }
+  }
+
   if (key == GLFW_KEY_B) {
     _mode = ControlMode::BUILD;
   }
@@ -231,7 +251,7 @@ void Game::receive(const KeyDownEvent& e) {
 
 void Game::receive(const MouseDownEvent& e) {
   if (_gameState._mode == ControlMode::BUILD) {
-    _world.addStructure(getMouseTile());
+    _world.addStructure(getMouseTile(), _structureType);
   }
   if (_gameState._mode == ControlMode::SELL) {
     _world.sellStructure(getMouseTile());
