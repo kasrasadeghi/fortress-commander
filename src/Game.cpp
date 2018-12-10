@@ -58,6 +58,9 @@ Game::Game()
   _healthBarSystem = new HealthBarSystem(_gameState);
   ECS::Manager::addSystem(ECS::System::Ptr(_healthBarSystem));
 
+  _lightRenderingSystem = new LightRenderingSystem(_gameState);
+  ECS::Manager::addSystem(ECS::System::Ptr(_lightRenderingSystem));
+
   ECS::EventManager::connect<KeyDownEvent>(this);
   ECS::EventManager::connect<MouseDownEvent>(this);
   ECS::EventManager::connect<MouseMoveEvent>(this);
