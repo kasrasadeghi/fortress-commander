@@ -3,9 +3,12 @@
 #include "../ECS/System.h"
 #include "../Components.h"
 #include "../GameState.h"
+#include "../Graphics/Instanced.h"
+#include "../Graphics/Light.h"
 
 class LightRenderingSystem : public ECS::System {
   CircleBatch _testCircles;
+  LightBatch _lights;
 
 public:
   LightRenderingSystem(GameState& gameState) : ECS::System(gameState) {
@@ -17,8 +20,10 @@ public:
   }
 
   std::size_t update(float dt) override {
+    _lights.instances.clear();
     _testCircles.instances.clear();
     auto result = ECS::System::update(dt);
+    _lights.draw(_gameState._view);
     _testCircles.draw(_gameState._view);
     return result;
   }
@@ -28,6 +33,10 @@ public:
     _testCircles.add()
       .position(pos)
       .size({0.2, 0.2})
-      .color({1, 0, 1, 1});
+      .color({1, 0, 0, 1});
+    _lights.add()
+      .position(pos)
+      .color({1, 0, 1, 1})
+      .intensity(1);
   }
 };
