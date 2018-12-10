@@ -24,7 +24,6 @@ void World::_drawUnits(TextureBatch& batch) const {
 
   // clang-format off
   for (auto& u : _units) {
-    float healthPercent = (float)u.health()/(float)u.max_health;
     float attackTimer = ECS::Manager::getComponent<AttackComponent>(u.id).attackTimer;
     
     //TODO: make bullets flash instead of selection
@@ -37,8 +36,6 @@ void World::_drawUnits(TextureBatch& batch) const {
     } else if (attackTimer < muzzleFlashTime) {
       baseColor = attackingColor;
     }
-
-    baseColor.a *= healthPercent;
 
     batch.add(TextureBatch::Instance{
       .pos = u.pos(),
@@ -56,7 +53,6 @@ void World::_drawEnemies(TextureBatch& batch) const {
 
   // clang-format off
   for (auto& e : _enemies) {
-    float healthPercent = (float)e.health()/(float)e.max_health;
     float attackTimer = ECS::Manager::getComponent<AttackComponent>(e.id).attackTimer;
 
     float angle = ECS::Manager::getComponent<TransformComponent>(e.id).rot;
@@ -65,7 +61,6 @@ void World::_drawEnemies(TextureBatch& batch) const {
     if (attackTimer < muzzleFlashTime) {
       baseColor = attackingColor;
     }
-    baseColor.a *= healthPercent;
 
     batch.add(TextureBatch::Instance{
       .pos = e.pos(),
