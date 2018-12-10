@@ -19,7 +19,7 @@ class EnemySpawner {
 
   std::mt19937 _mt;
   World& _world;
-  float timer = spawn_interval;
+  float timer = 0;
 
   std::uniform_int_distribution<int> _sideDist{0, 3};
   std::uniform_real_distribution<float> _fdist{tile_size / 2.f, world_bounds - tile_size / 2.f};

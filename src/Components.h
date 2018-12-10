@@ -9,6 +9,7 @@
 
 #include <deque>
 #include <functional>
+#include <assert.h>
 
 class World;
 
@@ -35,7 +36,7 @@ struct SelectableComponent : public ECS::Component {
 };
 
 struct MotionComponent : public ECS::Component {
-  float movementSpeed = 2.f; // TODO: not hardcoded
+  float movementSpeed = 5.f; // TODO: not hardcoded
 
   Path::iterator currentTarget; // when path.empty, this iterator is invalid
   glm::vec2 target{0, 0};
@@ -69,6 +70,12 @@ struct CommandableComponent : public ECS::Component {
 struct HealthComponent : public ECS::Component {
   HealthValue health;
 
+  std::vector<ECS::Entity> attackers;
+
+  void removeAttacker(ECS::Entity attacker) {
+    attackers.erase(std::remove(attackers.begin(), attackers.end(), attacker), attackers.end());
+  }
+
   static constexpr ECS::ComponentTypeId type = 5;
 
   HealthComponent() : health(0) {}
@@ -76,29 +83,38 @@ struct HealthComponent : public ECS::Component {
 };
 
 struct AttackComponent : public ECS::Component {
+private:
+  ECS::Entity _me;
+  ECS::Entity _target;
+public:
   StrengthValue strength;
 
   float range;
 
-  ECS::Entity me;
-  ECS::Entity target;
-
   float timer;
   const float cooldown;
 
-  void setTarget(ECS::Entity target) { 
-    this->target = target; 
+  void setTarget(ECS::Entity newTarget) { 
+    assert(newTarget != ECS::InvalidEntityId);
+    resetTarget();
+    _target = newTarget;
+    ECS::Manager::getComponent<HealthComponent>(_target).attackers.push_back(_me);
   }
 
-  bool hasTarget() { return target != ECS::InvalidEntityId; }
+  ECS::Entity target() { return _target; }
+
+  bool hasTarget() { return _target != ECS::InvalidEntityId; }
 
   void resetTarget() {
-    target = ECS::InvalidEntityId;
+    if (not hasTarget()) return;
+    ECS::Manager::getComponent<HealthComponent>(_target).removeAttacker(_me);
+    _target = ECS::InvalidEntityId;
   }
 
   // returns something if it has killed it
-  ECS::Entity attack() {
-    auto& targetHealth = ECS::Manager::getComponent<HealthComponent>(target).health;
+  void attack() {
+    assert(hasTarget());
+    auto& targetHealth = ECS::Manager::getComponent<HealthComponent>(_target).health;
 
     // Augment the target's health according to the attack strength
     targetHealth -= strength;
@@ -107,16 +123,38 @@ struct AttackComponent : public ECS::Component {
     timer = cooldown;
 
     if (targetHealth < 0) {
-      auto result = kill();
-      if (result) return result;
+      kill(); 
     }
-    return ECS::InvalidEntityId;
   }
 
-  ECS::Entity kill() {
-    auto t = target;
-    resetTarget();
-    return t;
+  void kill() {
+    auto& targetAttackers = ECS::Manager::getComponent<HealthComponent>(_target).attackers;
+
+    assert(ECS::Manager::getComponent<HealthComponent>(_target).health <= 0);
+
+    std::cout << "printing targetAttackers {";
+    for (auto& attacker : targetAttackers) {
+      std::cout << " " << attacker;
+    }
+    std::cout << " }" << std::endl;
+    
+    assert(std::find(targetAttackers.begin(), targetAttackers.end(), _me) != targetAttackers.end());
+    assert(std::find(targetAttackers.begin(), targetAttackers.end(), 0)   == targetAttackers.end());
+    assert(hasTarget());
+    
+    for (auto& attacker : targetAttackers) {
+      std::cout << attacker << std::endl; 
+      ECS::Manager::getComponent<AttackComponent>(attacker).resetTarget();
+    }
+
+    assert(not hasTarget());
+
+    // enemies can kill either units or structures
+    // if (ECS::Manager::hasComponent<CommandableComponent>(entity)) {
+    //   ECS::Manager::getComponent<TransformComponent>(entity).world.removeUnit(entity);
+    // } else {
+    //   ECS::Manager::getComponent<TransformComponent>(entity).world.removeStructure(entity);
+    // }
   }
 
   void tick(float dt) {
@@ -131,7 +169,7 @@ struct AttackComponent : public ECS::Component {
   static constexpr ECS::ComponentTypeId type = 6;
 
   AttackComponent(ECS::Entity me, StrengthValue strength, float attackRange, float attackCooldown)
-      : strength(strength), range(attackRange), me(me), target(ECS::InvalidEntityId),
+      : _me(me), _target(ECS::InvalidEntityId), strength(strength), range(attackRange),
         timer(0), cooldown(attackCooldown) {}
 };
 

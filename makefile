@@ -13,10 +13,16 @@ test: build\:true
 build\:%: cmake\:%
 	cd build; make -j8
 
+.PHONY: debug
+debug: buildfolder
+	cd build; cmake -DTEST=false -DDEBUG=true ..
+	cd build; make -j8
+	gdb build/fortress-commander
+
 # usage cmake:true for testing, cmake:false otherwise
 .PHONY: cmake\:%
 cmake\:%: buildfolder
-	cd build; cmake -DTEST=$* ..
+	cd build; cmake -DTEST=$* -DDEBUG=false ..
 
 .PHONY: buildfolder
 buildfolder:

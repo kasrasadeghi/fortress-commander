@@ -115,7 +115,7 @@ void Game::loop() {
     ECS::EventManager::update();
     ECS::Manager::update(dt);
     _gameState._bulletParticles.update(dt);
-    spawner.update(dt);
+    // spawner.update(dt);
 
     _window.swapBuffers();
     glfwPollEvents();
@@ -147,6 +147,9 @@ void Game::receive(const KeyDownEvent& e) {
   }
   if (key == GLFW_KEY_T) {
     _mode = ControlMode::TERRAIN;
+  }
+  if (key == GLFW_KEY_Z) {
+    _world.addEnemy(getMouseCoords());
   }
 
   if (key == GLFW_KEY_PERIOD) {

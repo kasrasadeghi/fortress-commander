@@ -161,7 +161,7 @@ class UnitCommandSystem : public ECS::System, ECS::EventSubscriber<MouseDownEven
     for (ECS::Entity entity : entities()) {
       bool selected = ECS::Manager::getComponent<SelectableComponent>(entity).selected;
       if (selected) {
-        ECS::Manager::getComponent<AttackComponent>(entity).target = found;
+        ECS::Manager::getComponent<AttackComponent>(entity).setTarget(found);
       }
     }
     return true;
@@ -232,9 +232,9 @@ class BattleSystem : public ECS::System {
     }
   }
 
-  void _removeEntity(const ECS::Entity entity) {
+  void _removeEntity(const ECS::Entity deadEntity) {
     // units can only kill enemies
-    ECS::Manager::getComponent<TransformComponent>(entity).world.removeEnemy(entity);
+    ECS::Manager::getComponent<TransformComponent>(deadEntity).world.removeEnemy(deadEntity);
   }
 
 public:
@@ -258,7 +258,7 @@ public:
 
     //TODO make attacker set and reset attacker targets on death
     // reset target if it has been removed by other sources
-    if (attack.hasTarget() && not ECS::Manager::hasEntity(attack.target)) {
+    if (attack.hasTarget() && not ECS::Manager::hasEntity(attack.target())) {
       attack.resetTarget();
     }
 
@@ -271,7 +271,7 @@ public:
     }
 
     // assert: target is in view Range
-    auto targetPos = ECS::Manager::getComponent<TransformComponent>(attack.target).pos;
+    auto targetPos = ECS::Manager::getComponent<TransformComponent>(attack.target()).pos;
 
     // we have a target and it is not in attack range
     if (glm::distance(pos, targetPos) > attack.range) {
@@ -282,10 +282,7 @@ public:
     // we have a target and it is in attack range
     if (attack.shouldAttack()) {
       _gameState._bulletParticles.add(BulletParticle(pos, targetPos, 20));
-      auto entityKilled = attack.attack();
-      if (entityKilled) {
-        _removeEntity(entityKilled);
-      }
+      attack.attack();
     }
   }
 };
@@ -329,12 +326,7 @@ class EnemyAttackSystem : public ECS::System {
   }
 
   void _removeEntity(ECS::Entity entity) {
-    // enemies can kill either units or structures
-    if (ECS::Manager::hasComponent<CommandableComponent>(entity)) {
-      ECS::Manager::getComponent<TransformComponent>(entity).world.removeUnit(entity);
-    } else {
-      ECS::Manager::getComponent<TransformComponent>(entity).world.removeStructure(entity);
-    }
+   
   }
 
 public:
@@ -359,12 +351,12 @@ public:
     attack.tick(dt);
 
     // reset target if it has been removed by other sources
-    if (attack.hasTarget() && not ECS::Manager::hasEntity(attack.target)) {
+    if (attack.hasTarget() && not ECS::Manager::hasEntity(attack.target())) {
       attack.resetTarget();
     }
 
     if (attack.hasTarget()) {
-      auto targetPos = ECS::Manager::getComponent<TransformComponent>(attack.target).pos;
+      auto targetPos = ECS::Manager::getComponent<TransformComponent>(attack.target()).pos;
       if (glm::distance(pos, targetPos) > viewRange) {
         attack.resetTarget();
       }
@@ -379,7 +371,7 @@ public:
     }
 
     // assert: target is in view Range
-    auto targetPos = ECS::Manager::getComponent<TransformComponent>(attack.target).pos;
+    auto targetPos = ECS::Manager::getComponent<TransformComponent>(attack.target()).pos;
 
     // we have a target and it is in viewRange but not attack range
     if (glm::distance(pos, targetPos) > attack.range) {
@@ -390,10 +382,7 @@ public:
     // we have a target and it is in attack range
     if (attack.shouldAttack()) {
       _gameState._bulletParticles.add(BulletParticle(pos, targetPos, 20));
-      auto entityKilled = attack.attack();
-      if (entityKilled) {
-        _removeEntity(entityKilled);
-      }
+      attack.attack();
     }
   }
 };
