@@ -165,7 +165,7 @@ bool World::addEnemy(glm::vec2 pos) {
 }
 
 bool World::addStructure(glm::ivec2 cell, StructureType t) {
-  if (not _region.inBounds({cell.x, cell.y})) {
+  if (not _region.inBounds({cell.x, cell.y}) or cell == glm::ivec2{world_size / 2, world_size / 2}) {
     return false;
   }
 
