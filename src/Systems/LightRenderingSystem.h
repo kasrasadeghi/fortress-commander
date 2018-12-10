@@ -29,6 +29,7 @@ public:
   }
 
   void updateEntity(float dt, ECS::Entity entity) override {
+    auto& light = ECS::Manager::getComponent<LightComponent>(entity);
     auto& pos = ECS::Manager::getComponent<TransformComponent>(entity).pos;
     _testCircles.add()
       .position(pos)
@@ -36,7 +37,7 @@ public:
       .color({1, 0, 0, 1});
     _lights.add()
       .position(pos)
-      .color({1, 0, 1, 1})
-      .intensity(1);
+      .color(light.color)
+      .intensity(light.intensity);
   }
 };

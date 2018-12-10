@@ -44,7 +44,7 @@ Structure::Structure(glm::vec2 pos, World& world, StructureType t)
   ECS::Manager::addComponent<TransformComponent>(id, TransformComponent(world, pos, 0.f));
   ECS::Manager::addComponent<HealthComponent>(id, HealthComponent(health));
   ECS::Manager::addComponent<ResourceComponent>(id, ResourceComponent(resourceSpeed));
-  ECS::Manager::addComponent<LightComponent>(id, LightComponent({1.f, 0.95f, 0.85f, 1.f}, 1.f));
+  ECS::Manager::addComponent<LightComponent>(id, LightComponent({1.f, 0.95f, 0.85f, 1.f}, 3.f));
 
   ECS::Manager::registerEntity(id);
 }

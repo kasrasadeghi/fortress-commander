@@ -58,11 +58,11 @@ public:
     _update(view);
 
     _shader.setMat4("projection", view.proj());
-    glBlendFunc(GL_DST_COLOR, GL_ZERO);
+    glBlendFunc(GL_DST_COLOR, GL_ZERO); // color multiply blending
     glBindVertexArray(_VAO.id);
-    glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, _vertexVBO.count(), instances.size());
+    glDrawArrays(GL_TRIANGLE_FAN, 0, _vertexVBO.count());
     glBindVertexArray(0);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
   }
 
 protected:
@@ -92,5 +92,6 @@ protected:
     _shader.setVec2("positions", positions);
     _shader.setVec4("colors", colors);
     _shader.setFloat("intensities", intensities);
+    _shader.setInt("num_lights", instances.size());
   }
 };
