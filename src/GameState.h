@@ -24,6 +24,7 @@ struct GameState {
   std::vector<Structure>& structures;
   
   ParticleSystem<BulletParticle> _bulletParticles;
+  ParticleSystem<DeathParticle> _deathParticles;
 
   ResourceType& _resources;
 

@@ -36,6 +36,7 @@ class BattleSystem : public ECS::System {
   }
 
   void _die(const ECS::Entity entity) {
+    auto& pos = ECS::Manager::getComponent<TransformComponent>(entity).pos;
     auto& world = ECS::Manager::getComponent<TransformComponent>(entity).world;
 
     if (ECS::Manager::hasComponent<CommandableComponent>(entity)) {
@@ -43,6 +44,8 @@ class BattleSystem : public ECS::System {
     } else if (ECS::Manager::hasComponent<MotionComponent>(entity)) {
       world.removeEnemy(entity); // delete enemy
     }
+
+    _gameState._deathParticles.add(DeathParticle(pos));
   }
 
   void _scanForHostiles(const ECS::Entity entity) {

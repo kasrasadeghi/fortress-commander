@@ -100,6 +100,7 @@ void Game::loop() {
     ECS::EventManager::update();
     ECS::Manager::update(dt);
     _gameState._bulletParticles.update(dt);
+    _gameState._deathParticles.update(dt);
     _spawner.update(dt);
 
     _window.swapBuffers();
