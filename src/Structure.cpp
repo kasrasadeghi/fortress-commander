@@ -3,6 +3,7 @@
 
 #include "World.h"
 
+// clang-format off
 const std::unordered_map<StructureType, const StructureData> StructureProperties::_data{
     {StructureType::NONE, StructureData{
         .health = 0,
@@ -29,8 +30,10 @@ const std::unordered_map<StructureType, const StructureData> StructureProperties
         .texOffset = 7
     }}
 };
+// clang-format on
 
-Structure::Structure(glm::vec2 pos, World& world, StructureType t) : id(ECS::Manager::createEntity()) {
+Structure::Structure(glm::vec2 pos, World& world, StructureType t)
+    : id(ECS::Manager::createEntity()) {
   auto& prop = StructureProperties::of(t);
 
   health = prop.health;

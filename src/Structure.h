@@ -12,14 +12,15 @@ class World;
 enum class StructureType { NONE, DEFAULT, BASE, WALL };
 
 struct StructureData {
-    HealthValue health;
-    ResourceType resourceSpeed;
-    ResourceType cost;
-    int texOffset;
+  HealthValue health;
+  ResourceType resourceSpeed;
+  ResourceType cost;
+  int texOffset;
 };
 
 class StructureProperties {
   static const std::unordered_map<StructureType, const StructureData> _data;
+
 public:
   static const StructureData& of(StructureType t) {
     return _data.at(t);

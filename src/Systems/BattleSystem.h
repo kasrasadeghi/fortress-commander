@@ -1,10 +1,10 @@
 #pragma once
 
 #include "../Components.h"
-#include "../World.h"
 #include "../ECS/System.h"
 #include "../Events.h"
 #include "../GameState.h"
+#include "../World.h"
 
 /**
  * @brief Facilitates battle between Units and Enemies
@@ -76,7 +76,7 @@ class BattleSystem : public ECS::System {
       for (auto& structure : _gameState.structures) {
         auto& structurePos = ECS::Manager::getComponent<TransformComponent>(structure.id).pos;
         auto dist = glm::distance(pos, structurePos);
-        
+
         if (dist < attack.attackRange) {
           attack.target = structure.id;
           return;

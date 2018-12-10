@@ -48,7 +48,8 @@ class World {
   friend class Game;
 
 public:
-  World(size_t size, ResourceType& resources) : _region({size, std::vector<Tile>(size, Tile::GRASS)}), _resources(resources) {
+  World(size_t size, ResourceType& resources)
+      : _region({size, std::vector<Tile>(size, Tile::GRASS)}), _resources(resources) {
     RegionGenerator().generate(_region);
   }
 
@@ -57,7 +58,7 @@ public:
     _enemies = other._enemies;
     _structures = other._structures;
     _resources = other._resources;
-    
+
     return *this;
   }
 
@@ -113,7 +114,7 @@ public:
 
     batch.update();
     batch.draw();
-    
+
     if (debug) {
       _drawDebug(view);
     }

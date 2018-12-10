@@ -55,7 +55,8 @@ public:
         float texi = TileProperties::of(_data[i][j]).texOffset;
         auto pos = glm::vec2{i * tile_size, j * tile_size} - offset;
 
-        batch.add(TextureBatch::Instance{.pos = pos, .size = {tile_size, tile_size}, .texOffset = texi});
+        batch.add(
+            TextureBatch::Instance{.pos = pos, .size = {tile_size, tile_size}, .texOffset = texi});
       }
     }
   }

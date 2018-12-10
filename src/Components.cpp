@@ -19,16 +19,16 @@ void TransformComponent::translate(glm::vec2 displacement) {
       return false;
     }
     const glm::ivec2 tilePos = Game::mapCoordsToTile(pos);
-    return TileProperties::of(region.at(tilePos)).walkable && not world.structureAt(tilePos).has_value();
+    return TileProperties::of(region.at(tilePos)).walkable &&
+           not world.structureAt(tilePos).has_value();
   };
 
   auto intersectsTile = [&](const glm::vec2& pos, const glm::ivec2& tile) {
     const float half_size = tile_size / 2.f;
     auto clamp = [](float f, float lo, float hi) { return std::max(lo, std::min(f, hi)); };
     glm::vec2 tileCenter = Game::centerOfTile(tile);
-    glm::vec2 nearest(
-      clamp(pos.x, tileCenter.x - half_size, tileCenter.x + half_size),
-      clamp(pos.y, tileCenter.y - half_size, tileCenter.y + half_size));
+    glm::vec2 nearest(clamp(pos.x, tileCenter.x - half_size, tileCenter.x + half_size),
+                      clamp(pos.y, tileCenter.y - half_size, tileCenter.y + half_size));
     float dist = glm::distance(pos, nearest);
     return dist < Unit::unit_size * 0.9f;
   };
@@ -36,17 +36,18 @@ void TransformComponent::translate(glm::vec2 displacement) {
   auto stepPosition = [&](glm::vec2 step) {
     const glm::vec2 newPos = pos + step;
     const glm::ivec2 tile = Game::mapCoordsToTile(newPos);
-    const std::array<glm::ivec2, 8> neighbors{glm::ivec2{tile.x - 1, tile.y}, glm::ivec2{tile.x + 1, tile.y}, 
-                                              glm::ivec2{tile.x, tile.y - 1}, glm::ivec2{tile.x, tile.y + 1},
-                                              glm::ivec2{tile.x + 1, tile.y + 1}, glm::ivec2{tile.x + 1, tile.y - 1}, 
-                                              glm::ivec2{tile.x - 1, tile.y + 1}, glm::ivec2{tile.x - 1, tile.y - 1}};
+    const std::array<glm::ivec2, 8> neighbors{
+        glm::ivec2{tile.x - 1, tile.y},     glm::ivec2{tile.x + 1, tile.y},
+        glm::ivec2{tile.x, tile.y - 1},     glm::ivec2{tile.x, tile.y + 1},
+        glm::ivec2{tile.x + 1, tile.y + 1}, glm::ivec2{tile.x + 1, tile.y - 1},
+        glm::ivec2{tile.x - 1, tile.y + 1}, glm::ivec2{tile.x - 1, tile.y - 1}};
     for (const glm::ivec2& t : neighbors) {
       if (not validPosition(t) && intersectsTile(newPos, t)) {
         glm::vec2 oppositeDir = newPos - Game::centerOfTile(t);
         pos += glm::normalize(oppositeDir) * glm::length(step);
         return false;
       }
-    } 
+    }
     pos = newPos;
     return true;
   };

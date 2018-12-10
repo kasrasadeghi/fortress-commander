@@ -6,7 +6,7 @@ struct VertexBuffer {
   uint VBO;
 
   explicit VertexBuffer() {
-    glGenBuffers(1, &VBO); 
+    glGenBuffers(1, &VBO);
   }
 
   ~VertexBuffer() {
@@ -61,7 +61,7 @@ public:
 
   /**
    * Takes a list of attribute sizes and creates a buffer with that layout.
-   * 
+   *
    * @returns the vertex buffer that was created so that you can load data into it.
    */
   void setAttributeLayout(std::initializer_list<uint> sizes, bool instanced = false) {
@@ -69,15 +69,21 @@ public:
 
     buffer(instanced).bind();
 
-    size_t stride = 0; // the stride should be the size of the elements of the vertex buffer == sum of sizes
-    for (uint size : sizes) { stride += size; }
+    size_t stride =
+        0; // the stride should be the size of the elements of the vertex buffer == sum of sizes
+    for (uint size : sizes) {
+      stride += size;
+    }
 
     size_t dataOffset = 0;
 
     for (uint size : sizes) {
       glEnableVertexAttribArray(attribCounter);
-      glVertexAttribPointer(attribCounter, size, GL_FLOAT, GL_FALSE, stride * sizeof(float), (void*)dataOffset);
-      if (instanced) { glVertexAttribDivisor(attribCounter, 1); }
+      glVertexAttribPointer(attribCounter, size, GL_FLOAT, GL_FALSE, stride * sizeof(float),
+                            (void*)dataOffset);
+      if (instanced) {
+        glVertexAttribDivisor(attribCounter, 1);
+      }
       attribCounter++;
       dataOffset += size * sizeof(float);
     }
@@ -86,4 +92,4 @@ public:
     unbind();
   }
 };
-}
+} // namespace GL

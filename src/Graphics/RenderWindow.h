@@ -74,7 +74,9 @@ public:
     _default.center(width / 2, height / 2).radius(width / 2, height / 2);
   }
 
-  ~RenderWindow() { glfwTerminate(); }
+  ~RenderWindow() {
+    glfwTerminate();
+  }
 
   // clang-format off
   GLFWwindow* window() { return _window; }

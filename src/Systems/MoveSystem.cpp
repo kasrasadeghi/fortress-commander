@@ -77,8 +77,7 @@ void MoveSystem::recomputePath(ECS::Entity entity) {
   motion.path = std::move(path);
 
   auto simplifyPath = [&](Path& path) {
-    if (path.size() == 0)
-      return Path();
+    if (path.size() == 0) return Path();
 
     Path simplifiedPath;
     // simplifiedPath.push_back(path[0]);
@@ -89,15 +88,15 @@ void MoveSystem::recomputePath(ECS::Entity entity) {
       if (tileVisible(region, path[index], path[last])) {
         ++index;
       } else {
-        last = index - 1; // update last visible point
+        last = index - 1;                     // update last visible point
         simplifiedPath.push_back(path[last]); // emit the point
         // ++index; // TODO: remove; ensures algorithm progression but produces extra steps
-                 // might need to adjust tileVisible to avoid infinite loop here.
+        // might need to adjust tileVisible to avoid infinite loop here.
       }
     }
     simplifiedPath.push_back(path.back());
     return simplifiedPath;
-  }; 
+  };
   motion.path = simplifyPath(motion.path);
   motion.oldPosition = pos;
 }
@@ -128,10 +127,11 @@ void MoveSystem::updateEntity(float dt, ECS::Entity entity) {
       motion.hasTarget = false;
     }
   } else {
-    // TODO: raycast to next waypoint to ensure that path is still valid, else path to it and prepend to existing path
-    // move toward current waypoint
+    // TODO: raycast to next waypoint to ensure that path is still valid, else path to it and
+    // prepend to existing path move toward current waypoint
     auto dir = glm::normalize(targetPos - pos);
     rot = -glm::atan(dir.y, dir.x) - glm::half_pi<float>();
-    ECS::Manager::getComponent<TransformComponent>(entity).translate(dir * motion.movementSpeed * dt);
+    ECS::Manager::getComponent<TransformComponent>(entity).translate(dir * motion.movementSpeed *
+                                                                     dt);
   }
 }

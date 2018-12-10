@@ -2,8 +2,8 @@
 
 #include "Graphics.h"
 
-#include "ParticleSystem.h"
 #include "Enemy.h"
+#include "ParticleSystem.h"
 #include "Structure.h"
 
 enum class ControlMode { NONE, BUILD, SELL, UNIT, TERRAIN };
@@ -22,11 +22,12 @@ struct GameState {
   std::vector<Unit>& units;
   std::vector<Enemy>& enemies;
   std::vector<Structure>& structures;
-  
+
   ParticleSystem<BulletParticle> _bulletParticles;
   ParticleSystem<DeathParticle> _deathParticles;
 
   ResourceType& _resources;
 
-  GameState(RenderWindow& window, std::vector<Unit>& units, std::vector<Enemy>& enemies, std::vector<Structure>& structures, ResourceType& resources);
+  GameState(RenderWindow& window, std::vector<Unit>& units, std::vector<Enemy>& enemies,
+            std::vector<Structure>& structures, ResourceType& resources);
 };

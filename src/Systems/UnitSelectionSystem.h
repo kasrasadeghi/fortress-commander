@@ -67,10 +67,10 @@ public:
     _selectionCount = 0;
     _selectionCentroid = {0, 0};
     auto result = ECS::System::update(dt);
-    
+
     if (_selectionCount > 0) {
       _selectionCentroid /= static_cast<float>(_selectionCount);
-    
+
       for (ECS::Entity e : entities()) {
         auto& selectable = ECS::Manager::getComponent<SelectableComponent>(e);
         if (selectable.selected) {
@@ -99,7 +99,7 @@ public:
 
       selected = inBox;
     }
-    
+
     if (selected) {
       _selectionCount += 1;
       _selectionCentroid += ECS::Manager::getComponent<TransformComponent>(entity).pos;
@@ -137,4 +137,3 @@ public:
     _selectionChanged = false;
   }
 };
-

@@ -20,7 +20,8 @@ void mat4_print(glm::mat4 m) {
 // clang-format on
 
 void World::_drawUnits(TextureBatch& batch) const {
-  const glm::vec4 selectedCol{.53, .53, .82, 1}, unselectedCol{.2, .4, .6, 1}, attackingColor{1, 1, 1, 1};
+  const glm::vec4 selectedCol{.53, .53, .82, 1}, unselectedCol{.2, .4, .6, 1},
+      attackingColor{1, 1, 1, 1};
 
   // clang-format off
   for (auto& u : _units) {
@@ -85,24 +86,24 @@ void World::_drawDebug(View& view) const {
     auto& path = e.path();
     for (auto p : path) {
       rectangles.add()
-        .position(Game::centerOfTile(p) - pathTileOffset)
-        .size(pathTileSize)
-        .color({1, 0, 0, 0.3});
+          .position(Game::centerOfTile(p) - pathTileOffset)
+          .size(pathTileSize)
+          .color({1, 0, 0, 0.3});
     }
 
     if (not path.empty()) {
       auto target = path.front();
       rectangles.add()
-        .position(Game::centerOfTile(target) - pathTileOffset)
-        .size(pathTileSize)
-        .color({0, 0, 1, 0.3});
-      
+          .position(Game::centerOfTile(target) - pathTileOffset)
+          .size(pathTileSize)
+          .color({0, 0, 1, 0.3});
+
       LineBatch()
-        .add()
+          .add()
           .points(e.pos(), Game::centerOfTile(target))
           .lineWidth(0.2)
           .color({1, 0, 1, 1})
-        .draw(view);
+          .draw(view);
     }
   }
 
@@ -110,17 +111,17 @@ void World::_drawDebug(View& view) const {
     auto& path = u.path();
     for (auto p : path) {
       rectangles.add()
-        .position(Game::centerOfTile(p) - pathTileOffset)
-        .size(pathTileSize)
-        .color({1, 0, 0, 0.3});
+          .position(Game::centerOfTile(p) - pathTileOffset)
+          .size(pathTileSize)
+          .color({1, 0, 0, 0.3});
     }
 
     if (not path.empty()) {
       auto target = path.front();
       rectangles.add()
-        .position(Game::centerOfTile(target) - pathTileOffset)
-        .size(pathTileSize)
-        .color({0, 0, 1, 0.3});
+          .position(Game::centerOfTile(target) - pathTileOffset)
+          .size(pathTileSize)
+          .color({0, 0, 1, 0.3});
     }
   }
   rectangles.draw(view);
@@ -130,11 +131,9 @@ void World::_drawStructures(TextureBatch& batch) const {
   const glm::vec2 offset(-tile_size * 0.5, -tile_size * 0.5);
 
   for (const auto& structure : _structures) {
-    batch.add(TextureBatch::Instance{
-      .pos = structure.pos() * tile_size - offset,
-      .size = {tile_size, tile_size},
-      .texOffset = static_cast<float>(structure.texOffset)
-    });
+    batch.add(TextureBatch::Instance{.pos = structure.pos() * tile_size - offset,
+                                     .size = {tile_size, tile_size},
+                                     .texOffset = static_cast<float>(structure.texOffset)});
   }
 }
 
@@ -165,7 +164,8 @@ bool World::addEnemy(glm::vec2 pos) {
 }
 
 bool World::addStructure(glm::ivec2 cell, StructureType t) {
-  if (not _region.inBounds({cell.x, cell.y}) or cell == glm::ivec2{world_size / 2, world_size / 2}) {
+  if (not _region.inBounds({cell.x, cell.y}) or
+      cell == glm::ivec2{world_size / 2, world_size / 2}) {
     return false;
   }
 

@@ -20,15 +20,17 @@ public:
   void updateEntity(float dt, ECS::Entity entity) override {
     const glm::vec2& pos = ECS::Manager::getComponent<TransformComponent>(entity).pos;
     for (ECS::Entity other : entities()) {
-      bool eMovable = _movable.at(entity); 
-      bool oMovable = _movable.at(other); 
+      bool eMovable = _movable.at(entity);
+      bool oMovable = _movable.at(other);
       if (not eMovable && not oMovable) {
         continue;
       }
 
       // make entities that are just standing around easy to push
-      if (ECS::Manager::hasComponent<MotionComponent>(entity) && ECS::Manager::getComponent<MotionComponent>(entity).hasTarget) {
-        if (ECS::Manager::hasComponent<MotionComponent>(other) && not ECS::Manager::getComponent<MotionComponent>(other).hasTarget) {
+      if (ECS::Manager::hasComponent<MotionComponent>(entity) &&
+          ECS::Manager::getComponent<MotionComponent>(entity).hasTarget) {
+        if (ECS::Manager::hasComponent<MotionComponent>(other) &&
+            not ECS::Manager::getComponent<MotionComponent>(other).hasTarget) {
           eMovable = false;
         }
       }
@@ -40,10 +42,16 @@ public:
       } else if (dist < Unit::unit_size * 2) {
         float overlapDistance = Unit::unit_size * 2 - dist;
         glm::vec2 displacement = glm::normalize(otherPos - pos) * overlapDistance;
-        
-        if (eMovable && oMovable) { displacement *= 0.5f; }
-        if (eMovable) { ECS::Manager::getComponent<TransformComponent>(entity).translate(-displacement); }
-        if (oMovable) { ECS::Manager::getComponent<TransformComponent>(other).translate(displacement); }
+
+        if (eMovable && oMovable) {
+          displacement *= 0.5f;
+        }
+        if (eMovable) {
+          ECS::Manager::getComponent<TransformComponent>(entity).translate(-displacement);
+        }
+        if (oMovable) {
+          ECS::Manager::getComponent<TransformComponent>(other).translate(displacement);
+        }
       }
     }
   }

@@ -5,8 +5,7 @@
 #include "stb_image.h"
 
 std::array<Shader, 3> ResourceManager::_shaders = {std::string("instanced_array"),
-                                                   std::string("text"),
-                                                   std::string("texture")};
+                                                   std::string("text"), std::string("texture")};
 
 Shader& ResourceManager::getShader(SHADER_INDEX i) {
   Shader& s = _shaders[static_cast<std::size_t>(i)];

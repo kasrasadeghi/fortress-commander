@@ -7,8 +7,8 @@
 #include "ECS/Event.h"
 #include "ECS/Manager.h"
 
-#include "EnemySpawner.h"
 #include "Components.h"
+#include "EnemySpawner.h"
 #include "Systems.h"
 #include "World.h"
 

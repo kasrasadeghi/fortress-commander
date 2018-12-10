@@ -8,8 +8,8 @@
 #include "Game.h"
 #include "Graphics.h"
 #include "Path.h"
-#include "World.h"
 #include "RegionGenerator.h"
+#include "World.h"
 #include <iostream>
 
 // Game g; // sets up opengl

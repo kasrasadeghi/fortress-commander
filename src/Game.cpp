@@ -15,11 +15,12 @@
 #include <sstream>
 #include <stdio.h>
 #include <vector>
- 
+
 int Game::tile_view_size = 25;
 
 Game::Game()
-    : _resources(init_resource_bal), _window("Fortress Commander"), _gameState(_window, _world._units, _world._enemies, _world._structures, _resources),
+    : _resources(init_resource_bal), _window("Fortress Commander"),
+      _gameState(_window, _world._units, _world._enemies, _world._structures, _resources),
       _world(world_size, _resources), _spawner(_world) {
   _window.setKeyCallback([this](auto&&... args) { keyCallback(args...); });
   _window.setMouseCallback([this](auto&&... args) { mouseCallback(args...); });
@@ -116,6 +117,7 @@ void Game::_drawUI(TextRenderer& t, float dt) {
   glm::vec4 modeColor(0.76, 0.27, 0.19, 1);
   std::string modeStr = "MODE";
 
+  // clang-format off
   ui.add()
     .position({_window.width() - 150, 40})
     .size({315, 95})
@@ -159,6 +161,7 @@ void Game::_drawUI(TextRenderer& t, float dt) {
       .size({150, 60})
       .color({.3, .3, .3, 1});
   }
+  // clang-format on
 
   ui.draw(_window._default);
 
@@ -188,10 +191,11 @@ void Game::_drawUI(TextRenderer& t, float dt) {
   t.renderText(modeStr, _window.width() - 275, 50, 1, modeColor);
 
   if (_debug) {
-      t.renderText(str(static_cast<int>(1.f / dt)), 25, 50, 1, glm::vec4(0, 0, 0, 1));
+    t.renderText(str(static_cast<int>(1.f / dt)), 25, 50, 1, glm::vec4(0, 0, 0, 1));
   }
 
-  t.renderText("RESOURCES: " + str(static_cast<int>(_resources)), _window.width() - 500, _window.height() - 20, 1, modeColor);
+  t.renderText("RESOURCES: " + str(static_cast<int>(_resources)), _window.width() - 500,
+               _window.height() - 20, 1, modeColor);
 }
 
 void Game::receive(const KeyDownEvent& e) {
@@ -210,13 +214,13 @@ void Game::receive(const KeyDownEvent& e) {
 
   if (_mode == ControlMode::BUILD) {
     switch (key) {
-      case GLFW_KEY_1:
-        _structureType = StructureType::DEFAULT;
-        break;
+    case GLFW_KEY_1:
+      _structureType = StructureType::DEFAULT;
+      break;
 
-      case GLFW_KEY_2:
-        _structureType = StructureType::WALL;
-        break;
+    case GLFW_KEY_2:
+      _structureType = StructureType::WALL;
+      break;
     }
   }
 
@@ -305,13 +309,14 @@ void Game::handleTick(float dt) {
   // _reboundViewToWorld();
 }
 
-
 void Game::incrementZoom() {
   tile_view_size = std::min(100, tile_view_size + 5);
-  _gameState._view.radius(tile_view_size * tile_size / 2.f * _window.widthScalingFactor(), tile_view_size * tile_size / 2.f);
+  _gameState._view.radius(tile_view_size * tile_size / 2.f * _window.widthScalingFactor(),
+                          tile_view_size * tile_size / 2.f);
 }
 
 void Game::decrementZoom() {
   tile_view_size = std::max(10, tile_view_size - 5);
-  _gameState._view.radius(tile_view_size * tile_size / 2.f * _window.widthScalingFactor(), tile_view_size * tile_size / 2.f);
+  _gameState._view.radius(tile_view_size * tile_size / 2.f * _window.widthScalingFactor(),
+                          tile_view_size * tile_size / 2.f);
 }

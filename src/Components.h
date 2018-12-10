@@ -101,6 +101,5 @@ struct ResourceComponent : public ECS::Component {
 
   static constexpr ECS::ComponentTypeId type = 7;
 
-  ResourceComponent(ResourceType accumulationSpeed)
-      : speed(accumulationSpeed) {}
+  ResourceComponent(ResourceType accumulationSpeed) : speed(accumulationSpeed) {}
 };

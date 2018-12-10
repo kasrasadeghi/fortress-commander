@@ -1,21 +1,21 @@
 /**
  * Usage example:
- * 
+ *
  * <code>
  * Texture t;
  * TextureBatch b {t};
  * auto view = View().center(10,10).radius(10,10);
  * b.view(view);
- * 
+ *
  * ...
- * 
+ *
  * // preadd and update
  * b.add({.pos = {15, 15}, .size = {2, 2}});
  * b.update();
- * 
+ *
  * while (looping) {
  *   ... clear screen ...
- * 
+ *
  *   if (need_add) {
  *     b.add({.pos = {10,10}, .size = {3, 3}});
  *     b.update();
@@ -24,13 +24,13 @@
  *     b.add({.pos = {5,5}, .size = {3, 3}});
  *     b.update();
  *   }
- *   
+ *
  *   b.draw();
- *  
+ *
  *   ... swap buffers and poll ...
  * }
  * </code>
- * 
+ *
  * Full instance add:
  * <code>
  * b.add({
@@ -41,7 +41,7 @@
  *   .rotation = {theta_radians},
  * })
  * </code>
- * 
+ *
  */
 
 #pragma once
@@ -60,7 +60,7 @@ struct TextureBatch {
     float rotation = 0;
   };
 
-  View* _view = nullptr; //TODO: delete
+  View* _view = nullptr; // TODO: delete
   std::vector<Instance> instances;
   const Texture& texture;
   Shader& shader = ResourceManager::getShader(SHADER_INDEX::TEXTURE);
@@ -75,15 +75,15 @@ struct TextureBatch {
     float tx = 1.0f / texture.textureCount;
 
     std::vector<glm::vec4> vertices = {
-       // positions     // texture coords
-      {-0.5f, -0.5f,    0.0f, 0.0f}, // bottom left
-      {-0.5f,  0.5f,    0.0f, 1.0f}, // top left 
-      { 0.5f, -0.5f,    tx,   0.0f}, // bottom right
-      { 0.5f,  0.5f,    tx,   1.0f}, // top right
+        // positions     // texture coords
+        {-0.5f, -0.5f, 0.0f, 0.0f}, // bottom left
+        {-0.5f, 0.5f, 0.0f, 1.0f},  // top left
+        {0.5f, -0.5f, tx, 0.0f},    // bottom right
+        {0.5f, 0.5f, tx, 1.0f},     // top right
     };
 
     VA.VB.bindData(vertices);
-    
+
     VA.setAttributeLayout({2, 2});
     VA.setAttributeLayout({2, 2, 4, 1, 1}, true);
   }
@@ -103,7 +103,7 @@ struct TextureBatch {
   }
 
   void add(Instance&& instance) {
-    instance.texOffset /= (float) texture.textureCount;
+    instance.texOffset /= (float)texture.textureCount;
     instances.push_back(instance);
   }
 
