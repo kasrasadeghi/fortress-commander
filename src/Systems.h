@@ -7,3 +7,4 @@
 #include "Systems/UnitCollisionSystem.h"
 #include "Systems/UnitCommandSystem.h"
 #include "Systems/UnitSelectionSystem.h"
+#include "Systems/LightRenderingSystem.h"

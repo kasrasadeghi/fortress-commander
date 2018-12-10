@@ -35,6 +35,10 @@ Game::Game()
   ECS::Manager::createComponentStore<HealthComponent>();
   ECS::Manager::createComponentStore<AttackComponent>();
   ECS::Manager::createComponentStore<ResourceComponent>();
+  ECS::Manager::createComponentStore<LightComponent>();
+
+  _lightRenderingSystem = new LightRenderingSystem(_gameState);
+  ECS::Manager::addSystem(ECS::System::Ptr(_lightRenderingSystem));
 
   _moveSystem = new MoveSystem(_gameState);
   ECS::Manager::addSystem(ECS::System::Ptr(_moveSystem));
@@ -98,13 +102,13 @@ void Game::loop() {
     handleTick(dt);
     _world.draw(batch, _gameState._view, _debug);
 
-    _drawUI(t, dt);
-
     ECS::EventManager::update();
     ECS::Manager::update(dt);
     _gameState._bulletParticles.update(dt);
     _gameState._deathParticles.update(dt);
     _spawner.update(dt);
+
+    _drawUI(t, dt);
 
     _window.swapBuffers();
     glfwPollEvents();

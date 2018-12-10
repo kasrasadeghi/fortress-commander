@@ -103,3 +103,12 @@ struct ResourceComponent : public ECS::Component {
 
   ResourceComponent(ResourceType accumulationSpeed) : speed(accumulationSpeed) {}
 };
+
+struct LightComponent : public ECS::Component {
+  glm::vec4 color;
+  float intensity;
+
+  static constexpr ECS::ComponentTypeId type = 8;
+
+  LightComponent(glm::vec4 color, float intensity) : color(color), intensity(intensity) {}
+};

@@ -32,6 +32,7 @@ class Game : public ECS::EventSubscriber<KeyDownEvent>,
   BattleSystem* _battleSystem;
   ResourceSystem* _resourceSystem;
   HealthBarSystem* _healthBarSystem;
+  LightRenderingSystem* _lightRenderingSystem;
 
   StructureType _structureType = StructureType::DEFAULT;
 
