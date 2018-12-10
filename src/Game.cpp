@@ -110,16 +110,31 @@ void Game::loop() {
 
 void Game::_drawUI(TextRenderer& t, float dt) {
   RectangleBatch ui;
+  auto& _mode = _gameState._mode;
+  glm::vec4 modeColor(0.76, 0.27, 0.19, 1);
+  std::string modeStr = "MODE";
 
   ui.add()
-    .position({_window.width() - 150, 0})
-    .size({315, 165})
+    .position({_window.width() - 150, 40})
+    .size({315, 95})
     .color({.1, .1, .1, 1});
 
   ui.add()
-    .position({_window.width() - 150, 0})
-    .size({300, 150})
+    .position({_window.width() - 150, 40})
+    .size({300, 80})
     .color({.3, .3, .3, 1});
+
+  if (_mode == ControlMode::BUILD) {
+    ui.add()
+      .position({_window.width() - 150, 127.5})
+      .size({315, 95})
+      .color({.1, .1, .1, 1});
+
+    ui.add()
+      .position({_window.width() - 150, 127.5})
+      .size({300, 80})
+      .color({.3, .3, .3, 1});
+  }
 
   ui.add()
     .position({_window.width() - 300, _window.height() - 30})
@@ -145,13 +160,10 @@ void Game::_drawUI(TextRenderer& t, float dt) {
 
   ui.draw(_window._default);
 
-  glm::vec4 modeColor(0.76, 0.27, 0.19, 1);
-  auto& _mode = _gameState._mode;
-  std::string modeStr = "MODE";
-
   if (_mode == ControlMode::BUILD) {
     modeStr = "BUILD";
     _world.structHolo(_gameState._view, getMouseTile());
+    t.renderText("STRUCTURE", _window.width() - 275, 142.5, 1, modeColor);
   }
   if (_mode == ControlMode::SELL) {
     modeStr = "SELL";
@@ -165,7 +177,7 @@ void Game::_drawUI(TextRenderer& t, float dt) {
     modeStr = "UNIT";
     Unit::holo(_gameState._view, getMouseCoords());
   }
-  t.renderText(modeStr, _window.width() - 250, 50, 1, modeColor);
+  t.renderText(modeStr, _window.width() - 275, 50, 1, modeColor);
 
   if (_debug) {
       t.renderText(str(static_cast<int>(1.f / dt)), 25, 50, 1, glm::vec4(0, 0, 0, 1));
