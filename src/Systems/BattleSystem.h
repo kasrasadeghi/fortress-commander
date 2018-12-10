@@ -29,7 +29,7 @@ class BattleSystem : public ECS::System {
     glm::vec2 tpos = ECS::Manager::getComponent<TransformComponent>(target).pos;
     _gameState._bulletParticles.add(BulletParticle(pos, tpos, 20));
 
-    if (ECS::Manager::hasComponent<ResourceComponent>(target)) {
+    if (targetHealth <= 0 && ECS::Manager::hasComponent<ResourceComponent>(target)) {
       auto& world = ECS::Manager::getComponent<TransformComponent>(target).world;
       world.removeStructure(target); // delete structure
     }
@@ -52,7 +52,7 @@ class BattleSystem : public ECS::System {
     auto& pos = ECS::Manager::getComponent<TransformComponent>(entity).pos;
     auto& attack = ECS::Manager::getComponent<AttackComponent>(entity);
 
-    if (ECS::Manager::hasComponent<CommandableComponent>(entity)) {
+    if (ECS::Manager::hasComponent<CommandableComponent>(entity)) { // entity is a Unit
       for (auto& hostile : _gameState.enemies) {
         auto& hostilePos = ECS::Manager::getComponent<TransformComponent>(hostile.id).pos;
         auto dist = glm::distance(pos, hostilePos);
@@ -63,7 +63,7 @@ class BattleSystem : public ECS::System {
           return;
         }
       }
-    } else {
+    } else { // entity is an Enemy
       for (auto& hostile : _gameState.units) {
         auto& hostilePos = ECS::Manager::getComponent<TransformComponent>(hostile.id).pos;
         auto dist = glm::distance(pos, hostilePos);
@@ -76,7 +76,7 @@ class BattleSystem : public ECS::System {
       for (auto& structure : _gameState.structures) {
         auto& structurePos = ECS::Manager::getComponent<TransformComponent>(structure.id).pos;
         auto dist = glm::distance(pos, structurePos);
-
+        
         if (dist < attack.attackRange) {
           attack.target = structure.id;
           return;

@@ -8,7 +8,7 @@ Enemy::Enemy(glm::vec2 pos, World& world) : _target(pos), id(ECS::Manager::creat
   ECS::Manager::addComponent<TransformComponent>(id, TransformComponent(world, pos, 0.f));
   ECS::Manager::addComponent<MotionComponent>(id, MotionComponent());
   ECS::Manager::addComponent<HealthComponent>(id, HealthComponent(max_health));
-  ECS::Manager::addComponent<AttackComponent>(id, AttackComponent(strength, 1.f, attackCooldown));
+  ECS::Manager::addComponent<AttackComponent>(id, AttackComponent(strength, radius, attackCooldown));
 
   ECS::Manager::registerEntity(id);
 }
