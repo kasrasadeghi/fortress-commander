@@ -41,6 +41,11 @@ public:
   Structure& operator=(const Structure& o) {
     ECS::Entity& _id = const_cast<ECS::Entity&>(id);
     _id = o.id;
+    health = o.health;
+    resourceSpeed = o.resourceSpeed;
+    cost = o.cost;
+    texOffset = o.texOffset;
+
     return *this;
   }
 
