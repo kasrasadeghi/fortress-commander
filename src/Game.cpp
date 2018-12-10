@@ -35,6 +35,7 @@ Game::Game()
   ECS::Manager::createComponentStore<HealthComponent>();
   ECS::Manager::createComponentStore<AttackComponent>();
   ECS::Manager::createComponentStore<ResourceComponent>();
+  ECS::Manager::createComponentStore<LightComponent>();
 
   _moveSystem = new MoveSystem(_gameState);
   ECS::Manager::addSystem(ECS::System::Ptr(_moveSystem));
