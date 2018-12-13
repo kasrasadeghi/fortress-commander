@@ -95,7 +95,7 @@ public:
    */
   template <int octaves = 1>
   double generate(double noiseX, double noiseY = 0, double noiseZ = 0) {
-    static_assert(octaves > 0);
+    static_assert(octaves > 0, "Must call PerlinNoise::generate with octaves > 0");
 
     double currentFreq = _frequency;
     double currentAmp = 1;
