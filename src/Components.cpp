@@ -6,6 +6,15 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/projection.hpp>
 
+constexpr ECS::ComponentTypeId TransformComponent::type;
+constexpr ECS::ComponentTypeId SelectableComponent::type;
+constexpr ECS::ComponentTypeId MotionComponent::type;
+constexpr ECS::ComponentTypeId CommandableComponent::type;
+constexpr ECS::ComponentTypeId HealthComponent::type;
+constexpr ECS::ComponentTypeId AttackComponent::type;
+constexpr ECS::ComponentTypeId ResourceComponent::type;
+constexpr ECS::ComponentTypeId LightComponent::type;
+
 void TransformComponent::translate(glm::vec2 displacement) {
   using V = glm::vec2;
   constexpr float precision = 0.1; // in unit coordinates
