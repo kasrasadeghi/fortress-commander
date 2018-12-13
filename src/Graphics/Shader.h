@@ -7,6 +7,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <GLFW/glfw3.h>
+
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -28,6 +30,7 @@ public:
   // activate the shader
   void use() const {
     glUseProgram(ID);
+    setFloat("time", static_cast<float>(glfwGetTime()));
   }
 
   // utility uniform functions

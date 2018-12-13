@@ -5,12 +5,12 @@
 #include "GL.h"
 
 struct TexturedRectangle {
-  Shader& shader = ResourceManager::getShader(SHADER_INDEX::SIMPLE_TEXTURE);
-
+  Shader& shader;
   GL::VertexArray VA;
 
-  TexturedRectangle(glm::vec2 a, glm::vec2 b) {
-    glDisable(GL_DEPTH_TEST);
+  TexturedRectangle(glm::vec2 a, glm::vec2 b, 
+                    Shader& shader = ResourceManager::getShader(SHADER_INDEX::SIMPLE_TEXTURE)) 
+                    : shader(shader) {
 
     std::vector<glm::vec4> vertices = {
         // positions     // texture coords
@@ -32,6 +32,7 @@ struct TexturedRectangle {
     // render 
     shader.use();
     shader.setMat4("projection", view.proj());
+    glDisable(GL_DEPTH_TEST);
     glBindVertexArray(VA.VAO);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     glBindVertexArray(0);
