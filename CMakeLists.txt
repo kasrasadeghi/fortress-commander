@@ -43,6 +43,8 @@ set(SRC_FILES
   glad/src/glad.c
 )
 
+link_directories(lib)
+
 if(TEST)
   set(PROJECT_NAME "${PROJECT_NAME}_TEST")
   add_executable(${PROJECT_NAME} src/Test.cpp ${SRC_FILES})
