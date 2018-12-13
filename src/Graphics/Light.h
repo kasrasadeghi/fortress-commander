@@ -7,8 +7,7 @@
 class LightBatch {
 protected:
   bool _vaoDirty = true;
-  VertexArray _VAO;
-  VertexBuffer<glm::vec2> _vertexVBO;
+  GL::VertexArray _VAO;
   GL::RenderTexture _renderTex;
 
 public:
@@ -21,7 +20,8 @@ public:
   std::vector<Instance> instances;
 
   LightBatch() {
-    _VAO.addAttrib(_vertexVBO);
+    _VAO.setAttributeLayout({2});
+    _VAO.setAttributeLayout({2, 4, 1}, true);
   }
 
   LightBatch& add(Instance i) {
@@ -70,9 +70,9 @@ public:
     glClearColor(0, 0, 0, 1);
     glClear(GL_COLOR_BUFFER_BIT);
     glBlendFunc(GL_ONE, GL_ONE); // additive blending 
-    glBindVertexArray(_VAO.id);
-    glDrawArrays(GL_TRIANGLE_FAN, 0, _vertexVBO.count());
-    glBindVertexArray(0);
+    _VAO.bind();
+    glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, 4, instances.size());
+    _VAO.unbind();
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
     _renderTex.unbindFramebuffer();
 
@@ -91,27 +91,13 @@ protected:
   void _update(View& view) {
     if (!_vaoDirty) return;
 
-    _vertexVBO.setVertices(std::vector<glm::vec2>{
+    _VAO.VB.bindData(std::vector<glm::vec2>{
       {view.left(), view.top()},
       {view.right(), view.top()},
       {view.right(), view.bottom()},
       {view.left(), view.bottom()}
     });
 
-    // update uniforms
-    std::vector<glm::vec2> positions(1024, glm::vec2(0, 0));
-    std::vector<glm::vec4> colors(1024, glm::vec4(0, 0, 0, 0));
-    std::vector<float> intensities(1024, 0);
-    uint index = 0;
-    for (const Instance& i : instances) {
-      positions[index] = i.position;
-      colors[index] = i.color;
-      intensities[index] = i.intensity;
-      ++index;
-    }
-    _lightShader.setVec2("positions", positions);
-    _lightShader.setVec4("colors", colors);
-    _lightShader.setFloat("intensities", intensities);
-    _lightShader.setInt("num_lights", instances.size());
+    _VAO.IB.bindData(instances);
   }
 };
