@@ -1,3 +1,5 @@
+#pragma once
+
 #include <glad/glad.h>
 
 namespace GL {
@@ -90,6 +92,73 @@ public:
 
     VertexBuffer::unbind();
     unbind();
+  }
+};
+
+struct RenderTexture {
+private:
+  glm::ivec2 _texDim;
+
+public:
+  uint fboId;
+  uint texId;
+
+  RenderTexture() {
+    glGenFramebuffers(1, &fboId);
+    glGenTextures(1, &texId);
+  }
+
+  ~RenderTexture() {
+    glDeleteTextures(1, &texId);
+    glDeleteFramebuffers(1, &fboId);
+  }
+
+  /**
+   * @brief Bind framebuffer for rendering to texture
+   */
+  void bindFramebuffer() {
+    glBindFramebuffer(GL_FRAMEBUFFER, fboId);
+  }
+
+  /**
+   * @brief Unbind framebuffer for resetting render target
+   */
+  void unbindFramebuffer() {
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  }
+
+  /**
+   * @brief Bind texture for usage of rendered data in shaders, etc.
+   */
+  void bindTexture() {
+    glBindTexture(GL_TEXTURE_2D, texId);
+  }
+
+  /**
+   * @brief Unbind texture
+   */
+  void unbindTexture() {
+    glBindTexture(GL_TEXTURE_2D, 0);
+  }
+
+  void updateTextureDimensions(int w, int h) {
+    if (w != _texDim.x || h != _texDim.y) {
+      _texDim = {w, h};
+      bindFramebuffer();
+      bindTexture();
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      unbindTexture();
+
+      // attach texture to framebuffer
+      glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texId, 0);
+
+      if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+	      std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
+
+      unbindFramebuffer();
+    }
   }
 };
 } // namespace GL

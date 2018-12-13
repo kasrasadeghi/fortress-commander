@@ -2,9 +2,9 @@
 out vec4 FragColor;
 
 uniform int num_lights;
-uniform vec2[1024] positions;
-uniform vec4[1024] colors;
-uniform float[1024] intensities;
+uniform vec2[256]positions;
+uniform vec4[256] colors;
+uniform float[256] intensities;
 
 varying vec2 screen_pos;
 

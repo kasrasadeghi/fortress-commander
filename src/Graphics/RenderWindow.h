@@ -80,15 +80,15 @@ public:
 
   // clang-format off
   GLFWwindow* window() { return _window; }
-  int height()         { return _height; }
-  int width()          { return _width;  }
+  int height() const   { return _height; }
+  int width() const    { return _width;  }
 
-  bool isOpen()      { return not glfwWindowShouldClose(_window); }
-  void swapBuffers() { glfwSwapBuffers(_window); }
-  void close()       { glfwSetWindowShouldClose(_window, true); }
+  bool isOpen() const { return not glfwWindowShouldClose(_window); }
+  void swapBuffers()  { glfwSwapBuffers(_window); }
+  void close()        { glfwSetWindowShouldClose(_window, true); }
 
-  View& defaultView()        { return _default; }
-  float widthScalingFactor() { return 1.f * _width / _height; }
+  View& defaultView()              { return _default; }
+  float widthScalingFactor() const { return 1.f * _width / _height; }
   // clang-format on
 
   /////////////////// Callbacks and Input ///////////////

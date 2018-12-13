@@ -42,6 +42,14 @@ public:
     return _inv;
   }
 
+  glm::vec2 topLeft() {
+    return {left(), top()};
+  }
+
+  glm::vec2 bottomRight() {
+    return {right(), bottom()};
+  }
+
   float left() {
     return _center[0] - _radius[0];
   }

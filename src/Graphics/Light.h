@@ -1,12 +1,15 @@
 #pragma once
 
 #include "Instanced.h"
+#include "TexturedRectangle.h"
+#include "GL.h"
 
 class LightBatch {
 protected:
   bool _vaoDirty = true;
   VertexArray _VAO;
   VertexBuffer<glm::vec2> _vertexVBO;
+  GL::RenderTexture _renderTex;
 
 public:
   struct Instance {
@@ -53,20 +56,37 @@ public:
     return *this;
   }
 
-  void draw(View& view) {
-    _shader.use();
+  void draw(View& view, const RenderWindow& window) {
+    // light addition pass
+    _renderTex.updateTextureDimensions(window.width(), window.height());
+    _renderTex.bindFramebuffer();
+
+    glEnable(GL_BLEND);
+
+    _lightShader.use();
+    _lightShader.setMat4("projection", view.proj());
     _update(view);
 
-    _shader.setMat4("projection", view.proj());
-    glBlendFunc(GL_DST_COLOR, GL_ZERO); // color multiply blending
+    glClearColor(0, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glBlendFunc(GL_ONE, GL_ONE); // additive blending 
     glBindVertexArray(_VAO.id);
     glDrawArrays(GL_TRIANGLE_FAN, 0, _vertexVBO.count());
     glBindVertexArray(0);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
+    _renderTex.unbindFramebuffer();
+
+    // multiply to screen
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_DST_COLOR, GL_ZERO); // color multiply blending
+    _renderTex.bindTexture();
+    TexturedRectangle(view.topLeft(), view.bottomRight()).draw(view);
+    _renderTex.unbindTexture();
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
   }
 
 protected:
-  const Shader& _shader = ResourceManager::getShader(SHADER_INDEX::LIGHT_MASK);
+  const Shader& _lightShader = ResourceManager::getShader(SHADER_INDEX::LIGHT_MASK);
 
   void _update(View& view) {
     if (!_vaoDirty) return;
@@ -89,9 +109,9 @@ protected:
       intensities[index] = i.intensity;
       ++index;
     }
-    _shader.setVec2("positions", positions);
-    _shader.setVec4("colors", colors);
-    _shader.setFloat("intensities", intensities);
-    _shader.setInt("num_lights", instances.size());
+    _lightShader.setVec2("positions", positions);
+    _lightShader.setVec4("colors", colors);
+    _lightShader.setFloat("intensities", intensities);
+    _lightShader.setInt("num_lights", instances.size());
   }
 };
