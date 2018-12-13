@@ -6,7 +6,7 @@
 #include "ParticleSystem.h"
 #include "Structure.h"
 
-enum class ControlMode { NONE, BUILD, SELL, UNIT, TERRAIN };
+enum class ControlMode { NONE, PAUSE, BUILD, SELL, UNIT, TERRAIN };
 
 class Unit;
 class Enemy;

@@ -147,7 +147,7 @@ class RegionGenerator {
   PerlinNoise _noise;
 
 public:
-  RegionGenerator(int seed = 80085) : _noise(seed) {
+  RegionGenerator(int seed = 42069) : _noise(seed) {
     _noise.frequency(1 / 30.).lacunarity(2.5);
   }
 

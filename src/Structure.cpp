@@ -13,13 +13,13 @@ const std::unordered_map<StructureType, const StructureData> StructureProperties
     }},
     {StructureType::DEFAULT, StructureData{
         .health = 500,
-        .resourceSpeed = 0.3f,
+        .resourceSpeed = 1.0f,
         .cost = 100.f,
         .texOffset = 2
     }},
     {StructureType::BASE, StructureData{
         .health = 1000,
-        .resourceSpeed = 0.5f,
+        .resourceSpeed = 3.0f,
         .cost = 0.f,
         .texOffset = 6
     }},

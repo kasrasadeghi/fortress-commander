@@ -95,6 +95,13 @@ void Game::loop() {
   batch.view(_gameState._view);
 
   while (_window.isOpen()) {
+    glfwPollEvents();
+    ECS::EventManager::update();
+
+    if (_gameState._mode == ControlMode::PAUSE) {
+      continue;
+    }
+
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -104,7 +111,6 @@ void Game::loop() {
     handleTick(dt);
     _world.draw(batch, _gameState._view, _debug);
 
-    ECS::EventManager::update();
     ECS::Manager::update(dt);
     _gameState._bulletParticles.update(dt);
     _gameState._deathParticles.update(dt);
@@ -113,7 +119,7 @@ void Game::loop() {
     _drawUI(t, dt);
 
     _window.swapBuffers();
-    glfwPollEvents();
+    //glfwPollEvents();
   }
 }
 
@@ -206,12 +212,12 @@ void Game::_drawUI(TextRenderer& t, float dt) {
 
 void Game::receive(const KeyDownEvent& e) {
   auto key = e.key;
+  auto& _mode = _gameState._mode;
 
   if (key == GLFW_KEY_ESCAPE) {
-    _window.close();
+    _mode = ControlMode::PAUSE;
+    //_window.close();
   }
-
-  auto& _mode = _gameState._mode;
 
   // TODO: temporary. normally left clicking on empty ground gets you out of a mode
   if (key == GLFW_KEY_Q) {
@@ -300,7 +306,7 @@ void Game::cursorCallback(double x, double y) {
 }
 
 void Game::scrollCallback(double x, double y) {
-  tile_view_size_target += y;
+  tile_view_size_target -= y * 2.f;
   ECS::EventManager::event(new MouseScrollEvent(x, y));
 }
 

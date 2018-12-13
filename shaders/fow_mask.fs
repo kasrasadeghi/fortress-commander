@@ -7,7 +7,7 @@ in float instance_intensity;
 out vec4 FragColor;
 
 const float distance_factor = 3.f;
-const float border_radius = 3.0f;
+const float border_radius = 4.0f;
 
 void main() {
   float dist = distance(screen_pos, instance_pos) / instance_intensity;
