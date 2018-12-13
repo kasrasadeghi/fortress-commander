@@ -57,7 +57,7 @@ public:
     return *this;
   }
 
-  void draw(View& view, const RenderWindow& window) {
+  void draw(View& view, const RenderWindow& window, bool debug = false) {
     // light addition pass
     _renderTex.updateTextureDimensions(window.width(), window.height());
     _renderTex.bindFramebuffer();
@@ -68,7 +68,11 @@ public:
     _maskShader.setMat4("projection", view.proj());
     _update(view);
 
-    glClearColor(0, 0, 0, 1);
+    if (debug) {
+      glClearColor(0.6, 0.6, 0.6, 1);
+    } else {
+      glClearColor(0, 0, 0, 1);
+    }
     glClear(GL_COLOR_BUFFER_BIT);
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_COLOR); // screen blending 
     _VAO.bind();
