@@ -16,7 +16,8 @@
 #include <stdio.h>
 #include <vector>
 
-int Game::tile_view_size = 25;
+float Game::tile_view_size = 25;
+float Game::tile_view_size_target = Game::tile_view_size;
 
 Game::Game()
     : _resources(init_resource_bal), _window("Fortress Commander"),
@@ -25,6 +26,7 @@ Game::Game()
   _window.setKeyCallback([this](auto&&... args) { this->keyCallback(args...); });
   _window.setMouseCallback([this](auto&&... args) { this->mouseCallback(args...); });
   _window.setCursorCallback([this](auto&&... args) { this->cursorCallback(args...); });
+  _window.setScrollCallback([this](auto&&... args) { this->scrollCallback(args...); });
 
   glfwSwapInterval(0); // oh, it's on by default
 
@@ -241,13 +243,6 @@ void Game::receive(const KeyDownEvent& e) {
     _mode = ControlMode::TERRAIN;
   }
 
-  if (key == GLFW_KEY_PERIOD) {
-    decrementZoom();
-  }
-  if (key == GLFW_KEY_COMMA) {
-    incrementZoom();
-  }
-
   if (key == GLFW_KEY_F12) {
     restart();
   }
@@ -279,6 +274,9 @@ void Game::receive(const MouseMoveEvent& e) {
   }
 }
 
+void Game::receive(const MouseScrollEvent& e) {
+}
+
 void Game::keyCallback(int key, int scancode, int action, int mods) {
   if (action == GLFW_PRESS) {
     ECS::EventManager::event(new KeyDownEvent(key));
@@ -301,6 +299,11 @@ void Game::cursorCallback(double x, double y) {
   ECS::EventManager::event(new MouseMoveEvent(getMouseCoords().x, getMouseCoords().y));
 }
 
+void Game::scrollCallback(double x, double y) {
+  tile_view_size_target += y;
+  ECS::EventManager::event(new MouseScrollEvent(x, y));
+}
+
 void Game::handleTick(float dt) {
   constexpr float speed = 20 * tile_size;
   float d = speed * dt;
@@ -309,18 +312,19 @@ void Game::handleTick(float dt) {
 
   _keyboardViewMove(d);
 
+  updateZoom(dt);
+
   // lock view to world by rebounding
   // _reboundViewToWorld();
 }
 
-void Game::incrementZoom() {
-  tile_view_size = std::min(100, tile_view_size + 5);
+void Game::updateZoom(float dt) {
+  constexpr float rate = 10.f;
+  const float current_rate = std::max(0.f, std::min(1.f, rate * dt));
+  tile_view_size = tile_view_size * (1 - current_rate) + tile_view_size_target * current_rate;
+  tile_view_size_target = std::max(10.f, std::min(100.f, tile_view_size_target));
+  // tile_view_size = tile_view_size_target;
   _gameState._view.radius(tile_view_size * tile_size / 2.f * _window.widthScalingFactor(),
                           tile_view_size * tile_size / 2.f);
 }
 
-void Game::decrementZoom() {
-  tile_view_size = std::max(10, tile_view_size - 5);
-  _gameState._view.radius(tile_view_size * tile_size / 2.f * _window.widthScalingFactor(),
-                          tile_view_size * tile_size / 2.f);
-}

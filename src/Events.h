@@ -19,6 +19,11 @@ struct MouseUpEvent {
   float x, y;
 };
 
+struct MouseScrollEvent {
+  MouseScrollEvent(float x, float y) : x(x), y(y) {}
+  float x, y;
+};
+
 struct KeyEvent {
   KeyEvent(int key, int action) : key(key), action(action) {}
   int key;

@@ -14,7 +14,8 @@
 
 class Game : public ECS::EventSubscriber<KeyDownEvent>,
              ECS::EventSubscriber<MouseDownEvent>,
-             ECS::EventSubscriber<MouseMoveEvent> {
+             ECS::EventSubscriber<MouseMoveEvent>,
+             ECS::EventSubscriber<MouseScrollEvent> {
   ResourceType _resources;
 
   RenderWindow _window;
@@ -93,7 +94,8 @@ class Game : public ECS::EventSubscriber<KeyDownEvent>,
   void _drawUI(TextRenderer& t, float dt);
 
 public:
-  static int tile_view_size; // Initialized to 25
+  static float tile_view_size; 
+  static float tile_view_size_target;
 
   Game();
 
@@ -133,13 +135,14 @@ public:
   void receive(const KeyDownEvent& e) override;
   void receive(const MouseDownEvent& e) override;
   void receive(const MouseMoveEvent& e) override;
+  void receive(const MouseScrollEvent& e) override;
 
   void keyCallback(int key, int scancode, int action, int mods);
   void mouseCallback(int button, int action, int mods);
   void cursorCallback(double x, double y);
+  void scrollCallback(double x, double y);
 
   void handleTick(float dt);
 
-  void incrementZoom();
-  void decrementZoom();
+  void updateZoom(float dt);
 };
