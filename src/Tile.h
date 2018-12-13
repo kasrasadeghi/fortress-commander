@@ -5,6 +5,17 @@
 
 enum class Tile { NONE, GRASS, SAND, WATER, MOUNTAIN };
 
+namespace std {
+
+template <>
+struct hash<Tile> {
+  size_t operator()(const Tile& t) const {
+    return std::hash<int>()(static_cast<int>(t));
+  }
+}
+;
+} // namespace std
+
 struct TileType {
   glm::vec4 color;
   bool walkable;
