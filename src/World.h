@@ -7,8 +7,6 @@
 #include "Structure.h"
 #include "Unit.h"
 
-#include <optional>
-
 class World {
   Region _region; // this should be a square
 
