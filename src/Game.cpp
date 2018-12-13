@@ -22,9 +22,9 @@ Game::Game()
     : _resources(init_resource_bal), _window("Fortress Commander"),
       _gameState(_window, _world._units, _world._enemies, _world._structures, _resources),
       _world(world_size, _resources), _spawner(_world) {
-  _window.setKeyCallback([this](auto&&... args) { keyCallback(args...); });
-  _window.setMouseCallback([this](auto&&... args) { mouseCallback(args...); });
-  _window.setCursorCallback([this](auto&&... args) { cursorCallback(args...); });
+  _window.setKeyCallback([this](auto&&... args) { this->keyCallback(args...); });
+  _window.setMouseCallback([this](auto&&... args) { this->mouseCallback(args...); });
+  _window.setCursorCallback([this](auto&&... args) { this->cursorCallback(args...); });
 
   glfwSwapInterval(0); // oh, it's on by default
 
