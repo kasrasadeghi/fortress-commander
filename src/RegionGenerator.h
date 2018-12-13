@@ -45,7 +45,7 @@ public:
     }
 
     std::mt19937 mt(seed);
-    auto randfunc = [&mt](int i) { return std::uniform_int_distribution{0, i}(mt); };
+    auto randfunc = [&mt](int i) { return std::uniform_int_distribution<int>{0, i}(mt); };
     std::random_shuffle(_randomData.begin(), _randomData.end(), randfunc);
 
     _randomData.insert(_randomData.end(), _randomData.begin(), _randomData.end());
