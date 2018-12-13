@@ -11,6 +11,17 @@ class World;
 
 enum class StructureType { NONE, DEFAULT, BASE, WALL };
 
+namespace std {
+
+template <>
+struct hash<StructureType> {
+  size_t operator()(const StructureType& t) const {
+    return std::hash<int>()(static_cast<int>(t));
+  }
+};
+
+} // namespace std
+
 struct StructureData {
   HealthValue health;
   ResourceType resourceSpeed;
