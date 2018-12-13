@@ -28,6 +28,8 @@ struct GameState {
 
   ResourceType& _resources;
 
+  bool& debug;
+
   GameState(RenderWindow& window, std::vector<Unit>& units, std::vector<Enemy>& enemies,
-            std::vector<Structure>& structures, ResourceType& resources);
+            std::vector<Structure>& structures, ResourceType& resources, bool& debug);
 };
