@@ -21,6 +21,8 @@ include(cmake/utils.cmake)
 include(cmake/gtest.cmake)
 include(cmake/freetype.cmake)
 
+include_directories(include)
+
 set(PROJECT_NAME fortress-commander)
 project(${PROJECT_NAME})
 
