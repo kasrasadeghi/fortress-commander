@@ -16,7 +16,7 @@ class Enemy;
  */
 struct GameState {
   RenderWindow& _window;
-  ControlMode _mode = ControlMode::NONE;
+  ControlMode _mode = ControlMode::PAUSE;
   View _view;
 
   std::vector<Unit>& units;

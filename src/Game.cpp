@@ -98,9 +98,11 @@ void Game::loop() {
     glfwPollEvents();
     ECS::EventManager::update();
 
+    /*
     if (_gameState._mode == ControlMode::PAUSE) {
       continue;
     }
+    */
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -108,28 +110,47 @@ void Game::loop() {
     float dt = glfwGetTime() - last_time;
     last_time = glfwGetTime();
 
-    handleTick(dt);
-    _world.draw(batch, _gameState._view, _debug);
+    if (_gameState._mode != ControlMode::PAUSE) {
+      handleTick(dt);
+      _world.draw(batch, _gameState._view, _debug);
+    }
 
     ECS::Manager::update(dt);
-    _gameState._bulletParticles.update(dt);
-    _gameState._deathParticles.update(dt);
-    _spawner.update(dt);
+
+    if (_gameState._mode != ControlMode::PAUSE) {
+      _gameState._bulletParticles.update(dt);
+      _gameState._deathParticles.update(dt);
+      _spawner.update(dt);
+    }
 
     _drawUI(t, dt);
 
     _window.swapBuffers();
-    //glfwPollEvents();
+    // glfwPollEvents();
   }
 }
 
 void Game::_drawUI(TextRenderer& t, float dt) {
   RectangleBatch ui;
-  auto& _mode = _gameState._mode;
   glm::vec4 modeColor(0.76, 0.27, 0.19, 1);
+
+  auto& _mode = _gameState._mode;
   std::string modeStr = "MODE";
 
   // clang-format off
+  if (_mode == ControlMode::PAUSE) {
+    ui.add()
+        .position({_window.width() / 2, _window.height() / 2})
+        .size({1000, 95})
+        .color({.1, .1, .1, 1});
+    
+    ui.add()
+        .position({_window.width() / 2, _window.height() / 2})
+        .size({970, 65})
+        .color({.3, .3, .3, 1});
+
+  }
+
   ui.add()
     .position({_window.width() - 150, 40})
     .size({315, 95})
@@ -177,6 +198,11 @@ void Game::_drawUI(TextRenderer& t, float dt) {
 
   ui.draw(_window._default);
 
+  if (_mode == ControlMode::PAUSE) {
+    t.renderText("Press Escape to start the game", _window.width() / 2 - 400,
+                 _window.height() / 2 + 10, 1, modeColor);
+  }
+
   if (_mode == ControlMode::BUILD) {
     modeStr = "BUILD";
     _world.structHolo(_gameState._view, getMouseTile());
@@ -215,8 +241,11 @@ void Game::receive(const KeyDownEvent& e) {
   auto& _mode = _gameState._mode;
 
   if (key == GLFW_KEY_ESCAPE) {
-    _mode = ControlMode::PAUSE;
-    //_window.close();
+    if (_mode == ControlMode::PAUSE) {
+      _mode = ControlMode::NONE;
+    } else {
+      _mode = ControlMode::PAUSE;
+    }
   }
 
   // TODO: temporary. normally left clicking on empty ground gets you out of a mode
@@ -280,8 +309,7 @@ void Game::receive(const MouseMoveEvent& e) {
   }
 }
 
-void Game::receive(const MouseScrollEvent& e) {
-}
+void Game::receive(const MouseScrollEvent& e) {}
 
 void Game::keyCallback(int key, int scancode, int action, int mods) {
   if (action == GLFW_PRESS) {
@@ -333,4 +361,3 @@ void Game::updateZoom(float dt) {
   _gameState._view.radius(tile_view_size * tile_size / 2.f * _window.widthScalingFactor(),
                           tile_view_size * tile_size / 2.f);
 }
-
