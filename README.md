@@ -37,15 +37,15 @@ You can interact with the map with the mouse. Left click and drag to make a sele
 You can use Escape to pause the game at any time.
 
 ## Dependencies
-GLFW3
-FreeType
+- GLFW3
+- FreeType
 
 ## Tools
-clang-format
-gdb
-valgrind
-CMake
-GNU Make
-OpenGL
-GLFW3
-FreeType
+- clang-format
+- gdb
+- valgrind
+- CMake
+- GNU Make
+- OpenGL
+- GLFW3
+- FreeType
