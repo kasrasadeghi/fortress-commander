@@ -26,6 +26,16 @@ Fortress Commander implements the following systems:
 ## Running
 If you have the correct dependencies installed, simply run `make`. The cmake build will be triggered, and the makefile will run the game binary for you.
 
+### Controls
+Use the keyboard to move the camera
+You can interact with the map with the mouse. Left click and drag to make a selection area. Right click to give a command to selected units. Use the following keys to switch modes:
+- B = Build (use number keys to select which type of structure)
+- U = Unit
+- X = Sell
+- Q = Exit mode
+
+You can use Escape to pause the game at any time.
+
 ## Dependencies
 GLFW3
 FreeType
