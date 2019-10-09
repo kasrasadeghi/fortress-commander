@@ -37,14 +37,13 @@ void World::_drawUnits(TextureBatch& batch) const {
     } else if (attackTimer < muzzleFlashTime) {
       baseColor = attackingColor;
     }
-
-    batch.add(TextureBatch::Instance{
-      .pos = u.pos(),
-      .size = {tile_size, tile_size},
-      .aColor = baseColor,
-      .rotation = angle,
-    });
     
+    TextureBatch::Instance inst;
+    inst.pos = u.pos();
+    inst.size = {tile_size, tile_size};
+    inst.aColor = baseColor;
+    inst.rotation = angle;
+    batch.add(std::move(inst));
   }
   // clang-format on
 }
@@ -63,12 +62,12 @@ void World::_drawEnemies(TextureBatch& batch) const {
       baseColor = attackingColor;
     }
 
-    batch.add(TextureBatch::Instance{
-      .pos = e.pos(),
-      .size = {tile_size, tile_size},
-      .aColor = baseColor,
-      .rotation = angle,
-    });
+    TextureBatch::Instance inst;
+    inst.pos = e.pos();
+    inst.size = {tile_size, tile_size};
+    inst.aColor = baseColor;
+    inst.rotation = angle;
+    batch.add(std::move(inst));
   }
   // clang-format on
 }
@@ -131,9 +130,11 @@ void World::_drawStructures(TextureBatch& batch) const {
   const glm::vec2 offset(-tile_size * 0.5, -tile_size * 0.5);
 
   for (const auto& structure : _structures) {
-    batch.add(TextureBatch::Instance{.pos = structure.pos() * tile_size - offset,
-                                     .size = {tile_size, tile_size},
-                                     .texOffset = static_cast<float>(structure.texOffset)});
+    TextureBatch::Instance inst;
+    inst.pos = structure.pos() * tile_size - offset;
+    inst.size = {tile_size, tile_size};
+    inst.texOffset = static_cast<float>(structure.texOffset); 
+    batch.add(std::move(inst));
   }
 }
 
@@ -272,14 +273,14 @@ bool World::sellStructure(glm::ivec2 cell) {
   return found;
 }
 
-std::optional<Structure> World::structureAt(glm::ivec2 cell) {
+Structure* World::structureAt(glm::ivec2 cell) {
   // TODO: Region::structureAt seemed to have stale data after Game::restart()
   // also, why is structure data split across world and region?
 
   for (Structure& s : _structures) {
     if (Game::mapCoordsToTile(s.pos()) == cell) {
-      return s;
+      return &s;
     }
   }
-  return {};
+  return nullptr;
 }

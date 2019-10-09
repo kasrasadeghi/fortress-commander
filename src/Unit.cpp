@@ -22,6 +22,7 @@ Unit::Unit(glm::vec2 pos, World& world) : _target(pos), id(ECS::Manager::createE
         glm::vec2 offset = pos - centroid;
         ECS::Manager::getComponent<MotionComponent>(idCopy).pathTo(targetPos + offset);
       }));
+  ECS::Manager::addComponent<LightComponent>(id, LightComponent({0.f, 0.f, 1.f, 1.f}, 1.f));
   ECS::Manager::registerEntity(id);
 }
 

@@ -6,7 +6,7 @@
 #include "ParticleSystem.h"
 #include "Structure.h"
 
-enum class ControlMode { NONE, BUILD, SELL, UNIT, TERRAIN };
+enum class ControlMode { NONE, PAUSE, BUILD, SELL, UNIT, TERRAIN };
 
 class Unit;
 class Enemy;
@@ -16,7 +16,7 @@ class Enemy;
  */
 struct GameState {
   RenderWindow& _window;
-  ControlMode _mode = ControlMode::NONE;
+  ControlMode _mode = ControlMode::PAUSE;
   View _view;
 
   std::vector<Unit>& units;
@@ -28,6 +28,8 @@ struct GameState {
 
   ResourceType& _resources;
 
+  bool& debug;
+
   GameState(RenderWindow& window, std::vector<Unit>& units, std::vector<Enemy>& enemies,
-            std::vector<Structure>& structures, ResourceType& resources);
+            std::vector<Structure>& structures, ResourceType& resources, bool& debug);
 };

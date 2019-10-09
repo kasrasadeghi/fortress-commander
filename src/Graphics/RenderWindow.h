@@ -32,6 +32,12 @@ static void __cursorCallbackWrapper(GLFWwindow* window, double x, double y) {
   __cursorCallback(x, y);
 }
 
+using ScrollCallback = std::function<void(double, double)>;
+static ScrollCallback __scrollCallback;
+static void __scrollCallbackWrapper(GLFWwindow* window, double x, double y) {
+  __scrollCallback(x, y);
+}
+
 class RenderWindow {
   GLFWwindow* _window;
 
@@ -120,5 +126,9 @@ public:
   void setCursorCallback(CursorCallback cursorCallback) {
     __cursorCallback = cursorCallback;
     glfwSetCursorPosCallback(_window, __cursorCallbackWrapper);
+  }
+  void setScrollCallback(ScrollCallback scrollCallback) {
+    __scrollCallback = scrollCallback;
+    glfwSetScrollCallback(_window, __scrollCallbackWrapper);
   }
 };

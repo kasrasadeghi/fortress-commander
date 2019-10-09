@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Instanced.h"
+#include "Texture.h"
 #include "TexturedRectangle.h"
 #include "GL.h"
 
@@ -56,37 +57,53 @@ public:
     return *this;
   }
 
-  void draw(View& view, const RenderWindow& window) {
+  void draw(View& view, const RenderWindow& window, bool debug = false) {
     // light addition pass
     _renderTex.updateTextureDimensions(window.width(), window.height());
     _renderTex.bindFramebuffer();
 
     glEnable(GL_BLEND);
 
-    _lightShader.use();
-    _lightShader.setMat4("projection", view.proj());
+    _maskShader.use();
+    _maskShader.setMat4("projection", view.proj());
     _update(view);
 
-    glClearColor(0, 0, 0, 1);
+    if (debug) {
+      glClearColor(0.6, 0.6, 0.6, 1);
+    } else {
+      glClearColor(0, 0, 0, 1);
+    }
     glClear(GL_COLOR_BUFFER_BIT);
-    glBlendFunc(GL_ONE, GL_ONE); // additive blending 
+    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_COLOR); // screen blending 
     _VAO.bind();
     glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, 4, instances.size());
     _VAO.unbind();
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
     _renderTex.unbindFramebuffer();
 
     // multiply to screen
     glEnable(GL_BLEND);
-    glBlendFunc(GL_DST_COLOR, GL_ZERO); // color multiply blending
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // alpha blending
+
+    // multitexture setup
+    _cloudShader.use();
+    _cloudShader.setInt("bufferTexture", 0);
+    _cloudShader.setInt("cloudTexture", 1);
+    glActiveTexture(GL_TEXTURE0);
+    glEnable(GL_TEXTURE_2D);
     _renderTex.bindTexture();
-    TexturedRectangle(view.topLeft(), view.bottomRight()).draw(view);
+    glActiveTexture(GL_TEXTURE1);
+    glEnable(GL_TEXTURE_2D);
+    _cloudTex.bind();
+    TexturedRectangle(view.topLeft(), view.bottomRight(), _cloudShader).draw(view);
+    _cloudTex.unbind();
+    glActiveTexture(GL_TEXTURE0);
     _renderTex.unbindTexture();
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
   }
 
 protected:
-  const Shader& _lightShader = ResourceManager::getShader(SHADER_INDEX::LIGHT_MASK);
+  Texture _cloudTex{"textures/clouds.png", true};
+  Shader& _maskShader = ResourceManager::getShader(SHADER_INDEX::FOW_MASK);
+  Shader& _cloudShader = ResourceManager::getShader(SHADER_INDEX::FOW_CLOUDS);
 
   void _update(View& view) {
     if (!_vaoDirty) return;

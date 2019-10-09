@@ -4,13 +4,13 @@
 #include <string>
 #include <unordered_map>
 
-enum class SHADER_INDEX { INSTANCED_ARRAY = 0, TEXT = 1, TEXTURE = 2, LIGHT_MASK = 3, SIMPLE_TEXTURE = 4 };
+enum class SHADER_INDEX { INSTANCED_ARRAY = 0, TEXT = 1, TEXTURE = 2, LIGHT_MASK = 3, SIMPLE_TEXTURE = 4, FOW_MASK = 5, FOW_CLOUDS = 6 };
 
 #include "Shader.h"
 #include "Texture.h"
 
 class ResourceManager {
-  static std::array<Shader, 5> _shaders;
+  static std::array<Shader, 7> _shaders;
 
 public:
   /// fast readfile compared with other methods

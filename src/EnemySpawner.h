@@ -52,7 +52,7 @@ public: // seed with random device
     for (int i = 0; i < spawn_group_count; ++i) {
       int side = _side();
 
-      glm::vec2 pos;
+      glm::vec2 pos{0, 0};
       if (side == 0) {
         pos = {tile_size / 2.f + spawn_tiles_from_edge, _pos()};
       }

@@ -100,6 +100,10 @@ public:
   }
 
   void updateEntity(float dt, ECS::Entity entity) override {
+    if (not ECS::Manager::hasEntity(entity)) {
+      return;
+    }
+
     if (ECS::Manager::getComponent<HealthComponent>(entity).health <= 0) {
       _die(entity);
     }

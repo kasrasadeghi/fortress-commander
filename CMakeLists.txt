@@ -1,9 +1,9 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.5)
 
 set(CMAKE_BUILD_TYPE Release)
 #set(CMAKE_BUILD_TYPE Debug)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -20,6 +20,8 @@ include(cmake/glad_glfw.cmake)
 include(cmake/utils.cmake)
 include(cmake/gtest.cmake)
 include(cmake/freetype.cmake)
+
+include_directories(include)
 
 set(PROJECT_NAME fortress-commander)
 project(${PROJECT_NAME})
@@ -53,7 +55,6 @@ endif(TEST)
 
 setup_glad_glfw(${PROJECT_NAME})
 setup_freetype(${PROJECT_NAME})
-
 
 # copy over resources
 copy_to_bin_dir(fonts shaders textures)

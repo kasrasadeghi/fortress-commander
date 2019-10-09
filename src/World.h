@@ -7,8 +7,6 @@
 #include "Structure.h"
 #include "Unit.h"
 
-#include <optional>
-
 class World {
   Region _region; // this should be a square
 
@@ -130,6 +128,6 @@ public:
 
   bool sellStructure(glm::ivec2 cell);
 
-  std::optional<Structure> structureAt(glm::ivec2 cell);
+  Structure* structureAt(glm::ivec2 cell);
   // bool unitAt(glm::ivec2 cell);
 };

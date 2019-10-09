@@ -23,8 +23,10 @@ public:
     _lights.instances.clear();
     _testCircles.instances.clear();
     auto result = ECS::System::update(dt);
-    _lights.draw(_gameState._view, _gameState._window);
-    _testCircles.draw(_gameState._view);
+    _lights.draw(_gameState._view, _gameState._window, _gameState.debug);
+    if (_gameState.debug) {
+      _testCircles.draw(_gameState._view);
+    }
     return result;
   }
 

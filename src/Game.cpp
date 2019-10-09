@@ -16,15 +16,17 @@
 #include <stdio.h>
 #include <vector>
 
-int Game::tile_view_size = 25;
+float Game::tile_view_size = 25;
+float Game::tile_view_size_target = Game::tile_view_size;
 
 Game::Game()
     : _resources(init_resource_bal), _window("Fortress Commander"),
-      _gameState(_window, _world._units, _world._enemies, _world._structures, _resources),
+      _gameState(_window, _world._units, _world._enemies, _world._structures, _resources, _debug),
       _world(world_size, _resources), _spawner(_world) {
-  _window.setKeyCallback([this](auto&&... args) { keyCallback(args...); });
-  _window.setMouseCallback([this](auto&&... args) { mouseCallback(args...); });
-  _window.setCursorCallback([this](auto&&... args) { cursorCallback(args...); });
+  _window.setKeyCallback([this](auto&&... args) { this->keyCallback(args...); });
+  _window.setMouseCallback([this](auto&&... args) { this->mouseCallback(args...); });
+  _window.setCursorCallback([this](auto&&... args) { this->cursorCallback(args...); });
+  _window.setScrollCallback([this](auto&&... args) { this->scrollCallback(args...); });
 
   glfwSwapInterval(0); // oh, it's on by default
 
@@ -93,35 +95,62 @@ void Game::loop() {
   batch.view(_gameState._view);
 
   while (_window.isOpen()) {
+    glfwPollEvents();
+    ECS::EventManager::update();
+
+    /*
+    if (_gameState._mode == ControlMode::PAUSE) {
+      continue;
+    }
+    */
+
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
     float dt = glfwGetTime() - last_time;
     last_time = glfwGetTime();
 
-    handleTick(dt);
-    _world.draw(batch, _gameState._view, _debug);
+    if (_gameState._mode != ControlMode::PAUSE) {
+      handleTick(dt);
+      _world.draw(batch, _gameState._view, _debug);
+    }
 
-    ECS::EventManager::update();
     ECS::Manager::update(dt);
-    _gameState._bulletParticles.update(dt);
-    _gameState._deathParticles.update(dt);
-    _spawner.update(dt);
+
+    if (_gameState._mode != ControlMode::PAUSE) {
+      _gameState._bulletParticles.update(dt);
+      _gameState._deathParticles.update(dt);
+      _spawner.update(dt);
+    }
 
     _drawUI(t, dt);
 
     _window.swapBuffers();
-    glfwPollEvents();
+    // glfwPollEvents();
   }
 }
 
 void Game::_drawUI(TextRenderer& t, float dt) {
   RectangleBatch ui;
-  auto& _mode = _gameState._mode;
   glm::vec4 modeColor(0.76, 0.27, 0.19, 1);
+
+  auto& _mode = _gameState._mode;
   std::string modeStr = "MODE";
 
   // clang-format off
+  if (_mode == ControlMode::PAUSE) {
+    ui.add()
+        .position({_window.width() / 2, _window.height() / 2})
+        .size({1000, 95})
+        .color({.1, .1, .1, 1});
+    
+    ui.add()
+        .position({_window.width() / 2, _window.height() / 2})
+        .size({970, 65})
+        .color({.3, .3, .3, 1});
+
+  }
+
   ui.add()
     .position({_window.width() - 150, 40})
     .size({315, 95})
@@ -169,6 +198,11 @@ void Game::_drawUI(TextRenderer& t, float dt) {
 
   ui.draw(_window._default);
 
+  if (_mode == ControlMode::PAUSE) {
+    t.renderText("Press Escape to start the game", _window.width() / 2 - 400,
+                 _window.height() / 2 + 10, 1, modeColor);
+  }
+
   if (_mode == ControlMode::BUILD) {
     modeStr = "BUILD";
     _world.structHolo(_gameState._view, getMouseTile());
@@ -204,12 +238,15 @@ void Game::_drawUI(TextRenderer& t, float dt) {
 
 void Game::receive(const KeyDownEvent& e) {
   auto key = e.key;
+  auto& _mode = _gameState._mode;
 
   if (key == GLFW_KEY_ESCAPE) {
-    _window.close();
+    if (_mode == ControlMode::PAUSE) {
+      _mode = ControlMode::NONE;
+    } else {
+      _mode = ControlMode::PAUSE;
+    }
   }
-
-  auto& _mode = _gameState._mode;
 
   // TODO: temporary. normally left clicking on empty ground gets you out of a mode
   if (key == GLFW_KEY_Q) {
@@ -239,13 +276,6 @@ void Game::receive(const KeyDownEvent& e) {
   }
   if (key == GLFW_KEY_T) {
     _mode = ControlMode::TERRAIN;
-  }
-
-  if (key == GLFW_KEY_PERIOD) {
-    decrementZoom();
-  }
-  if (key == GLFW_KEY_COMMA) {
-    incrementZoom();
   }
 
   if (key == GLFW_KEY_F12) {
@@ -279,6 +309,8 @@ void Game::receive(const MouseMoveEvent& e) {
   }
 }
 
+void Game::receive(const MouseScrollEvent& e) {}
+
 void Game::keyCallback(int key, int scancode, int action, int mods) {
   if (action == GLFW_PRESS) {
     ECS::EventManager::event(new KeyDownEvent(key));
@@ -301,6 +333,11 @@ void Game::cursorCallback(double x, double y) {
   ECS::EventManager::event(new MouseMoveEvent(getMouseCoords().x, getMouseCoords().y));
 }
 
+void Game::scrollCallback(double x, double y) {
+  tile_view_size_target -= y * 2.f;
+  ECS::EventManager::event(new MouseScrollEvent(x, y));
+}
+
 void Game::handleTick(float dt) {
   constexpr float speed = 20 * tile_size;
   float d = speed * dt;
@@ -309,18 +346,18 @@ void Game::handleTick(float dt) {
 
   _keyboardViewMove(d);
 
+  updateZoom(dt);
+
   // lock view to world by rebounding
   // _reboundViewToWorld();
 }
 
-void Game::incrementZoom() {
-  tile_view_size = std::min(100, tile_view_size + 5);
-  _gameState._view.radius(tile_view_size * tile_size / 2.f * _window.widthScalingFactor(),
-                          tile_view_size * tile_size / 2.f);
-}
-
-void Game::decrementZoom() {
-  tile_view_size = std::max(10, tile_view_size - 5);
+void Game::updateZoom(float dt) {
+  constexpr float rate = 10.f;
+  const float current_rate = std::max(0.f, std::min(1.f, rate * dt));
+  tile_view_size = tile_view_size * (1 - current_rate) + tile_view_size_target * current_rate;
+  tile_view_size_target = std::max(10.f, std::min(100.f, tile_view_size_target));
+  // tile_view_size = tile_view_size_target;
   _gameState._view.radius(tile_view_size * tile_size / 2.f * _window.widthScalingFactor(),
                           tile_view_size * tile_size / 2.f);
 }

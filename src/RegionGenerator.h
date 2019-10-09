@@ -45,7 +45,7 @@ public:
     }
 
     std::mt19937 mt(seed);
-    auto randfunc = [&mt](int i) { return std::uniform_int_distribution{0, i}(mt); };
+    auto randfunc = [&mt](int i) { return std::uniform_int_distribution<int>{0, i}(mt); };
     std::random_shuffle(_randomData.begin(), _randomData.end(), randfunc);
 
     _randomData.insert(_randomData.end(), _randomData.begin(), _randomData.end());
@@ -95,7 +95,7 @@ public:
    */
   template <int octaves = 1>
   double generate(double noiseX, double noiseY = 0, double noiseZ = 0) {
-    static_assert(octaves > 0);
+    static_assert(octaves > 0, "Must call PerlinNoise::generate with octaves > 0");
 
     double currentFreq = _frequency;
     double currentAmp = 1;
@@ -147,7 +147,7 @@ class RegionGenerator {
   PerlinNoise _noise;
 
 public:
-  RegionGenerator(int seed = 80085) : _noise(seed) {
+  RegionGenerator(int seed = 42069) : _noise(seed) {
     _noise.frequency(1 / 30.).lacunarity(2.5);
   }
 
