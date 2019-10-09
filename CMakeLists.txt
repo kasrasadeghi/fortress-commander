@@ -56,6 +56,5 @@ endif(TEST)
 setup_glad_glfw(${PROJECT_NAME})
 setup_freetype(${PROJECT_NAME})
 
-
 # copy over resources
 copy_to_bin_dir(fonts shaders textures)

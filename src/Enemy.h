@@ -25,6 +25,7 @@ public:
   constexpr static float radius = 1.5f;
 
   Enemy(glm::vec2 pos, World&);
+  constexpr Enemy(const Enemy&) = default;
 
   Enemy& operator=(const Enemy& o) {
     ECS::Entity& _id = const_cast<ECS::Entity&>(id);

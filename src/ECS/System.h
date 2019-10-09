@@ -119,6 +119,8 @@ public:
   virtual std::size_t update(float dt) {
     std::size_t updatedEntities = 0;
 
+    // TODO: we crash here when an entity gets killed.
+    // entity (the iterator itself) gets corrupted, incremented, and dereferenced
     for (auto entity = _matchingEntities.begin(); entity != _matchingEntities.end(); ++entity) {
       updateEntity(dt, *entity); // each user class should specialize this
                                  // pure virtual function
