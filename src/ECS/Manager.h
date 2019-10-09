@@ -40,6 +40,8 @@ class Manager {
    */
   SystemContainer _systems;
 
+  std::unordered_set<Entity> _deleteSet;
+
   Manager();
   ~Manager();
 
@@ -140,8 +142,7 @@ class Manager {
    * @param id The entity to delete
    */
   bool _deleteEntity(Entity id) {
-    _unregisterEntity(id);
-    return _entities.erase(id);
+    return _deleteSet.insert(id).second;
   }
 
   /**

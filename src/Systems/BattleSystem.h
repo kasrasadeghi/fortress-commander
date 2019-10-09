@@ -106,6 +106,7 @@ public:
 
     if (ECS::Manager::getComponent<HealthComponent>(entity).health <= 0) {
       _die(entity);
+      return;
     }
 
     auto target = ECS::Manager::getComponent<AttackComponent>(entity).target;

@@ -49,7 +49,7 @@ std::size_t Manager::_unregisterEntity(const Entity entity) {
   // Find the appropritate Entity -> ComponentTypeSet entry
   auto entityIt = _entities.find(entity);
   if (entityIt == _entities.end()) {
-    throw std::runtime_error("The entity doesn't exist");
+    return associatedSystems; // the entity doesn't exist, so maybe it has been manually unregistered
   }
 
   auto entityComponents = entityIt->second;
@@ -69,6 +69,11 @@ std::size_t Manager::_update(float dt) {
     if (system->update(dt)) {
       ++updatedSystems;
     }
+  }
+
+  for (auto id : _deleteSet) {
+    _unregisterEntity(id);
+    _entities.erase(id);
   }
 
   return updatedSystems;
