@@ -11,9 +11,9 @@
 
 - what is instancing
 instancing kind of acts like a nested for loop
-you say glDrawArraysInstanced(GL_TRIANGLES, first, count, instances)
+you say `glDrawArraysInstanced(GL\_TRIANGLES, first, count, instances)`
 and it draws triangles using the vertex data from _first_, _count_ times
 
-then for each instance, it passes along gl_InstanceID to allow the shader to
+then for each instance, it passes along `gl\_InstanceID` to allow the shader to
 update from uniforms, and it increments various attributes from buffers if they
-have a non-zero divisor set by glVertexAttribDivisor
+have a non-zero divisor set by `glVertexAttribDivisor`
