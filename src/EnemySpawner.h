@@ -56,13 +56,13 @@ public: // seed with random device
       if (side == 0) {
         pos = {tile_size / 2.f + spawn_tiles_from_edge, _pos()};
       }
-      if (side == 1) {
+      else if (side == 1) {
         pos = {_pos(), tile_size / 2.f + spawn_tiles_from_edge};
       }
-      if (side == 2) {
+      else if (side == 2) {
         pos = {world_bounds - (tile_size / 2.f + spawn_tiles_from_edge), _pos()};
       }
-      if (side == 3) {
+      else {
         pos = {_pos(), world_bounds - (tile_size / 2.f + spawn_tiles_from_edge)};
       }
 
