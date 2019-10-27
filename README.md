@@ -1,5 +1,5 @@
 # Fortress Commander
-Fortress Commander is a game about protecting your fortress from incoming waves of enemies. It descends from the RTS genre, and incorporates many classic RTS game mechanics, such as passive resource gathering, a battle system, and the assignment of actions and destinations to controllable entities (to which the game engine finds the shortest path). The game is implemented in its own custom Entity-Component System and pub-sub Event Manager. The graphics were entirely written in OpenGL.
+Fortress Commander is a game about protecting your fortress from incoming waves of enemies. It descends from the RTS genre, and incorporates many classic RTS game mechanics, such as passive resource gathering, a battle system, and assigning actions and destinations to controllable entities (using the game engine's implementation of A\* pathfinding). The game is implemented in its own custom Entity-Component System and pub-sub Event Manager. The graphics were entirely written in OpenGL.
 
 # Features
 - An Entity-Component-System framework that we use extensively in the game
